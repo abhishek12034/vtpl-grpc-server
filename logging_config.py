@@ -12,7 +12,7 @@ def setup_logging():
         console_handler.setLevel(logging.DEBUG)
 
         # File handler (single file for all logs)
-        file_handler = logging.FileHandler('grpc_server.log')  # Change here
+        file_handler = logging.FileHandler('logs/grpc_server.log')  # Change here
         file_handler.setLevel(logging.DEBUG)
 
         # Formatters
