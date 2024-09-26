@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package grpc_ips;
+import "job.proto";
+import "channel.proto";  // Import the job-related messages
+service ImageProcessingService {
+    rpc Channel (ChannelRequest) returns (stream ImageProcessingResponse);
+    rpc GetJobStatus (JobStatusRequest) returns (JobStatusResponse);
+}

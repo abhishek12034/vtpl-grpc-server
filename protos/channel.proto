@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+
+message ChannelRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
+    int64 sub_process_num = 4;
+    string sub_process_black = 5;
+    string sub_process_white = 6;
+    string sub_process_mid = 7; // Optional
+    string out_img_path = 8;
+    string process_type  =9;
+}
+
+
+message ImageProcessingResponse {
+    int32 processed_image_count = 1;
+    string status_message = 2;
+    double total_time = 3;
+    double processing_time = 4;
+    double reading_time = 5;
+    double writing_time = 6;
+    string job_id = 7;
+}
