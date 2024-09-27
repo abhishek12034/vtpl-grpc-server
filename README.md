@@ -34,5 +34,5 @@ This project is focused on building a gRPC server that exposes a collection of i
     docker build -t grpc-server .
     ```
     ``` bash
-        docker run -p 50051:50051 grpc-ips
+    docker run -p 50051:50051 grpc-ips
     ```
