@@ -1,5 +1,5 @@
 import logging
-
+import os
 def setup_logging():
     logger = logging.getLogger('grpc_ips')
     
@@ -12,6 +12,8 @@ def setup_logging():
         console_handler.setLevel(logging.DEBUG)
 
         # File handler (single file for all logs)
+        log_path = os.path.join('logs', 'grpc_server.log')
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
         file_handler = logging.FileHandler('logs/grpc_server.log')  # Change here
         file_handler.setLevel(logging.DEBUG)
 
