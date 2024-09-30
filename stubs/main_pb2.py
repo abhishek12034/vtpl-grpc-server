@@ -26,13 +26,13 @@ import job_pb2 as job__pb2
 import channel_pb2 as channel__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nmain.proto\x12\x08grpc_ips\x1a\tjob.proto\x1a\rchannel.proto2\x99\x01\n\x16ImageProcessingService\x12\x36\n\x07\x43hannel\x12\x0f.ChannelRequest\x1a\x18.ImageProcessingResponse0\x01\x12G\n\x0cGetJobStatus\x12\x1a.grpc_ips.JobStatusRequest\x1a\x1b.grpc_ips.JobStatusResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nmain.proto\x12\x10vtpl_grpc_server\x1a\tjob.proto\x1a\rchannel.proto2\xa9\x03\n\x0fImageProcessing\x12\x38\n\x0fGrayscaleFilter\x12\x11.GrayScaleRequest\x1a\x12.JobStatusResponse\x12<\n\x11\x43olorSwitchFilter\x12\x13.ColorSwitchRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x43olorConversionFilter\x12\x17.ColorConversionRequest\x1a\x12.JobStatusResponse\x12N\n\x1a\x45xtractSingleChannelFilter\x12\x1c.ExtractSingleChannelRequest\x1a\x12.JobStatusResponse\x12Q\n\x1c\x44isplaySelectedChannelFilter\x12\x1d.DisplaySlectedChannelRequest\x1a\x12.JobStatusResponse\x12\x35\n\x0cGetJobStatus\x12\x11.JobStatusRequest\x1a\x12.JobStatusResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'main_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_IMAGEPROCESSINGSERVICE']._serialized_start=51
-  _globals['_IMAGEPROCESSINGSERVICE']._serialized_end=204
+  _globals['_IMAGEPROCESSING']._serialized_start=59
+  _globals['_IMAGEPROCESSING']._serialized_end=484
 # @@protoc_insertion_point(module_scope)

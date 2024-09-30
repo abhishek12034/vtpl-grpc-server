@@ -9,7 +9,7 @@ def setup_logging():
 
         # Console handler
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
+        console_handler.setLevel(logging.ERROR)
 
         # File handler (single file for all logs)
         log_path = os.path.join('logs', 'grpc_server.log')

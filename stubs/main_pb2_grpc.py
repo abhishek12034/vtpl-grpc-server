@@ -26,7 +26,7 @@ if _version_not_supported:
     )
 
 
-class ImageProcessingServiceStub(object):
+class ImageProcessingStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,22 +35,66 @@ class ImageProcessingServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Channel = channel.unary_stream(
-                '/grpc_ips.ImageProcessingService/Channel',
-                request_serializer=channel__pb2.ChannelRequest.SerializeToString,
-                response_deserializer=channel__pb2.ImageProcessingResponse.FromString,
+        self.GrayscaleFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ImageProcessing/GrayscaleFilter',
+                request_serializer=channel__pb2.GrayScaleRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ColorSwitchFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ImageProcessing/ColorSwitchFilter',
+                request_serializer=channel__pb2.ColorSwitchRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ColorConversionFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ImageProcessing/ColorConversionFilter',
+                request_serializer=channel__pb2.ColorConversionRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ExtractSingleChannelFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ImageProcessing/ExtractSingleChannelFilter',
+                request_serializer=channel__pb2.ExtractSingleChannelRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.DisplaySelectedChannelFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ImageProcessing/DisplaySelectedChannelFilter',
+                request_serializer=channel__pb2.DisplaySlectedChannelRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
                 _registered_method=True)
         self.GetJobStatus = channel.unary_unary(
-                '/grpc_ips.ImageProcessingService/GetJobStatus',
+                '/vtpl_grpc_server.ImageProcessing/GetJobStatus',
                 request_serializer=job__pb2.JobStatusRequest.SerializeToString,
                 response_deserializer=job__pb2.JobStatusResponse.FromString,
                 _registered_method=True)
 
 
-class ImageProcessingServiceServicer(object):
+class ImageProcessingServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Channel(self, request, context):
+    def GrayscaleFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ColorSwitchFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ColorConversionFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ExtractSingleChannelFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DisplaySelectedChannelFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -63,12 +107,32 @@ class ImageProcessingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_ImageProcessingServiceServicer_to_server(servicer, server):
+def add_ImageProcessingServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Channel': grpc.unary_stream_rpc_method_handler(
-                    servicer.Channel,
-                    request_deserializer=channel__pb2.ChannelRequest.FromString,
-                    response_serializer=channel__pb2.ImageProcessingResponse.SerializeToString,
+            'GrayscaleFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.GrayscaleFilter,
+                    request_deserializer=channel__pb2.GrayScaleRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ColorSwitchFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ColorSwitchFilter,
+                    request_deserializer=channel__pb2.ColorSwitchRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ColorConversionFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ColorConversionFilter,
+                    request_deserializer=channel__pb2.ColorConversionRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ExtractSingleChannelFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExtractSingleChannelFilter,
+                    request_deserializer=channel__pb2.ExtractSingleChannelRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'DisplaySelectedChannelFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.DisplaySelectedChannelFilter,
+                    request_deserializer=channel__pb2.DisplaySlectedChannelRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
             ),
             'GetJobStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.GetJobStatus,
@@ -77,17 +141,17 @@ def add_ImageProcessingServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'grpc_ips.ImageProcessingService', rpc_method_handlers)
+            'vtpl_grpc_server.ImageProcessing', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('grpc_ips.ImageProcessingService', rpc_method_handlers)
+    server.add_registered_method_handlers('vtpl_grpc_server.ImageProcessing', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class ImageProcessingService(object):
+class ImageProcessing(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Channel(request,
+    def GrayscaleFilter(request,
             target,
             options=(),
             channel_credentials=None,
@@ -97,12 +161,120 @@ class ImageProcessingService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(
+        return grpc.experimental.unary_unary(
             request,
             target,
-            '/grpc_ips.ImageProcessingService/Channel',
-            channel__pb2.ChannelRequest.SerializeToString,
-            channel__pb2.ImageProcessingResponse.FromString,
+            '/vtpl_grpc_server.ImageProcessing/GrayscaleFilter',
+            channel__pb2.GrayScaleRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ColorSwitchFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ImageProcessing/ColorSwitchFilter',
+            channel__pb2.ColorSwitchRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ColorConversionFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ImageProcessing/ColorConversionFilter',
+            channel__pb2.ColorConversionRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ExtractSingleChannelFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ImageProcessing/ExtractSingleChannelFilter',
+            channel__pb2.ExtractSingleChannelRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DisplaySelectedChannelFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ImageProcessing/DisplaySelectedChannelFilter',
+            channel__pb2.DisplaySlectedChannelRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -127,7 +299,7 @@ class ImageProcessingService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/grpc_ips.ImageProcessingService/GetJobStatus',
+            '/vtpl_grpc_server.ImageProcessing/GetJobStatus',
             job__pb2.JobStatusRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
