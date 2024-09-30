@@ -1,9 +1,13 @@
 syntax = "proto3";
 
-package grpc_ips;
+package vtpl_grpc_server;
 import "job.proto";
-import "channel.proto";  // Import the job-related messages
-service ImageProcessingService {
-    rpc Channel (ChannelRequest) returns (stream ImageProcessingResponse);
-    rpc GetJobStatus (JobStatusRequest) returns (JobStatusResponse);
+import "channel.proto";
+service ImageProcessing {
+    rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
+    rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
+    rpc ColorConversionFilter (ColorConversionRequest) returns (JobStatusResponse);
+    rpc ExtractSingleChannelFilter (ExtractSingleChannelRequest) returns (JobStatusResponse);
+    rpc DisplaySelectedChannelFilter (DisplaySlectedChannelRequest) returns (JobStatusResponse);
+    rpc GetJobStatus (JobStatusRequest) returns (JobStatusResponse); 
 }
