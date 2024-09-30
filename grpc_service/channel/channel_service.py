@@ -24,8 +24,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
         self.executor = ThreadPoolExecutor(max_workers=10)
 
     def GrayscaleFilter(self, request, context):
-        # Temporrary line
-        # clear_output_folder(request.out_img_path)
+ 
         job_id = str(uuid.uuid4())
         
         # Initialize job status
@@ -54,8 +53,6 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
         return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
     
     def ColorSwitchFilter(self, request, context):
-        # Temporrary line
-        clear_output_folder(request.out_img_path)
 
         job_id = str(uuid.uuid4())
         total_images = count_images_in_folder(request.in_img_path)
@@ -87,8 +84,6 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
 
 
     def ColorConversionFilter(self, request, context):
-        # Temporrary line
-        clear_output_folder(request.out_img_path)
 
         job_id = str(uuid.uuid4())
         total_images = count_images_in_folder(request.in_img_path)
@@ -119,9 +114,6 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
         return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
     
     def ExtractSingleChannelFilter(self, request, context):
-        # Temporrary line
-        clear_output_folder(request.out_img_path)
-
         job_id = str(uuid.uuid4())
         total_images = count_images_in_folder(request.in_img_path)
         
@@ -151,8 +143,6 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
         return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
     
     def DisplaySelectedChannelFilter(self, request, context):
-        # Temporrary line
-        clear_output_folder(request.out_img_path)
 
         job_id = str(uuid.uuid4())
         total_images = count_images_in_folder(request.in_img_path)
