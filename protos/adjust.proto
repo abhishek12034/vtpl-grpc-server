@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+message LevelControlRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4; 
+    float in_level_st = 6;
+    float in_level_mid = 7;
+    float in_level_en = 8;
+    float out_level_st = 9;
+    float out_level_en = 10;
+}
+
+message ContrastStretchRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    float in_con_stretch_amt = 5;
+
+}
+
+message ClaheRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    double in_clip_limit = 5;   
+    int32 grid_row = 6;          
+    int32 grid_col = 7;  
+}
+
+message BrightnessContrastChangeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    double brightness_amount_change =5;
+    double contrast_change_factor=6;
+}
+
+message IntensityChangeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    double intensity_value_amount_change = 5;
+
+}
+
+message HueSatValChangeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    double intensity_value_amount_change = 5; 
+    int64 hue_degree_change =6;
+    int32 saturation_times_change =7;
+}
+
+message SaturationChangeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    int32 saturation_times_change =5;
+}
+message HueChangeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    int64 hue_degree_change =5;
+}
+
+
+message ExposureControlRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    int64 exposure_times=5;
+ }
+
+ message CurveRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool curve_color_ch_red = 6;
+    bool curve_color_ch_blue =7;
+    bool curve_color_ch_green =8;
+    repeated float curve_x_list=9;
+    repeated float curve_y_list =10;
+
+ }
+
+ message HistogramEqualizationRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    int64 in_st_row=5;
+    int64 in_en_row=6;
+    int64 in_st_col=7;
+    int64 in_en_col=8;
+    bool histogram_calc_on_full_img_flag =9;
+
+ }
+

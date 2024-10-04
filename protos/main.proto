@@ -3,7 +3,8 @@ syntax = "proto3";
 package vtpl_grpc_server;
 import "job.proto";
 import "channel.proto";
-service ImageProcessing {
+import "adjust.proto";
+service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
     rpc ColorConversionFilter (ColorConversionRequest) returns (JobStatusResponse);
@@ -11,3 +12,18 @@ service ImageProcessing {
     rpc DisplaySelectedChannelFilter (DisplaySlectedChannelRequest) returns (JobStatusResponse);
     rpc GetJobStatus (JobStatusRequest) returns (JobStatusResponse); 
 }
+
+service AdjustService {
+    rpc LevelControlFilter(LevelControlRequest) returns (JobStatusResponse);
+    rpc ContrastStretchFilter(ContrastStretchRequest) returns(JobStatusResponse);
+    rpc ClaheFilter(ClaheRequest) returns(JobStatusResponse);
+    rpc BrightnessContrastChangeFilter(BrightnessContrastChangeRequest) returns(JobStatusResponse);
+    rpc IntensityChangeFilter(IntensityChangeRequest) returns(JobStatusResponse);
+    rpc HueSatValChangeFilter(HueSatValChangeRequest) returns(JobStatusResponse);
+    rpc SaturationChangeFilter(SaturationChangeRequest) returns(JobStatusResponse);
+    rpc HueChangeFilter(HueChangeRequest) returns(JobStatusResponse);
+    rpc ExposureControlFilter(ExposureControlRequest) returns(JobStatusResponse);
+    rpc CurveFilter(CurveRequest) returns(JobStatusResponse);
+    rpc HistogramEqualizationFilter(HistogramEqualizationRequest) returns(JobStatusResponse);
+}
+
