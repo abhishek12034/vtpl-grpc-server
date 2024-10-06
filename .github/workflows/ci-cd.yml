@@ -41,7 +41,7 @@ jobs:
 
       # Step 2: Deploy to the physical machine (use SSH to copy and run commands)
       - name: Deploy to server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@updating-with-two-rpc
         with:
           host: '172.16.1.191'  # Add your physical machine's IP in GitHub secrets
           username: 'vadmin'  # Add your server username to secrets
