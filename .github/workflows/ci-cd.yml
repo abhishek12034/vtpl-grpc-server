@@ -36,7 +36,7 @@ jobs:
 
       - name: Connect to VPN
         run: |
-          sudo openvpn --config ./config.ovpn --auth-user-pass <(echo -e "${{ secrets.VPN_USERNAME }}\n${{ secrets.VPN_PASSWORD }}") &
+          sudo openvpn --config ../config.ovpn --auth-user-pass <(echo -e "${{ secrets.VPN_USERNAME }}\n${{ secrets.VPN_PASSWORD }}") &
           sleep 10  # Wait for VPN to connect
 
       - name: Deploy to server
