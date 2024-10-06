@@ -45,3 +45,5 @@ jobs:
             git pull origin updating-with-two-rpc  # Pull the latest changes from your branch
             pip install -r requirements.txt  # Reinstall dependencies
             systemctl restart myproject.service  # Restart the service
+          debug: true
+
