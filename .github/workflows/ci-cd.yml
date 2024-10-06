@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# Trigger the workflow on push to the main branch
 on:
   push:
     branches:
@@ -11,43 +10,38 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use a Linux environment
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Python environment (for Python projects)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Specify the Python version
+          python-version: '3.x'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Only run deploy if build is successful
-  # hello
+    needs: build
+
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Deploy to the physical machine (use SSH to copy and run commands)
       - name: Deploy to server
-        uses: appleboy/ssh-action@updating-with-two-rpc
+        uses: appleboy/ssh-action@master  # Keep this as is
         with:
-          host: '172.16.1.191'  # Add your physical machine's IP in GitHub secrets
-          username: 'vadmin'  # Add your server username to secrets
-          key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCqYELzFE7g+M052BQonr8xgzVYhiRbg76IfLJLMX8lVO6xXey9Hzi9KwtcKzpPJmCeYc5UFolaMHQAiCwe1Pg72Rpe+CdgIgqfkz1z8mwAaHG+4z0y1wZt13xXxErXL7KZ9ZtOoLvs9OUTItZd3ucO72NvHc61ROQKUEIOQQkpu0zpHD2kykLz24ciwP/GZnDwxTDJknGQbViLvMLhTFBGaNCaXRMKHijCu6kzggtYrBs/FavmvwX/IqlwygZm5J7/OgUyDyky2TQ9GPcPsTH4clo8TryWns1Q6BXBJm2RW04Y6qT+kLOcjHaJ/s0Mto+n61hnaQM4ZoEh2QrZkv1fqWRgDrbUkU1pW0OsP/6WdruEpr+9o+ZN7NeUWLMx512wzID0+zSbN5zcvBiokX85mz6oHE3lSZHcjZqMiH8guqww7SLi0LHiXdJ+b9TH8ucf+i5ab5/wG1XqsByYZgaxoht8YThV/V7tri+VaYkK/xkGFUskktVxRzSVorDbJr9V8Y9hQofLzUQHEBAMsD2IfASAXd/eQoXIULZ3w9f5uvZwH67JRN6C3FU6N4ylux+2bnNUOsquaQaBAkQCNsn8Diq+Afz8nm7Uu9vQQmu+SnFqugsQFqpalZUIjLdvFtgXtxaRbQo8RLrJO0TnhnAMnPB5vW9JYt/zlD+WttZ5tw== abhishek.udiya@videonetics.com'  # Add your SSH private key to secrets
+          host: ${{ secrets.SERVER_IP }}  # Your server IP in GitHub secrets
+          username: ${{ secrets.SERVER_USER }}  # Your server username in secrets
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key in secrets
           script: |
             cd /home/vadmin/python-grpc-server  # Go to the project folder on the server
-            git pull origin adding-adjust-funtionality  # Pull the latest changes
+            git pull origin updating-with-two-rpc  # Pull the latest changes from your branch
             pip install -r requirements.txt  # Reinstall dependencies
             systemctl restart myproject.service  # Restart the service
