@@ -45,12 +45,18 @@ jobs:
 
       - name: Connect to VPN
         run: |
-          sudo openvpn --config ./config.ovpn --auth-user-pass vpn_credentials.txt &
+          sudo openvpn --config ./config.ovpn --auth-user-pass vpn_credentials.txt --daemon
           sleep 10  # Wait for VPN to connect
 
       - name: Cleanup VPN credentials file
         run: |
           rm vpn_credentials.txt
+
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.7
