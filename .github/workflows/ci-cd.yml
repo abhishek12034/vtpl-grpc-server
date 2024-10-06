@@ -46,7 +46,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}  # Add your physical machine's IP in GitHub secrets
           username: ${{ secrets.SERVER_USER }}  # Add your server username to secrets
           key: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your SSH private key to secrets
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}  # Optional: Add passphrase if your key uses one
           script: |
             cd /home/vadmin/python-grpc-server  # Go to the project folder on the server
             git pull origin adding-adjust-funtionality  # Pull the latest changes
