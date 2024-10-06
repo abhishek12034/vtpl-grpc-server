@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+# Trigger the workflow on push to the main branch
+on:
+  push:
+    branches:
+      - adding-adjust-funtionality  # Adjust the branch as needed
+  pull_request:
+    branches:
+      - adding-adjust-funtionality
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use a Linux environment
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Python environment (for Python projects)
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Specify the Python version
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run tests
+      - name: Run tests
+        run: |
+          pytest  # or any test framework you are using
+          
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Only run deploy if build is successful
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Deploy to the physical machine (use SSH to copy and run commands)
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}  # Add your physical machine's IP in GitHub secrets
+          username: ${{ secrets.SERVER_USER }}  # Add your server username to secrets
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your SSH private key to secrets
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}  # Optional: Add passphrase if your key uses one
+          script: |
+            cd /home/vadmin/python-grpc-server  # Go to the project folder on the server
+            git pull origin adding-adjust-funtionality  # Pull the latest changes
+            pip install -r requirements.txt  # Reinstall dependencies
+            systemctl restart myproject.service  # Restart the service
