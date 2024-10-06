@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/vadmin/python-grpc-server//vtpl-grpc-server
+            cd /home/vadmin/python-grpc-server/vtpl-grpc-server
             git fetch origin
             git reset --hard origin/updating-with-two-rpc  # Ensures latest changes
             pip install --upgrade -r requirements.txt  # Upgrade dependencies
