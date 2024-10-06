@@ -34,8 +34,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Connect to VPN
+        run: |
+          sudo openvpn --config ./config.ovpn --auth-user-pass <(echo -e "${{ secrets.VPN_USERNAME }}\n${{ secrets.VPN_PASSWORD }}") &
+          sleep 10  # Wait for VPN to connect
+
       - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.7  # Updated version
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
