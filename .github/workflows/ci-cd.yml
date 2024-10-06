@@ -54,6 +54,7 @@ jobs:
 
       - name: Setup SSH key
         run: |
+          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
