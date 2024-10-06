@@ -43,9 +43,9 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_IP }}  # Add your physical machine's IP in GitHub secrets
-          username: ${{ secrets.SERVER_USER }}  # Add your server username to secrets
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your SSH private key to secrets
+          host: '172.16.1.191'  # Add your physical machine's IP in GitHub secrets
+          username: 'vadmin'  # Add your server username to secrets
+          key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCqYELzFE7g+M052BQonr8xgzVYhiRbg76IfLJLMX8lVO6xXey9Hzi9KwtcKzpPJmCeYc5UFolaMHQAiCwe1Pg72Rpe+CdgIgqfkz1z8mwAaHG+4z0y1wZt13xXxErXL7KZ9ZtOoLvs9OUTItZd3ucO72NvHc61ROQKUEIOQQkpu0zpHD2kykLz24ciwP/GZnDwxTDJknGQbViLvMLhTFBGaNCaXRMKHijCu6kzggtYrBs/FavmvwX/IqlwygZm5J7/OgUyDyky2TQ9GPcPsTH4clo8TryWns1Q6BXBJm2RW04Y6qT+kLOcjHaJ/s0Mto+n61hnaQM4ZoEh2QrZkv1fqWRgDrbUkU1pW0OsP/6WdruEpr+9o+ZN7NeUWLMx512wzID0+zSbN5zcvBiokX85mz6oHE3lSZHcjZqMiH8guqww7SLi0LHiXdJ+b9TH8ucf+i5ab5/wG1XqsByYZgaxoht8YThV/V7tri+VaYkK/xkGFUskktVxRzSVorDbJr9V8Y9hQofLzUQHEBAMsD2IfASAXd/eQoXIULZ3w9f5uvZwH67JRN6C3FU6N4ylux+2bnNUOsquaQaBAkQCNsn8Diq+Afz8nm7Uu9vQQmu+SnFqugsQFqpalZUIjLdvFtgXtxaRbQo8RLrJO0TnhnAMnPB5vW9JYt/zlD+WttZ5tw== abhishek.udiya@videonetics.com'  # Add your SSH private key to secrets
           script: |
             cd /home/vadmin/python-grpc-server  # Go to the project folder on the server
             git pull origin adding-adjust-funtionality  # Pull the latest changes
