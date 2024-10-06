@@ -4,10 +4,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - adding-adjust-funtionality  # Adjust the branch as needed
+      - updating-with-two-rpc  # Adjust the branch as needed
   pull_request:
     branches:
-      - adding-adjust-funtionality
+      - updating-with-two-rpc
 
 jobs:
   build:
