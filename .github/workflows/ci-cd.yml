@@ -31,4 +31,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/vadmin
-            git pull
+            echo "Current Directory: $(pwd)"
+            ls -la
+            git status
+            git pull origin main  # Replace 'main' with your default branch if differen
