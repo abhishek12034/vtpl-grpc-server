@@ -14,6 +14,7 @@ from logging_config import setup_logging
 from grpc_service.base.base_filter_type import StatusMessage
 from grpc_service.channel.channel_filter_type import ChannelProcessingType
 from grpc_service.base.base_service import BaseService
+import os
 logger = setup_logging()
 
 class ChannelService(BaseService,main_pb2_grpc.ChannelServiceServicer):
@@ -22,33 +23,54 @@ class ChannelService(BaseService,main_pb2_grpc.ChannelServiceServicer):
         self.processor = channel_process()
 
     def GrayscaleFilter(self, request, context):
- 
-        job_id = str(uuid.uuid4())
+        try:
+            # Check if input and output paths exist
+            if not os.path.exists(request.in_img_path):
+                raise FileNotFoundError(f"Input image path does not exist: {request.in_img_path}")
+            if not os.path.exists(os.path.dirname(request.out_img_path)):
+                raise FileNotFoundError(f"Output directory does not exist: {os.path.dirname(request.out_img_path)}")
+
+            # Generate a new job ID
+            job_id = str(uuid.uuid4())
+            
+            # Initialize job status
+            with self.lock:
+                self.job_status[job_id] = {
+                    'job_id': job_id,
+                    'percentage': 0.0,
+                    'in_img_path': request.in_img_path,
+                    'out_img_path': request.out_img_path,
+                    'total_images': 0,
+                    'processed_image_count': 0,
+                    'status_message': StatusMessage.JOB_STARTED.value,
+                    'completed': False,
+                    'error': None,
+                    'thread_id': None 
+                }
+            logger.info(f"Job Created: {self.job_status[job_id]}")
+
+            # Submit the image processing job and the progress update to the executor
+            self.executor.submit(self.update_progress_in_redis, job_id)
+
+            # Submit the image processing task to a thread
+            self.executor.submit(self.process_image, request, job_id, ChannelProcessingType.GRAYSCALE.value)
+
+            # Return the initial job status response
+            return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
         
-        # Initialize job status
-        with self.lock:
-            self.job_status[job_id] = {
-                'job_id': job_id,
-                'percentage': 0.0,
-                'in_img_path': request.in_img_path,
-                'out_img_path': request.out_img_path,
-                'total_images': 0,
-                'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.value,
-                'completed': False,
-                'error': None,
-                'thread_id': None 
-            }
-        logger.info(f"Job Created: {self.job_status[job_id]}")
+        except FileNotFoundError as fnf_error:
+            logger.error(f"FileNotFoundError: {fnf_error}")
+            context.set_details(str(fnf_error))
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            return None
+        
+        except Exception as e:
+            logger.error(f"Unexpected error occurred: {e}")
+            context.set_details(f"An error occurred while processing the image: {e}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return None
 
-        # Submit the image processing job and the progress update to the executor
-        self.executor.submit(self.update_progress_in_redis, job_id)
 
-        # Submit the image processing task to a thread
-        self.executor.submit(self.process_image, request, job_id,ChannelProcessingType.GRAYSCALE.value)
-
-        # Return the initial job status response
-        return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
     
     def ColorSwitchFilter(self, request, context):
 
