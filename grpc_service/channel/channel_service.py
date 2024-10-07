@@ -7,21 +7,19 @@ from stubs import channel_pb2_grpc
 from stubs import main_pb2_grpc
 from stubs import job_pb2
 from image_processing_algorithm.vid2img_channel_x import channel_process
-from utility.utility import count_images_in_folder, list_image_files,clear_output_folder
+from utility.utility import count_images_in_folder, list_image_files
 import uuid
 import json
 from logging_config import setup_logging
-from config.redis_config import get_redis_client
-from .channel_filter_type import ChannelProcessingType,StatusMessage
+from grpc_service.base.base_filter_type import StatusMessage
+from grpc_service.channel.channel_filter_type import ChannelProcessingType
+from grpc_service.base.base_service import BaseService
 logger = setup_logging()
 
-class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
+class ChannelService(BaseService,main_pb2_grpc.ChannelServiceServicer):
     def __init__(self):
-        self.job_status = {}  # Make job_status an instance variable
+        super().__init__()  # Call the __init__ method of BaseService
         self.processor = channel_process()
-        self.lock = threading.Lock()
-        self.redis_client = get_redis_client()
-        self.executor = ThreadPoolExecutor(max_workers=10)
 
     def GrayscaleFilter(self, request, context):
  
@@ -36,7 +34,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
                 'out_img_path': request.out_img_path,
                 'total_images': 0,
                 'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.name,
+                'status_message': StatusMessage.JOB_STARTED.value,
                 'completed': False,
                 'error': None,
                 'thread_id': None 
@@ -66,7 +64,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
                 'out_img_path': request.out_img_path,
                 'total_images': total_images,
                 'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.name,
+                'status_message': StatusMessage.JOB_STARTED.value,
                 'completed': False,
                 'error': None,
                 'thread_id': None 
@@ -97,7 +95,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
                 'out_img_path': request.out_img_path,
                 'total_images': total_images,
                 'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.name,
+                'status_message': StatusMessage.JOB_STARTED.value,
                 'completed': False,
                 'error': None,
                 'thread_id': None 
@@ -126,7 +124,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
                 'out_img_path': request.out_img_path,
                 'total_images': total_images,
                 'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.name,
+                'status_message': StatusMessage.JOB_STARTED.value,
                 'completed': False,
                 'error': None,
                 'thread_id': None 
@@ -156,7 +154,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
                 'out_img_path': request.out_img_path,
                 'total_images': total_images,
                 'processed_image_count': 0,
-                'status_message': StatusMessage.JOB_STARTED.name,
+                'status_message': StatusMessage.JOB_STARTED.value,
                 'completed': False,
                 'error': None,
                 'thread_id': None 
@@ -182,7 +180,7 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
             # storing thread in redis along with job_id
             with self.lock:
                 self.job_status[job_id]['thread_id'] = threading.get_ident()
-                self.job_status[job_id]['status_message'] = StatusMessage.JOB_STARTED.name
+                self.job_status[job_id]['status_message'] = StatusMessage.JOB_STARTED.value
                 self.job_status[job_id]['total_images'] = len(in_img_list)
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
             # Process each image in the list
@@ -206,105 +204,18 @@ class ImageProcessingService(main_pb2_grpc.ImageProcessingServicer):
             # Mark job as completed
             with self.lock:
                 self.job_status[job_id]['completed'] = True
-                self.job_status[job_id]['status_message'] = StatusMessage.JOB_COMPLETED.name
+                self.job_status[job_id]['status_message'] = StatusMessage.JOB_COMPLETED.value
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
         except Exception as e:
             # Handle exceptions and update job status as failed
             with self.lock:
                 self.job_status[job_id]['completed'] = False
-                self.job_status[job_id]['status_message'] = StatusMessage.JOB_FAILED.name
+                self.job_status[job_id]['status_message'] = StatusMessage.JOB_FAILED.value
                 self.job_status[job_id]['error'] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
-    def store_job_status_in_redis(self, job_id, job_status):
-        try:
-            # Check if job_status is serializable
-            job_status_json = json.dumps(job_status)  # This will raise an error if it's not serializable
-            # If the check passes, serialize and store in Redis
-            self.redis_client.set(job_id, job_status_json)
-            logger.info(f"Job status for {job_id} stored in Redis: {job_status}")
-            
-        except TypeError as e:
-            logger.error(f"Error serializing job status for {job_id}: {e}")
-            # Optionally log the job_status for debugging
-            logger.debug(f"Job status contents: {job_status}")
-            raise e
-            
-        except Exception as e:
-            logger.error(f"Error storing job status in Redis for {job_id}: {e}")
-            raise e
-
-
-
-    def create_job_status_response(self, job_id, job_status=None, error=None):
-        if job_status is None:
-            return job_pb2.JobStatusResponse(
-                job_id=job_id,
-                percentage=0.0,
-                in_img_path='',
-                out_img_path='',
-                total_input_images=0,
-                processed_image_count=0,
-                status_message=StatusMessage.JOB_NOT_FOUND.name,
-                completed=False,
-                error=error
-            )
-
-        return job_pb2.JobStatusResponse(
-            job_id=job_status['job_id'],
-            percentage=job_status['percentage'],
-            in_img_path=job_status['in_img_path'],
-            out_img_path=job_status['out_img_path'],
-            total_input_images=job_status['total_images'],
-            processed_image_count=job_status['processed_image_count'],
-            status_message=job_status['status_message'],
-            completed=job_status['completed'],
-            error=error if error else job_status.get('error')
-        )
-    def update_progress_in_redis(self, job_id):
-        retry_count = 0
-        max_retries = 5
-
-        while True:
-            try:
-                time.sleep(1)  # Wait for 1 second
-
-                with self.lock:
-                    job_status = self.job_status.get(job_id)
-                    if job_status:
-                        # Calculate percentage
-                        if job_status['total_images'] > 0:
-                            job_status['percentage'] = (job_status['processed_image_count'] * 100) / job_status['total_images']
-                        else:
-                            job_status['percentage'] = 100  # Prevent division by zero if there are no images
-
-                        # Update status message if all images processed
-                        if job_status['percentage'] == 100:
-                            job_status['status_message'] = StatusMessage.JOB_COMPLETED.name
-                            logger.info(f"Job {job_id} completed. Status message updated.")
-
-                        # Store job status in Redis
-                        self.store_job_status_in_redis(job_id, job_status)
-                        logger.info(f"Job {job_id} progress updated in Redis: {job_status}")
-
-                    # Break the loop if job is completed
-                    if job_status and job_status['completed']:
-                        logger.info(f"Job {job_id} is completed.")
-                        break
-
-            except Exception as e:
-                # Handle or log the error when updating Redis
-                logger.error(f"Error updating progress for Job {job_id} in Redis: {str(e)}")
-
-                # Increment retry count
-                retry_count += 1
-                if retry_count >= max_retries:
-                    logger.error(f"Max retries reached for Job {job_id}. Exiting the update loop.")
-                    break  # Exit the loop after max retries
-                else:
-                    logger.info(f"Retrying... ({retry_count}/{max_retries})")
     
     def GetJobStatus(self, request, context):
         job_id = request.job_id
