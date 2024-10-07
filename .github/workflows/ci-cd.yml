@@ -31,7 +31,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/vadmin
-            echo "Current Directory: $(pwd)"
-            ls -la
-            git status
-            git pull origin main  # Replace 'main' with your default branch if differen
+            git clone git@github.com:abhishek12034/vtpl-grpc-server.git
