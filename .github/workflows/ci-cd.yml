@@ -3,7 +3,7 @@ name: GitHub Action
 on:
   push:
     branches:
-      - main
+      - updating-with-two-rpc
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
       - name: Connect to VPN
         uses: "kota65535/github-openvpn-connect-action@v2"
         with:
-          config_file: .github/workflows/client.ovpn
+          config_file: .github/workflows/config.ovpn
           username: ${{ secrets.VPN_USERNAME }}
           password: ${{ secrets.VPN_PASSWORD }}
           client_key: ${{ secrets.USER_KEY }}
