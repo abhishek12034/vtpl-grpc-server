@@ -1,74 +1,34 @@
-name: CI/CD Pipeline
+name: GitHub Action
 
 on:
   push:
     branches:
-      - updating-with-two-rpc
-  pull_request:
-    branches:
-      - updating-with-two-rpc
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
   deploy:
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Install OpenVPN
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openvpn
-
-      - name: Create VPN credentials file
-        run: |
-          echo -e "${{ secrets.VPN_USERNAME }}\n${{ secrets.VPN_PASSWORD }}" > vpn_credentials.txt
-
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
       - name: Connect to VPN
-        run: |
-          sudo openvpn --config ./config.ovpn --auth-user-pass vpn_credentials.txt --daemon
-          sleep 10  # Wait for VPN to connect
-
-      - name: Cleanup VPN credentials file
-        run: |
-          rm vpn_credentials.txt
-
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.7
+        uses: "kota65535/github-openvpn-connect-action@v2"
         with:
+          config_file: .github/workflows/client.ovpn
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          client_key: ${{ secrets.USER_KEY }}
+      - name: Use SSH
+        uses: appleboy/ssh-action@master
+        with: 
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/vadmin/python-grpc-server/vtpl-grpc-server
-            git fetch origin
-            git reset --hard origin/updating-with-two-rpc  # Ensures latest changes
-            pip install --upgrade -r requirements.txt  # Upgrade dependencies
-            systemctl restart myproject.service  # Restart service
-          debug: true  # Keep this for debugging purposes
+            cd /home/vadmin
+            git pull
