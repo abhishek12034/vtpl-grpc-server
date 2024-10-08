@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global --unset user.email || true
           git config --global --unset user.name || true
-          git config --global user.email "abhishek.udiya@videonetics.com
+          git config --global user.email "abhishek.udiya@videonetics.com"
           git config --global user.name "Abhishek"
           git config --list  # Check the applied Git settings
 
