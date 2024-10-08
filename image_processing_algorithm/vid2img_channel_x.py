@@ -147,7 +147,7 @@ class channel_process:
     
                     out_img = in_img.convert(mode = "L")
                     if sub_process_mid in self.cl_name:
-                        print(f"black_name = {black_name}  white_name = {white_name}  sub_process_mid = {sub_process_mid}")
+                        # print(f"black_name = {black_name}  white_name = {white_name}  sub_process_mid = {sub_process_mid}")
                         out_img = ImageOps.colorize(out_img, black = black_name, white = white_name, mid = sub_process_mid)
                     else:
                         out_img = ImageOps.colorize(out_img, black = black_name, white = white_name)

@@ -8,6 +8,7 @@ from stubs import job_pb2
 from grpc_service.base.base_filter_type import StatusMessage
 import uuid
 import grpc
+import os
 logger = setup_logging()
 
 class BaseService:
@@ -90,17 +91,21 @@ class BaseService:
                 else:
                     logger.info(f"Retrying... ({retry_count}/{max_retries})")
     def _start_image_processing_job(self, request,context, process_type, processing_func):
+
         try:
             job_id = str(uuid.uuid4())
 
             # Validate required fields
             if not request.in_img_path:
                 raise ValueError("in_img_path is required")
+            if not os.path.exists(request.in_img_path):
+                raise ValueError(f"in_img_path does not exist: {request.in_img_path}")
+            
             if request.out_img_path == "":
                 raise ValueError("out_img_path is required")
-            if request.process_all_flag is None:
-                raise ValueError("process_all_flag is required")
-            
+            if not os.path.exists(os.path.dirname(request.out_img_path)):
+                raise ValueError(f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}")
+        
             # Initialize job status
             with self.lock:
                 self.job_status[job_id] = {
@@ -121,7 +126,7 @@ class BaseService:
             self.executor.submit(self.update_progress_in_redis, job_id)
 
             # Submit the image processing task
-            self.executor.submit(processing_func, request,context, job_id, process_type)
+            self.executor.submit(processing_func, request, context, job_id, process_type)
 
             # Return the initial job status response
             return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
@@ -129,8 +134,9 @@ class BaseService:
         except ValueError as ve:
             # Handle validation errors and send a specific message
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, str(ve))
-        
+
         except Exception as e:
             # Handle general errors and return a more generic error message
             logger.error(f"Error occurred while starting job: {str(e)}")
             context.abort(grpc.StatusCode.INTERNAL, "Internal error occurred during job initialization")
+
