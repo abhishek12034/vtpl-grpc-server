@@ -26,10 +26,13 @@ jobs:
           password: ${{ secrets.VPN_PASSWORD }}
           client_key: ${{ secrets.USER_KEY }}
 
-      - name: Configure Git
+      - name: Force reset Git user info
         run: |
-          git config --global user.email "abhishek.udiya@videonetics.com"
-          git config --global user.name "Abhishek Udiya"
+          git config --global --unset user.email || true
+          git config --global --unset user.name || true
+          git config --global user.email "abhishek.udiya@videonetics.com
+          git config --global user.name "Abhishek"
+          git config --list  # Check the applied Git settings
 
       - name: Use SSH
         uses: appleboy/ssh-action@master
