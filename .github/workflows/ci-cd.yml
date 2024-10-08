@@ -1,0 +1,42 @@
+name: GitHub Action
+
+on:
+  push:
+    branches:
+      - ci-cd-test
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Install OpenVPN
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+      
+      - name: Connect to VPN
+        uses: "kota65535/github-openvpn-connect-action@v2"
+        with:
+          config_file: .github/workflows/config.ovpn
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          client_key: ${{ secrets.USER_KEY }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "abhishek.udiya@videonetics.com"
+          git config --global user.name "Abhishek Udiya"
+
+      - name: Use SSH
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/vadmin/vtpl-grpc-server
+            git pull origin ci-cd-test
