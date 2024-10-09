@@ -58,14 +58,12 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
 
     def DisplaySelectedChannelFilter(self, request, context):
 
-        response = self._start_image_processing_job(
+        return self._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.DISPLAY_SELECTED_CHANNEL.value,
             self.process_display_selected_channel,
         )
-        print(response)
-        return response
 
     def GetJobStatus(self, request, context):
         job_id = request.job_id
