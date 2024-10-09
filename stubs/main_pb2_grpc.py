@@ -7,23 +7,26 @@ import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
 import job_pb2 as job__pb2
 
-GRPC_GENERATED_VERSION = '1.66.1'
+GRPC_GENERATED_VERSION = "1.66.1"
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
 try:
     from grpc._utilities import first_version_is_lower
-    _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
+
+    _version_not_supported = first_version_is_lower(
+        GRPC_VERSION, GRPC_GENERATED_VERSION
+    )
 except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
     raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in main_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+        f"The grpc package installed is at version {GRPC_VERSION},"
+        + f" but the generated code in main_pb2_grpc.py depends on"
+        + f" grpcio>={GRPC_GENERATED_VERSION}."
+        + f" Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}"
+        + f" or downgrade your generated code using grpcio-tools<={GRPC_VERSION}."
     )
 
 
@@ -37,35 +40,41 @@ class ChannelServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GrayscaleFilter = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/GrayscaleFilter',
-                request_serializer=channel__pb2.GrayScaleRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/GrayscaleFilter",
+            request_serializer=channel__pb2.GrayScaleRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ColorSwitchFilter = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/ColorSwitchFilter',
-                request_serializer=channel__pb2.ColorSwitchRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/ColorSwitchFilter",
+            request_serializer=channel__pb2.ColorSwitchRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ColorConversionFilter = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/ColorConversionFilter',
-                request_serializer=channel__pb2.ColorConversionRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/ColorConversionFilter",
+            request_serializer=channel__pb2.ColorConversionRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ExtractSingleChannelFilter = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/ExtractSingleChannelFilter',
-                request_serializer=channel__pb2.ExtractSingleChannelRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/ExtractSingleChannelFilter",
+            request_serializer=channel__pb2.ExtractSingleChannelRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.DisplaySelectedChannelFilter = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/DisplaySelectedChannelFilter',
-                request_serializer=channel__pb2.DisplaySlectedChannelRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/DisplaySelectedChannelFilter",
+            request_serializer=channel__pb2.DisplaySlectedChannelRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.GetJobStatus = channel.unary_unary(
-                '/vtpl_grpc_server.ChannelService/GetJobStatus',
-                request_serializer=job__pb2.JobStatusRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.ChannelService/GetJobStatus",
+            request_serializer=job__pb2.JobStatusRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
 
 
 class ChannelServiceServicer(object):
@@ -74,98 +83,103 @@ class ChannelServiceServicer(object):
     def GrayscaleFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ColorSwitchFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ColorConversionFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ExtractSingleChannelFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DisplaySelectedChannelFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetJobStatus(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_ChannelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GrayscaleFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.GrayscaleFilter,
-                    request_deserializer=channel__pb2.GrayScaleRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ColorSwitchFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ColorSwitchFilter,
-                    request_deserializer=channel__pb2.ColorSwitchRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ColorConversionFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ColorConversionFilter,
-                    request_deserializer=channel__pb2.ColorConversionRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ExtractSingleChannelFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExtractSingleChannelFilter,
-                    request_deserializer=channel__pb2.ExtractSingleChannelRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'DisplaySelectedChannelFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.DisplaySelectedChannelFilter,
-                    request_deserializer=channel__pb2.DisplaySlectedChannelRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'GetJobStatus': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetJobStatus,
-                    request_deserializer=job__pb2.JobStatusRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
+        "GrayscaleFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.GrayscaleFilter,
+            request_deserializer=channel__pb2.GrayScaleRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ColorSwitchFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ColorSwitchFilter,
+            request_deserializer=channel__pb2.ColorSwitchRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ColorConversionFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ColorConversionFilter,
+            request_deserializer=channel__pb2.ColorConversionRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ExtractSingleChannelFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ExtractSingleChannelFilter,
+            request_deserializer=channel__pb2.ExtractSingleChannelRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "DisplaySelectedChannelFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.DisplaySelectedChannelFilter,
+            request_deserializer=channel__pb2.DisplaySlectedChannelRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "GetJobStatus": grpc.unary_unary_rpc_method_handler(
+            servicer.GetJobStatus,
+            request_deserializer=job__pb2.JobStatusRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'vtpl_grpc_server.ChannelService', rpc_method_handlers)
+        "vtpl_grpc_server.ChannelService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('vtpl_grpc_server.ChannelService', rpc_method_handlers)
+    server.add_registered_method_handlers(
+        "vtpl_grpc_server.ChannelService", rpc_method_handlers
+    )
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class ChannelService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GrayscaleFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def GrayscaleFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/GrayscaleFilter',
+            "/vtpl_grpc_server.ChannelService/GrayscaleFilter",
             channel__pb2.GrayScaleRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -176,23 +190,26 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ColorSwitchFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ColorSwitchFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/ColorSwitchFilter',
+            "/vtpl_grpc_server.ChannelService/ColorSwitchFilter",
             channel__pb2.ColorSwitchRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -203,23 +220,26 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ColorConversionFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ColorConversionFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/ColorConversionFilter',
+            "/vtpl_grpc_server.ChannelService/ColorConversionFilter",
             channel__pb2.ColorConversionRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -230,23 +250,26 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ExtractSingleChannelFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ExtractSingleChannelFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/ExtractSingleChannelFilter',
+            "/vtpl_grpc_server.ChannelService/ExtractSingleChannelFilter",
             channel__pb2.ExtractSingleChannelRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -257,23 +280,26 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def DisplaySelectedChannelFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def DisplaySelectedChannelFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/DisplaySelectedChannelFilter',
+            "/vtpl_grpc_server.ChannelService/DisplaySelectedChannelFilter",
             channel__pb2.DisplaySlectedChannelRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -284,23 +310,26 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def GetJobStatus(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def GetJobStatus(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.ChannelService/GetJobStatus',
+            "/vtpl_grpc_server.ChannelService/GetJobStatus",
             job__pb2.JobStatusRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -311,7 +340,8 @@ class ChannelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
 
 class AdjustServiceStub(object):
@@ -324,60 +354,71 @@ class AdjustServiceStub(object):
             channel: A grpc.Channel.
         """
         self.LevelControlFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/LevelControlFilter',
-                request_serializer=adjust__pb2.LevelControlRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/LevelControlFilter",
+            request_serializer=adjust__pb2.LevelControlRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ContrastStretchFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/ContrastStretchFilter',
-                request_serializer=adjust__pb2.ContrastStretchRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/ContrastStretchFilter",
+            request_serializer=adjust__pb2.ContrastStretchRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ClaheFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/ClaheFilter',
-                request_serializer=adjust__pb2.ClaheRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/ClaheFilter",
+            request_serializer=adjust__pb2.ClaheRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.BrightnessContrastChangeFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/BrightnessContrastChangeFilter',
-                request_serializer=adjust__pb2.BrightnessContrastChangeRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/BrightnessContrastChangeFilter",
+            request_serializer=adjust__pb2.BrightnessContrastChangeRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.IntensityChangeFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/IntensityChangeFilter',
-                request_serializer=adjust__pb2.IntensityChangeRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/IntensityChangeFilter",
+            request_serializer=adjust__pb2.IntensityChangeRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.HueSatValChangeFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/HueSatValChangeFilter',
-                request_serializer=adjust__pb2.HueSatValChangeRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/HueSatValChangeFilter",
+            request_serializer=adjust__pb2.HueSatValChangeRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.SaturationChangeFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/SaturationChangeFilter',
-                request_serializer=adjust__pb2.SaturationChangeRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/SaturationChangeFilter",
+            request_serializer=adjust__pb2.SaturationChangeRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.HueChangeFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/HueChangeFilter',
-                request_serializer=adjust__pb2.HueChangeRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/HueChangeFilter",
+            request_serializer=adjust__pb2.HueChangeRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.ExposureControlFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/ExposureControlFilter',
-                request_serializer=adjust__pb2.ExposureControlRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/ExposureControlFilter",
+            request_serializer=adjust__pb2.ExposureControlRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.CurveFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/CurveFilter',
-                request_serializer=adjust__pb2.CurveRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/CurveFilter",
+            request_serializer=adjust__pb2.CurveRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
         self.HistogramEqualizationFilter = channel.unary_unary(
-                '/vtpl_grpc_server.AdjustService/HistogramEqualizationFilter',
-                request_serializer=adjust__pb2.HistogramEqualizationRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
-                _registered_method=True)
+            "/vtpl_grpc_server.AdjustService/HistogramEqualizationFilter",
+            request_serializer=adjust__pb2.HistogramEqualizationRequest.SerializeToString,
+            response_deserializer=job__pb2.JobStatusResponse.FromString,
+            _registered_method=True,
+        )
 
 
 class AdjustServiceServicer(object):
@@ -386,153 +427,158 @@ class AdjustServiceServicer(object):
     def LevelControlFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ContrastStretchFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ClaheFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def BrightnessContrastChangeFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def IntensityChangeFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def HueSatValChangeFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def SaturationChangeFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def HueChangeFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ExposureControlFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CurveFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def HistogramEqualizationFilter(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_AdjustServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'LevelControlFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.LevelControlFilter,
-                    request_deserializer=adjust__pb2.LevelControlRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ContrastStretchFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ContrastStretchFilter,
-                    request_deserializer=adjust__pb2.ContrastStretchRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ClaheFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ClaheFilter,
-                    request_deserializer=adjust__pb2.ClaheRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'BrightnessContrastChangeFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.BrightnessContrastChangeFilter,
-                    request_deserializer=adjust__pb2.BrightnessContrastChangeRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'IntensityChangeFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.IntensityChangeFilter,
-                    request_deserializer=adjust__pb2.IntensityChangeRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'HueSatValChangeFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.HueSatValChangeFilter,
-                    request_deserializer=adjust__pb2.HueSatValChangeRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'SaturationChangeFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.SaturationChangeFilter,
-                    request_deserializer=adjust__pb2.SaturationChangeRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'HueChangeFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.HueChangeFilter,
-                    request_deserializer=adjust__pb2.HueChangeRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'ExposureControlFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.ExposureControlFilter,
-                    request_deserializer=adjust__pb2.ExposureControlRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'CurveFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.CurveFilter,
-                    request_deserializer=adjust__pb2.CurveRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
-            'HistogramEqualizationFilter': grpc.unary_unary_rpc_method_handler(
-                    servicer.HistogramEqualizationFilter,
-                    request_deserializer=adjust__pb2.HistogramEqualizationRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
-            ),
+        "LevelControlFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.LevelControlFilter,
+            request_deserializer=adjust__pb2.LevelControlRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ContrastStretchFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ContrastStretchFilter,
+            request_deserializer=adjust__pb2.ContrastStretchRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ClaheFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ClaheFilter,
+            request_deserializer=adjust__pb2.ClaheRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "BrightnessContrastChangeFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.BrightnessContrastChangeFilter,
+            request_deserializer=adjust__pb2.BrightnessContrastChangeRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "IntensityChangeFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.IntensityChangeFilter,
+            request_deserializer=adjust__pb2.IntensityChangeRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "HueSatValChangeFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.HueSatValChangeFilter,
+            request_deserializer=adjust__pb2.HueSatValChangeRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "SaturationChangeFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.SaturationChangeFilter,
+            request_deserializer=adjust__pb2.SaturationChangeRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "HueChangeFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.HueChangeFilter,
+            request_deserializer=adjust__pb2.HueChangeRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "ExposureControlFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.ExposureControlFilter,
+            request_deserializer=adjust__pb2.ExposureControlRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "CurveFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.CurveFilter,
+            request_deserializer=adjust__pb2.CurveRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
+        "HistogramEqualizationFilter": grpc.unary_unary_rpc_method_handler(
+            servicer.HistogramEqualizationFilter,
+            request_deserializer=adjust__pb2.HistogramEqualizationRequest.FromString,
+            response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'vtpl_grpc_server.AdjustService', rpc_method_handlers)
+        "vtpl_grpc_server.AdjustService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('vtpl_grpc_server.AdjustService', rpc_method_handlers)
+    server.add_registered_method_handlers(
+        "vtpl_grpc_server.AdjustService", rpc_method_handlers
+    )
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class AdjustService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def LevelControlFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def LevelControlFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/LevelControlFilter',
+            "/vtpl_grpc_server.AdjustService/LevelControlFilter",
             adjust__pb2.LevelControlRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -543,23 +589,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ContrastStretchFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ContrastStretchFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/ContrastStretchFilter',
+            "/vtpl_grpc_server.AdjustService/ContrastStretchFilter",
             adjust__pb2.ContrastStretchRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -570,23 +619,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ClaheFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ClaheFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/ClaheFilter',
+            "/vtpl_grpc_server.AdjustService/ClaheFilter",
             adjust__pb2.ClaheRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -597,23 +649,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def BrightnessContrastChangeFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def BrightnessContrastChangeFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/BrightnessContrastChangeFilter',
+            "/vtpl_grpc_server.AdjustService/BrightnessContrastChangeFilter",
             adjust__pb2.BrightnessContrastChangeRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -624,23 +679,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def IntensityChangeFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def IntensityChangeFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/IntensityChangeFilter',
+            "/vtpl_grpc_server.AdjustService/IntensityChangeFilter",
             adjust__pb2.IntensityChangeRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -651,23 +709,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def HueSatValChangeFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def HueSatValChangeFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/HueSatValChangeFilter',
+            "/vtpl_grpc_server.AdjustService/HueSatValChangeFilter",
             adjust__pb2.HueSatValChangeRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -678,23 +739,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def SaturationChangeFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def SaturationChangeFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/SaturationChangeFilter',
+            "/vtpl_grpc_server.AdjustService/SaturationChangeFilter",
             adjust__pb2.SaturationChangeRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -705,23 +769,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def HueChangeFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def HueChangeFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/HueChangeFilter',
+            "/vtpl_grpc_server.AdjustService/HueChangeFilter",
             adjust__pb2.HueChangeRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -732,23 +799,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def ExposureControlFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def ExposureControlFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/ExposureControlFilter',
+            "/vtpl_grpc_server.AdjustService/ExposureControlFilter",
             adjust__pb2.ExposureControlRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -759,23 +829,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def CurveFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def CurveFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/CurveFilter',
+            "/vtpl_grpc_server.AdjustService/CurveFilter",
             adjust__pb2.CurveRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -786,23 +859,26 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def HistogramEqualizationFilter(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def HistogramEqualizationFilter(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vtpl_grpc_server.AdjustService/HistogramEqualizationFilter',
+            "/vtpl_grpc_server.AdjustService/HistogramEqualizationFilter",
             adjust__pb2.HistogramEqualizationRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
@@ -813,4 +889,5 @@ class AdjustService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )

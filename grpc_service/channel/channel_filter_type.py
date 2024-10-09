@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class ChannelProcessingType(Enum):
     GRAYSCALE = "grayscale"
     COLOR_SWITCH = "color_switch"

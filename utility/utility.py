@@ -1,7 +1,8 @@
 import os
 
+
 def count_images_in_folder(folder_path):
-    image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
+    image_extensions = (".jpg", ".jpeg", ".png", ".bmp", ".gif")
 
     image_count = 0
 
@@ -16,22 +17,27 @@ def count_images_in_folder(folder_path):
 import os
 import re
 
+
 def extract_number(filename):
-    match = re.search(r'\d+', filename)
+    match = re.search(r"\d+", filename)
     return int(match.group()) if match else None
 
+
 def list_image_files(directory):
-    image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff']
+    image_extensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff"]
     files = [
-        entry.name for entry in os.scandir(directory) 
-        if entry.is_file() and os.path.splitext(entry.name)[1].lower() in image_extensions
+        entry.name
+        for entry in os.scandir(directory)
+        if entry.is_file()
+        and os.path.splitext(entry.name)[1].lower() in image_extensions
     ]
-    
+
     return sorted(files, key=extract_number, reverse=False)
 
 
 import os
 import shutil
+
 
 def clear_output_folder(folder_path):
     # Check if the folder exists
@@ -46,6 +52,6 @@ def clear_output_folder(folder_path):
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)  # Remove directory
             except Exception as e:
-                print(f'Failed to delete {file_path}. Reason: {e}')
+                print(f"Failed to delete {file_path}. Reason: {e}")
     else:
-        print(f'The folder {folder_path} does not exist.')
+        print(f"The folder {folder_path} does not exist.")

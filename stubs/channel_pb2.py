@@ -9,36 +9,32 @@ from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+
 _runtime_version.ValidateProtobufRuntimeVersion(
-    _runtime_version.Domain.PUBLIC,
-    5,
-    27,
-    2,
-    '',
-    'channel.proto'
+    _runtime_version.Domain.PUBLIC, 5, 27, 2, "", "channel.proto"
 )
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rchannel.proto\"l\n\x10GrayScaleRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\"\x87\x01\n\x12\x43olorSwitchRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\"\xc1\x01\n\x16\x43olorConversionRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x19\n\x11sub_process_black\x18\x05 \x01(\t\x12\x19\n\x11sub_process_white\x18\x06 \x01(\t\x12\x17\n\x0fsub_process_mid\x18\x07 \x01(\t\"\x90\x01\n\x1b\x45xtractSingleChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\"\x91\x01\n\x1c\x44isplaySlectedChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b'\n\rchannel.proto"l\n\x10GrayScaleRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t"\x87\x01\n\x12\x43olorSwitchRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03"\xc1\x01\n\x16\x43olorConversionRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x19\n\x11sub_process_black\x18\x05 \x01(\t\x12\x19\n\x11sub_process_white\x18\x06 \x01(\t\x12\x17\n\x0fsub_process_mid\x18\x07 \x01(\t"\x90\x01\n\x1b\x45xtractSingleChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03"\x91\x01\n\x1c\x44isplaySlectedChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x62\x06proto3'
+)
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'channel_pb2', _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "channel_pb2", _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
-  _globals['_GRAYSCALEREQUEST']._serialized_start=17
-  _globals['_GRAYSCALEREQUEST']._serialized_end=125
-  _globals['_COLORSWITCHREQUEST']._serialized_start=128
-  _globals['_COLORSWITCHREQUEST']._serialized_end=263
-  _globals['_COLORCONVERSIONREQUEST']._serialized_start=266
-  _globals['_COLORCONVERSIONREQUEST']._serialized_end=459
-  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_start=462
-  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_end=606
-  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_start=609
-  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_end=754
+    DESCRIPTOR._loaded_options = None
+    _globals["_GRAYSCALEREQUEST"]._serialized_start = 17
+    _globals["_GRAYSCALEREQUEST"]._serialized_end = 125
+    _globals["_COLORSWITCHREQUEST"]._serialized_start = 128
+    _globals["_COLORSWITCHREQUEST"]._serialized_end = 263
+    _globals["_COLORCONVERSIONREQUEST"]._serialized_start = 266
+    _globals["_COLORCONVERSIONREQUEST"]._serialized_end = 459
+    _globals["_EXTRACTSINGLECHANNELREQUEST"]._serialized_start = 462
+    _globals["_EXTRACTSINGLECHANNELREQUEST"]._serialized_end = 606
+    _globals["_DISPLAYSLECTEDCHANNELREQUEST"]._serialized_start = 609
+    _globals["_DISPLAYSLECTEDCHANNELREQUEST"]._serialized_end = 754
 # @@protoc_insertion_point(module_scope)

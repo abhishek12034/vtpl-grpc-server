@@ -8,7 +8,11 @@ from stubs import job_pb2
 from grpc_service.base.base_filter_type import StatusMessage
 import uuid
 import grpc
+from utility.utility import count_images_in_folder
+import os
+
 logger = setup_logging()
+
 
 class BaseService:
     def __init__(self):
@@ -31,24 +35,26 @@ class BaseService:
             return job_pb2.JobStatusResponse(
                 job_id=job_id,
                 percentage=0.0,
-                in_img_path='',
-                out_img_path='',
+                in_img_path="",
+                out_img_path="",
                 total_input_images=0,
                 processed_image_count=0,
+                process_type=job_status["process_type"],
                 status_message=StatusMessage.JOB_NOT_FOUND.value,
                 completed=False,
-                error=error
+                error=error,
             )
         return job_pb2.JobStatusResponse(
-            job_id=job_status['job_id'],
-            percentage=job_status['percentage'],
-            in_img_path=job_status['in_img_path'],
-            out_img_path=job_status['out_img_path'],
-            total_input_images=job_status['total_images'],
-            processed_image_count=job_status['processed_image_count'],
-            status_message=job_status['status_message'],
-            completed=job_status['completed'],
-            error=error if error else job_status.get('error')
+            job_id=job_status["job_id"],
+            percentage=job_status["percentage"],
+            in_img_path=job_status["in_img_path"],
+            out_img_path=job_status["out_img_path"],
+            total_input_images=job_status["total_images"],
+            processed_image_count=job_status["processed_image_count"],
+            process_type=job_status["process_type"],
+            status_message=job_status["status_message"],
+            completed=job_status["completed"],
+            error=error if error else job_status.get("error"),
         )
 
     def update_progress_in_redis(self, job_id):
@@ -61,59 +67,83 @@ class BaseService:
 
                 with self.lock:
                     job_status = self.job_status.get(job_id)
-                    if job_status['status_message'] == StatusMessage.JOB_FAILED.value:
+                    if job_status["status_message"] == StatusMessage.JOB_FAILED.value:
                         break
                     if job_status:
                         # Calculate percentage
-                        if job_status['total_images'] > 0:
-                            job_status['percentage'] = (job_status['processed_image_count'] * 100) / job_status['total_images']
-                        else:
-                            job_status['percentage'] = 100  # Prevent division by zero
+                        if job_status["total_images"] > 0:
+                            job_status["percentage"] = (
+                                job_status["processed_image_count"] * 100
+                            ) / job_status["total_images"]
 
-                        if job_status['percentage'] == 100:
-                            job_status['status_message'] = StatusMessage.JOB_COMPLETED.value
+                        if job_status["percentage"] == 100:
+                            job_status["status_message"] = (
+                                StatusMessage.JOB_COMPLETED.value
+                            )
+                            job_status["completed"] = True
 
                         # Store job status in Redis
                         self.store_job_status_in_redis(job_id, job_status)
-                        logger.info(f"Job {job_id} progress updated in Redis: {job_status}")
+                        logger.info(
+                            f"Job {job_id} progress updated in Redis: {job_status}"
+                        )
 
-                    if job_status and job_status['completed']:
+                    if job_status and job_status["completed"]:
                         logger.info(f"Job {job_id} is completed.")
                         break
             except Exception as e:
                 logger.error(f"Error updating progress for Job {job_id}: {e}")
                 retry_count += 1
                 if retry_count >= max_retries:
-                    job_status['status_message'] = StatusMessage.JOB_FAILED.value
-                    logger.error(f"Max retries reached for Job {job_id}. Exiting the update loop.")
+                    job_status["status_message"] = StatusMessage.JOB_FAILED.value
+                    logger.error(
+                        f"Max retries reached for Job {job_id}. Exiting the update loop."
+                    )
                     break
                 else:
                     logger.info(f"Retrying... ({retry_count}/{max_retries})")
-    def _start_image_processing_job(self, request,context, process_type, processing_func):
+
+    def _start_image_processing_job(
+        self, request, context, process_type, processing_func
+    ):
+
         try:
             job_id = str(uuid.uuid4())
-
+            total_images = (
+                count_images_in_folder(request.in_img_path)
+                if request.process_all_flag
+                else len(request.in_img_list)
+            )
+            if total_images == 0:
+                raise ValueError(
+                    "No images found to process. Either provide a valid image path or image list."
+                )
             # Validate required fields
             if not request.in_img_path:
                 raise ValueError("in_img_path is required")
+            if not os.path.exists(request.in_img_path):
+                raise ValueError(f"in_img_path does not exist: {request.in_img_path}")
             if request.out_img_path == "":
                 raise ValueError("out_img_path is required")
-            if request.process_all_flag is None:
-                raise ValueError("process_all_flag is required")
-            
+            if not os.path.exists(os.path.dirname(request.out_img_path)):
+                raise ValueError(
+                    f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
+                )
+
             # Initialize job status
             with self.lock:
                 self.job_status[job_id] = {
-                    'job_id': job_id,
-                    'percentage': 0.0,
-                    'in_img_path': request.in_img_path,
-                    'out_img_path': request.out_img_path,
-                    'total_images': 0,
-                    'processed_image_count': 0,
-                    'status_message': StatusMessage.JOB_STARTED.value,
-                    'completed': False,
-                    'error': None,
-                    'thread_id': None
+                    "job_id": job_id,
+                    "percentage": 0.0,
+                    "in_img_path": request.in_img_path,
+                    "out_img_path": request.out_img_path,
+                    "total_images": total_images,
+                    "processed_image_count": 0,
+                    "status_message": StatusMessage.JOB_STARTED.value,
+                    "process_type": process_type,
+                    "completed": False,
+                    "error": None,
+                    "thread_id": None,
                 }
             logger.info(f"Job Created: {self.job_status[job_id]}")
 
@@ -121,16 +151,22 @@ class BaseService:
             self.executor.submit(self.update_progress_in_redis, job_id)
 
             # Submit the image processing task
-            self.executor.submit(processing_func, request,context, job_id, process_type)
+            self.executor.submit(
+                processing_func, request, context, job_id, process_type
+            )
 
             # Return the initial job status response
-            return self.create_job_status_response(job_id, job_status=self.job_status[job_id])
-
+            return self.create_job_status_response(
+                job_id, job_status=self.job_status[job_id]
+            )
         except ValueError as ve:
             # Handle validation errors and send a specific message
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, str(ve))
-        
+
         except Exception as e:
             # Handle general errors and return a more generic error message
             logger.error(f"Error occurred while starting job: {str(e)}")
-            context.abort(grpc.StatusCode.INTERNAL, "Internal error occurred during job initialization")
+            context.abort(
+                grpc.StatusCode.INTERNAL,
+                "Internal error occurred during job initialization",
+            )
