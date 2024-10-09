@@ -1,4 +1,6 @@
 from enum import Enum
+
+
 class StatusMessage(Enum):
     JOB_STARTED = "Job started"
     JOB_COMPLETED = "Job completed"

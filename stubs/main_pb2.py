@@ -9,13 +9,9 @@ from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+
 _runtime_version.ValidateProtobufRuntimeVersion(
-    _runtime_version.Domain.PUBLIC,
-    5,
-    27,
-    2,
-    '',
-    'main.proto'
+    _runtime_version.Domain.PUBLIC, 5, 27, 2, "", "main.proto"
 )
 # @@protoc_insertion_point(imports)
 
@@ -27,15 +23,17 @@ import channel_pb2 as channel__pb2
 import adjust_pb2 as adjust__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nmain.proto\x12\x10vtpl_grpc_server\x1a\tjob.proto\x1a\rchannel.proto\x1a\x0c\x61\x64just.proto2\xa8\x03\n\x0e\x43hannelService\x12\x38\n\x0fGrayscaleFilter\x12\x11.GrayScaleRequest\x1a\x12.JobStatusResponse\x12<\n\x11\x43olorSwitchFilter\x12\x13.ColorSwitchRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x43olorConversionFilter\x12\x17.ColorConversionRequest\x1a\x12.JobStatusResponse\x12N\n\x1a\x45xtractSingleChannelFilter\x12\x1c.ExtractSingleChannelRequest\x1a\x12.JobStatusResponse\x12Q\n\x1c\x44isplaySelectedChannelFilter\x12\x1d.DisplaySlectedChannelRequest\x1a\x12.JobStatusResponse\x12\x35\n\x0cGetJobStatus\x12\x11.JobStatusRequest\x1a\x12.JobStatusResponse2\xf7\x05\n\rAdjustService\x12>\n\x12LevelControlFilter\x12\x14.LevelControlRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x43ontrastStretchFilter\x12\x17.ContrastStretchRequest\x1a\x12.JobStatusResponse\x12\x30\n\x0b\x43laheFilter\x12\r.ClaheRequest\x1a\x12.JobStatusResponse\x12V\n\x1e\x42rightnessContrastChangeFilter\x12 .BrightnessContrastChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15IntensityChangeFilter\x12\x17.IntensityChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15HueSatValChangeFilter\x12\x17.HueSatValChangeRequest\x1a\x12.JobStatusResponse\x12\x46\n\x16SaturationChangeFilter\x12\x18.SaturationChangeRequest\x1a\x12.JobStatusResponse\x12\x38\n\x0fHueChangeFilter\x12\x11.HueChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x45xposureControlFilter\x12\x17.ExposureControlRequest\x1a\x12.JobStatusResponse\x12\x30\n\x0b\x43urveFilter\x12\r.CurveRequest\x1a\x12.JobStatusResponse\x12P\n\x1bHistogramEqualizationFilter\x12\x1d.HistogramEqualizationRequest\x1a\x12.JobStatusResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b"\n\nmain.proto\x12\x10vtpl_grpc_server\x1a\tjob.proto\x1a\rchannel.proto\x1a\x0c\x61\x64just.proto2\xa8\x03\n\x0e\x43hannelService\x12\x38\n\x0fGrayscaleFilter\x12\x11.GrayScaleRequest\x1a\x12.JobStatusResponse\x12<\n\x11\x43olorSwitchFilter\x12\x13.ColorSwitchRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x43olorConversionFilter\x12\x17.ColorConversionRequest\x1a\x12.JobStatusResponse\x12N\n\x1a\x45xtractSingleChannelFilter\x12\x1c.ExtractSingleChannelRequest\x1a\x12.JobStatusResponse\x12Q\n\x1c\x44isplaySelectedChannelFilter\x12\x1d.DisplaySlectedChannelRequest\x1a\x12.JobStatusResponse\x12\x35\n\x0cGetJobStatus\x12\x11.JobStatusRequest\x1a\x12.JobStatusResponse2\xf7\x05\n\rAdjustService\x12>\n\x12LevelControlFilter\x12\x14.LevelControlRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x43ontrastStretchFilter\x12\x17.ContrastStretchRequest\x1a\x12.JobStatusResponse\x12\x30\n\x0b\x43laheFilter\x12\r.ClaheRequest\x1a\x12.JobStatusResponse\x12V\n\x1e\x42rightnessContrastChangeFilter\x12 .BrightnessContrastChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15IntensityChangeFilter\x12\x17.IntensityChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15HueSatValChangeFilter\x12\x17.HueSatValChangeRequest\x1a\x12.JobStatusResponse\x12\x46\n\x16SaturationChangeFilter\x12\x18.SaturationChangeRequest\x1a\x12.JobStatusResponse\x12\x38\n\x0fHueChangeFilter\x12\x11.HueChangeRequest\x1a\x12.JobStatusResponse\x12\x44\n\x15\x45xposureControlFilter\x12\x17.ExposureControlRequest\x1a\x12.JobStatusResponse\x12\x30\n\x0b\x43urveFilter\x12\r.CurveRequest\x1a\x12.JobStatusResponse\x12P\n\x1bHistogramEqualizationFilter\x12\x1d.HistogramEqualizationRequest\x1a\x12.JobStatusResponseb\x06proto3"
+)
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'main_pb2', _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "main_pb2", _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
-  _globals['_CHANNELSERVICE']._serialized_start=73
-  _globals['_CHANNELSERVICE']._serialized_end=497
-  _globals['_ADJUSTSERVICE']._serialized_start=500
-  _globals['_ADJUSTSERVICE']._serialized_end=1259
+    DESCRIPTOR._loaded_options = None
+    _globals["_CHANNELSERVICE"]._serialized_start = 73
+    _globals["_CHANNELSERVICE"]._serialized_end = 497
+    _globals["_ADJUSTSERVICE"]._serialized_start = 500
+    _globals["_ADJUSTSERVICE"]._serialized_end = 1259
 # @@protoc_insertion_point(module_scope)
