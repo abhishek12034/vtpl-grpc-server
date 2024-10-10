@@ -33,6 +33,7 @@ jobs:
           git config --global user.email "abhishek.udiya@videonetics.com"
           git config --global user.name "Abhishek"
           git config --list  # Check the applied Git settings
+
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
@@ -40,5 +41,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            chmod +x ./deploy.sh
-            ./deploy.sh
+            chmod +x .github/workflows/deploy.sh  # Correct path to the script
+            .github/workflows/deploy.sh           # Correctly reference the script's path
