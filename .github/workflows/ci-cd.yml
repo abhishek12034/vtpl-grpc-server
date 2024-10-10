@@ -42,4 +42,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             chmod +x .github/workflows/deploy.sh  # Correct path to the script
-            .github/workflows/deploy.sh           # Correctly reference the script's path
+            ./.github/workflows/deploy.sh           # Correctly reference the script's path
