@@ -41,5 +41,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            chmod +x .github/workflows/deploy.sh  # Correct path to the script
-            ./.github/workflows/deploy.sh           # Correctly reference the script's path
+            chmod +x .github/workflows/deply.sh  # Correct path to the script
+            ./.github/workflows/deply.sh           # Correctly reference the script's path
