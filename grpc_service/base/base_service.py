@@ -114,20 +114,34 @@ class BaseService:
                 if request.process_all_flag
                 else len(request.in_img_list)
             )
-            if total_images == 0:
-                raise ValueError(
-                    "No images found to process. Either provide a valid image path or image list."
-                )
-            # Validate required fields
+
+            # # Validate required fields
             if not request.in_img_path:
                 raise ValueError("in_img_path is required")
-            if not os.path.exists(request.in_img_path):
-                raise ValueError(f"in_img_path does not exist: {request.in_img_path}")
+
             if request.out_img_path == "":
                 raise ValueError("out_img_path is required")
+
+            # Check if in_img_path exists and if all images in in_img_list are present
+            if not request.process_all_flag and not all(
+                img in os.listdir(request.in_img_path) for img in request.in_img_list
+            ):
+                missing_images = [
+                    img
+                    for img in request.in_img_list
+                    if img not in os.listdir(request.in_img_path)
+                ]
+                raise ValueError(
+                    f"Either in_img_path does not exist: {request.in_img_path} or the following images do not exist in the directory: {', '.join(missing_images)}."
+                )
+
             if not os.path.exists(os.path.dirname(request.out_img_path)):
                 raise ValueError(
                     f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
+                )
+            if total_images == 0:
+                raise ValueError(
+                    "No images found to process. Either provide a valid image path or image list."
                 )
 
             # Initialize job status
