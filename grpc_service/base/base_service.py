@@ -22,9 +22,11 @@ class BaseService:
         self.executor = ThreadPoolExecutor(max_workers=10)
 
     def store_job_status_in_redis(self, job_id, job_status):
+        EXPIRATION_TIME = 60 * 60 * 24
         try:
             job_status_json = json.dumps(job_status)
-            self.redis_client.set(job_id, job_status_json)
+            self.redis_client.set(job_id, job_status_json, ex=EXPIRATION_TIME)
+            self.redis_client.set
             logger.info(f"Job status for {job_id} stored in Redis: {job_status}")
         except Exception as e:
             logger.error(f"Error storing job status in Redis for {job_id}: {e}")
