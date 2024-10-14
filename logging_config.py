@@ -1,5 +1,6 @@
 import logging
 import os
+from logging.handlers import TimedRotatingFileHandler
 
 
 def setup_logging():
@@ -13,10 +14,15 @@ def setup_logging():
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.ERROR)
 
-        # File handler (single file for all logs)
+        # File handler with timed rotation
         log_path = os.path.join("logs", "grpc_server.log")
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        file_handler = logging.FileHandler("logs/grpc_server.log")  # Change here
+        file_handler = TimedRotatingFileHandler(
+            log_path,
+            when="D",
+            interval=2,
+            backupCount=5,  # Rotate every minute, keep 1 backup
+        )
         file_handler.setLevel(logging.DEBUG)
 
         # Formatters
