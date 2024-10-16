@@ -160,6 +160,7 @@ class channel_process:
                     # ITU-R 601-2 luma transform
                     # L = R * 299/1000 + G * 587/1000 + B * 114/1000
                     out_img = in_img.convert(mode="L")
+                    out_img = out_img.convert("RGB")
 
                 # color_conversion
                 elif process_type == "color_conversion":
