@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from logging_config import setup_logging
 from config.redis_config import get_redis_client
 from stubs import job_pb2
-from grpc_service.base.base_filter_type import StatusMessage
+from grpc_service.base.base_filter_type import StatusMessage, JobStatusCode
 import uuid
 import grpc
 from utility.utility import count_images_in_folder
@@ -32,7 +32,9 @@ class BaseService:
             logger.error(f"Error storing job status in Redis for {job_id}: {e}")
             raise e
 
-    def create_job_status_response(self, job_id, job_status=None, error=None):
+    def create_job_status_response(
+        self, job_id, job_status=None, error=None, status_code=None
+    ):
         if job_status is None:
             return job_pb2.JobStatusResponse(
                 job_id=job_id,
@@ -41,10 +43,11 @@ class BaseService:
                 out_img_path="",
                 total_input_images=0,
                 processed_image_count=0,
-                process_type=job_status["process_type"],
+                process_type=None,
                 status_message=StatusMessage.JOB_NOT_FOUND.value,
                 completed=False,
                 error=error,
+                status_code=JobStatusCode.NOT_FOUND.value,
             )
         return job_pb2.JobStatusResponse(
             job_id=job_status["job_id"],
@@ -57,6 +60,7 @@ class BaseService:
             status_message=job_status["status_message"],
             completed=job_status["completed"],
             error=error if error else job_status.get("error"),
+            status_code=job_status["status_code"],
         )
 
     def update_progress_in_redis(self, job_id):
@@ -74,14 +78,16 @@ class BaseService:
                     if job_status:
                         # Calculate percentage
                         if job_status["total_images"] > 0:
-                            job_status["percentage"] = (
-                                job_status["processed_image_count"] * 100
-                            ) / job_status["total_images"]
+                            job_status["percentage"] = int(
+                                (job_status["processed_image_count"] * 100)
+                                / job_status["total_images"]
+                            )
 
                         if job_status["percentage"] == 100:
                             job_status["status_message"] = (
                                 StatusMessage.JOB_COMPLETED.value
                             )
+                            job_status["status_code"] = JobStatusCode.COMPLETED.value
                             job_status["completed"] = True
 
                         # Store job status in Redis
@@ -98,6 +104,8 @@ class BaseService:
                 retry_count += 1
                 if retry_count >= max_retries:
                     job_status["status_message"] = StatusMessage.JOB_FAILED.value
+                    job_status["status_code"] = JobStatusCode.FAILED.value
+
                     logger.error(
                         f"Max retries reached for Job {job_id}. Exiting the update loop."
                     )
@@ -160,6 +168,7 @@ class BaseService:
                     "completed": False,
                     "error": None,
                     "thread_id": None,
+                    "status_code": JobStatusCode.IN_PROGRESS.value,
                 }
             logger.info(f"Job Created: {self.job_status[job_id]}")
 
