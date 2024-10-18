@@ -15,4 +15,5 @@ message JobStatusResponse {
     bool completed = 8;
     string error = 9;
     string process_type=10;
+    int32 status_code = 11; // New status code field
 }

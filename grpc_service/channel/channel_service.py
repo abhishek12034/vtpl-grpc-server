@@ -11,7 +11,7 @@ from utility.utility import count_images_in_folder, list_image_files
 import uuid
 import json
 from logging_config import setup_logging
-from grpc_service.base.base_filter_type import StatusMessage
+from grpc_service.base.base_filter_type import StatusMessage, JobStatusCode
 from grpc_service.channel.channel_filter_type import ChannelProcessingType
 from grpc_service.base.base_service import BaseService
 import os
@@ -71,6 +71,15 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
             job_status_json = self.redis_client.get(job_id)
             if job_status_json:
                 job_status = json.loads(job_status_json)
+
+                # Check if the job status code is 500 (FAILED)
+                if job_status.get("status_code") == JobStatusCode.FAILED.value:
+                    logger.error(f"Job {job_id} has failed.")
+                    # context.set_details(f"Job {job_id} has failed.")
+                    # context.set_code(grpc.StatusCode.INTERNAL)
+                    return self.create_job_status_response(job_id, job_status)
+
+                # If status code is not 500, return the job status as usual
                 return self.create_job_status_response(job_id, job_status)
             else:
                 logger.warning(f"Job ID {job_id} not found in Redis.")
@@ -208,6 +217,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 self.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_COMPLETED.value
+                self.job_status[job_id]["status_code"] = JobStatusCode.COMPLETED.value
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
         except Exception as e:
@@ -217,6 +227,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 self.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
+                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
                 self.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])

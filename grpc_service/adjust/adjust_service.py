@@ -1,6 +1,6 @@
 from .adjust_filter_type import AdjustProcessingType
 from stubs import main_pb2_grpc
-from grpc_service.base.base_filter_type import StatusMessage
+from grpc_service.base.base_filter_type import JobStatusCode, StatusMessage
 from image_processing_algorithm.vid2img_adjust_x import adjust_process
 from grpc_service.base.base_service import BaseService
 from logging_config import setup_logging
@@ -142,6 +142,8 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 self.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_COMPLETED.value
+                self.job_status["status_code"] = JobStatusCode.COMPLETED.value
+
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
         except Exception as e:
@@ -151,6 +153,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 self.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
+                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
                 self.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
