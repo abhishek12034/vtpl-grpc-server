@@ -1,0 +1,29 @@
+version: '3.8'  # Specify the Compose file version
+
+services:
+  redis:
+    image: redis:latest  # Use the latest Redis image
+    container_name: my-redis  # Name for the Redis container
+    ports:
+      - "6379:6379"  # Expose Redis on port 6379
+    networks:
+      - app-network  # Use a custom network for communication
+
+  grpc_service:
+    build: .  # Build the image from the Dockerfile in the current directory
+    container_name: my-grpc-service  # Name for the gRPC service container
+    ports:
+      - "50051:50051"  # Expose gRPC on port 50051
+    volumes:
+      - /home/vadmin/Documents/Image_data/vid_1:/app/input_images  # Mount input images
+      - /home/vadmin/Documents/Image_data/vid_2:/app/output_images  # Mount output images
+    environment:
+      REDIS_HOST: redis  # Use the service name as the Redis host
+      REDIS_PORT: 6379  # Set the Redis port
+    depends_on:
+      - redis  # Ensure Redis starts before the gRPC service
+    networks:
+      - app-network  # Use the same network for communication
+
+networks:
+  app-network:  # Define a custom network for the app and Redis
