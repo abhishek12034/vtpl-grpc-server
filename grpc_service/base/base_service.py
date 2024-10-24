@@ -146,6 +146,7 @@ class BaseService:
                 )
 
             if not os.path.exists(os.path.dirname(request.out_img_path)):
+                logger.info(f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}")
                 raise ValueError(
                     f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
                 )
