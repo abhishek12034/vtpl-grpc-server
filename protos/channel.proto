@@ -6,6 +6,8 @@ message GrayScaleRequest{
     bool process_all_flag=2;
     repeated string in_img_list=3;
     string out_img_path = 4;
+    bool is_preview_flag = 5;
+
 }
 
 message ColorSwitchRequest{
@@ -14,6 +16,8 @@ message ColorSwitchRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     int64 sub_process_num = 5;
+    bool is_preview_flag = 6;
+
 }
 message ColorConversionRequest{
     string in_img_path=1;
@@ -23,6 +27,8 @@ message ColorConversionRequest{
     string sub_process_black = 5;
     string sub_process_white = 6;
     string sub_process_mid = 7;
+    bool is_preview_flag = 8;
+
 }
 message ExtractSingleChannelRequest{
     string in_img_path=1;
@@ -30,6 +36,8 @@ message ExtractSingleChannelRequest{
     repeated string in_img_list=3;
     string out_img_path = 4; 
     int64 sub_process_num = 5;
+    bool is_preview_flag = 6;
+
 }
 
 message DisplaySlectedChannelRequest{
@@ -38,4 +46,6 @@ message DisplaySlectedChannelRequest{
     repeated string in_img_list=3;
     string out_img_path = 4; 
     int64 sub_process_num = 5;
+    bool is_preview_flag = 6;
+
 }

@@ -10,6 +10,7 @@ message LevelControlRequest{
     float in_level_en = 8;
     float out_level_st = 9;
     float out_level_en = 10;
+    bool is_preview_flag = 11;
 }
 
 message ContrastStretchRequest{
@@ -18,7 +19,7 @@ message ContrastStretchRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     float in_con_stretch_amt = 5;
-
+    bool is_preview_flag = 6;
 }
 
 message ClaheRequest{
@@ -28,7 +29,9 @@ message ClaheRequest{
     string out_img_path = 4;
     double in_clip_limit = 5;   
     int32 grid_row = 6;          
-    int32 grid_col = 7;  
+    int32 grid_col = 7;
+    bool is_preview_flag = 8;
+  
 }
 
 message BrightnessContrastChangeRequest{
@@ -38,6 +41,8 @@ message BrightnessContrastChangeRequest{
     string out_img_path = 4;
     double brightness_amount_change =5;
     double contrast_change_factor=6;
+    bool is_preview_flag = 7;
+
 }
 
 message IntensityChangeRequest{
@@ -46,6 +51,9 @@ message IntensityChangeRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     double intensity_value_amount_change = 5;
+    bool is_preview_flag = 6;
+    
+
 
 }
 
@@ -57,6 +65,8 @@ message HueSatValChangeRequest{
     double intensity_value_amount_change = 5; 
     int64 hue_degree_change =6;
     int32 saturation_times_change =7;
+    bool is_preview_flag = 8;
+
 }
 
 message SaturationChangeRequest{
@@ -65,6 +75,8 @@ message SaturationChangeRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     int32 saturation_times_change =5;
+    bool is_preview_flag = 6;
+
 }
 message HueChangeRequest{
     string in_img_path=1;
@@ -72,6 +84,8 @@ message HueChangeRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     int64 hue_degree_change =5;
+    bool is_preview_flag = 6;
+
 }
 
 
@@ -81,6 +95,8 @@ message ExposureControlRequest{
     repeated string in_img_list=3;
     string out_img_path = 4;
     int64 exposure_times=5;
+    bool is_preview_flag = 6;
+
  }
 
  message CurveRequest{
@@ -93,6 +109,7 @@ message ExposureControlRequest{
     bool curve_color_ch_green =8;
     repeated float curve_x_list=9;
     repeated float curve_y_list =10;
+    bool is_preview_flag = 11;
 
  }
 
@@ -106,6 +123,7 @@ message ExposureControlRequest{
     int64 in_st_col=7;
     int64 in_en_col=8;
     bool histogram_calc_on_full_img_flag =9;
+    bool is_preview_flag = 10;
 
  }
 

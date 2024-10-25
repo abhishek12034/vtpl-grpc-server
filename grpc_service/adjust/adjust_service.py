@@ -99,7 +99,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
             self.process_histogram_equalization,
         )
 
-    def process_images(self, request, job_id, process_type, adjust_params):
+    def process_images(self, request, job_id, process_type, adjust_params, img_chunk):
         try:
 
             # List images based on the flag
@@ -113,11 +113,10 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 self.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_STARTED.value
-                self.job_status[job_id]["total_images"] = len(in_img_list)
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
             # Process each image in the list
-            for in_img in in_img_list:
+            for in_img in img_chunk:
                 self.processor.mod_adjust(
                     process_all_flag=False,
                     in_img_path=request.in_img_path,
@@ -129,22 +128,12 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 # Update processed image count
                 with self.lock:
                     self.job_status[job_id]["processed_image_count"] += 1
-                    self.job_status[job_id]["percentage"] = (
-                        self.job_status[job_id]["processed_image_count"]
-                        / self.job_status[job_id]["total_images"]
-                        * 100
-                    )
-                    self.store_job_status_in_redis(job_id, self.job_status[job_id])
-
-            # Mark job as completed
-            with self.lock:
-                self.job_status[job_id]["completed"] = True
-                self.job_status[job_id][
-                    "status_message"
-                ] = StatusMessage.JOB_COMPLETED.value
-                self.job_status["status_code"] = JobStatusCode.COMPLETED.value
-
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                    # self.job_status[job_id]["percentage"] = (
+                    #     self.job_status[job_id]["processed_image_count"]
+                    #     / self.job_status[job_id]["total_images"]
+                    #     * 100
+                    # )
+                    # self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
         except Exception as e:
             # Handle exceptions and update job status as failed
@@ -159,7 +148,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
                 raise e
 
-    def process_level_control(self, request, context, job_id, process_type):
+    def process_level_control(self, request, context, job_id, process_type, img_chunk):
         try:
 
             self.processor.mod_adjust(
@@ -174,7 +163,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "level_control_set_lines_flag": False,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -184,7 +173,9 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_exposure_control(self, request, context, job_id, process_type):
+    def process_exposure_control(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             self.processor.mod_adjust(
@@ -195,7 +186,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "set_exposure_curve_flag": False,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -205,7 +196,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_curve(self, request, context, job_id, process_type):
+    def process_curve(self, request, context, job_id, process_type, img_chunk):
         try:
 
             self.processor.mod_adjust(
@@ -220,7 +211,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "curve_color_ch_green": request.curve_color_ch_green,
                 "curve_color_ch_blue": request.curve_color_ch_blue,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -231,7 +222,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
             )
 
     def process_brightness_contrast_change(
-        self, request, context, job_id, process_type
+        self, request, context, job_id, process_type, img_chunk
     ):
         try:
 
@@ -240,7 +231,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "contrast_change_factor": request.contrast_change_factor,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -250,14 +241,16 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_intensity_change(self, request, context, job_id, process_type):
+    def process_intensity_change(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
                 "intensity_value_amount_change": request.intensity_value_amount_change,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -267,14 +260,16 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_saturation_change(self, request, context, job_id, process_type):
+    def process_saturation_change(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
                 "saturation_times_change": request.saturation_times_change,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -284,14 +279,14 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_hue_change(self, request, context, job_id, process_type):
+    def process_hue_change(self, request, context, job_id, process_type, img_chunk):
         try:
 
             adjust_params = {
                 "hue_degree_change": request.hue_degree_change,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -301,7 +296,9 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_hue_sat_val_change(self, request, context, job_id, process_type):
+    def process_hue_sat_val_change(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
@@ -310,7 +307,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "saturation_times_change": request.saturation_times_change,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             # Handle general errors and return a more generic error message
@@ -320,13 +317,15 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_contrast_stretch(self, request, context, job_id, process_type):
+    def process_contrast_stretch(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
             adjust_params = {
                 "in_con_stretch_amt": request.in_con_stretch_amt,
                 "process_type": process_type,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
         except Exception as e:
             # Handle general errors and return a more generic error message
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -335,7 +334,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_clahe(self, request, context, job_id, process_type):
+    def process_clahe(self, request, context, job_id, process_type, img_chunk):
         try:
             adjust_params = {
                 "in_clip_limit": request.in_clip_limit,
@@ -345,7 +344,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
             }
             print("Hello from clahe")
 
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
         except Exception as e:
             # Handle general errors and return a more generic error message
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -354,7 +353,9 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_histogram_equalization(self, request, context, job_id, process_type):
+    def process_histogram_equalization(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
             adjust_params = {
                 "in_st_row": request.in_st_row,
@@ -365,7 +366,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "histogram_calc_on_full_img_flag": request.histogram_calc_on_full_img_flag,
             }
 
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
         except Exception as e:
             # Handle general errors and return a more generic error message
             logger.error(f"Error occurred while handling params: {str(e)}")

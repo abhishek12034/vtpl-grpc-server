@@ -10,6 +10,8 @@ import uuid
 import grpc
 from utility.utility import count_images_in_folder
 import os
+from utility.utility import count_images_in_folder, list_image_files
+from queue import PriorityQueue
 
 logger = setup_logging()
 
@@ -20,6 +22,7 @@ class BaseService:
         self.lock = threading.Lock()
         self.redis_client = get_redis_client()
         self.executor = ThreadPoolExecutor(max_workers=10)
+        self.priority_queue = PriorityQueue()  # Priority queue for tasks
 
     def store_job_status_in_redis(self, job_id, job_status):
         EXPIRATION_TIME = 60 * 60 * 24
@@ -82,13 +85,15 @@ class BaseService:
                                 (job_status["processed_image_count"] * 100)
                                 / job_status["total_images"]
                             )
-
                         if job_status["percentage"] == 100:
                             job_status["status_message"] = (
                                 StatusMessage.JOB_COMPLETED.value
                             )
                             job_status["status_code"] = JobStatusCode.COMPLETED.value
                             job_status["completed"] = True
+                            logger.info(
+                                f"Total Time Taken for Job Id {job_id} is {time.time()-self.start_time}"
+                            )
 
                         # Store job status in Redis
                         self.store_job_status_in_redis(job_id, job_status)
@@ -113,11 +118,18 @@ class BaseService:
                 else:
                     logger.info(f"Retrying... ({retry_count}/{max_retries})")
 
+    def chunkify_list(self, lst, n):
+        """Divide a list into chunks of n elements."""
+        for i in range(0, len(lst), n):
+            yield lst[i : i + n]
+
     def _start_image_processing_job(
         self, request, context, process_type, processing_func
     ):
 
         try:
+            self.start_time = time.time()
+
             job_id = str(uuid.uuid4())
             total_images = (
                 count_images_in_folder(request.in_img_path)
@@ -127,9 +139,15 @@ class BaseService:
 
             # # Validate required fields
             if not request.in_img_path:
+                logger.info(
+                    f"out_img_path directory does not exist: {request.in_img_path}"
+                )
                 raise ValueError("in_img_path is required")
 
             if request.out_img_path == "":
+                logger.info(
+                    f"out_img_path directory does not exist: {request.out_img_path}"
+                )
                 raise ValueError("out_img_path is required")
 
             # Check if in_img_path exists and if all images in in_img_list are present
@@ -146,7 +164,10 @@ class BaseService:
                 )
 
             if not os.path.exists(os.path.dirname(request.out_img_path)):
-                logger.info(f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}")
+                logger.info(
+                    f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
+                )
+
                 raise ValueError(
                     f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
                 )
@@ -155,6 +176,10 @@ class BaseService:
                     "No images found to process. Either provide a valid image path or image list."
                 )
 
+            if request.process_all_flag:
+                in_img_list = list_image_files(request.in_img_path)
+            else:
+                in_img_list = request.in_img_list
             # Initialize job status
             with self.lock:
                 self.job_status[job_id] = {
@@ -168,18 +193,35 @@ class BaseService:
                     "process_type": process_type,
                     "completed": False,
                     "error": None,
-                    "thread_id": None,
+                    "thread_id": [],
                     "status_code": JobStatusCode.IN_PROGRESS.value,
                 }
             logger.info(f"Job Created: {self.job_status[job_id]}")
-
+            self.store_job_status_in_redis(
+                job_id=job_id, job_status=self.job_status[job_id]
+            )
             # Submit the image processing job and progress update to the executor
             self.executor.submit(self.update_progress_in_redis, job_id)
 
-            # Submit the image processing task
-            self.executor.submit(
-                processing_func, request, context, job_id, process_type
+            priority = (
+                1 if request.is_preview_flag else 10
+            )  # Single-image jobs get higher priority
+
+            # Submit the job to the priority queue
+            self.priority_queue.put(
+                (
+                    priority,
+                    job_id,
+                    processing_func,
+                    request,
+                    context,
+                    process_type,
+                    self.job_status[job_id],
+                    in_img_list,
+                )
             )
+            # Start the worker thread if not already running
+            self.executor.submit(self._process_queue)
 
             # Return the initial job status response
             return self.create_job_status_response(
@@ -196,3 +238,76 @@ class BaseService:
                 grpc.StatusCode.INTERNAL,
                 "Internal error occurred during job initialization",
             )
+
+    def _process_queue(self):
+        """Worker method that processes jobs from the priority queue."""
+        max_concurrent_threads = os.cpu_count() - 2
+        max_concurrent_threads = (
+            1 if max_concurrent_threads < 1 else max_concurrent_threads
+        )
+        logger.info(f"Maximum Core Used By Process {max_concurrent_threads}")
+        # Set a limit for concurrent threads per job
+        # this will execute if there are priority job
+        while not self.priority_queue.empty():
+            # Get the next job from the queue
+            (
+                priority,
+                job_id,
+                processing_func,
+                request,
+                context,
+                process_type,
+                job_status,
+                in_img_list,
+            ) = self.priority_queue.get()
+            logger.info(f"Processing job {job_id} with priority {priority}")
+
+            # Split image list into smaller chunks
+            img_chunks = list(self.chunkify_list(in_img_list, 1))
+
+            for i in range(0, len(img_chunks), max_concurrent_threads):
+                # Process the images in batches, respecting the thread limit
+                chunk_batch = img_chunks[i : i + max_concurrent_threads]
+
+                # Before processing each batch, re-check the priority queue
+                if not self.priority_queue.empty():
+                    next_priority, next_job_id, *_ = self.priority_queue.queue[0]
+                    # If a higher priority job (lower number) is waiting, context switch
+                    if next_priority < priority:
+                        logger.info(
+                            f"Context switching to higher priority job {next_job_id}"
+                        )
+                        self.priority_queue.put(
+                            (
+                                priority,
+                                job_id,
+                                processing_func,
+                                request,
+                                context,
+                                process_type,
+                                job_status,
+                                in_img_list,
+                            )
+                        )
+                        break  # Exit current job to switch to the higher priority one
+
+                # Submit the batch to the executor
+                futures = []
+                for img_chunk in chunk_batch:
+                    future = self.executor.submit(
+                        processing_func,
+                        request,
+                        context,
+                        job_id,
+                        process_type,
+                        img_chunk,
+                    )
+                    futures.append(future)
+
+                # Wait for the current batch of futures to complete before submitting the next batch
+                for future in futures:
+                    future.result()  # This will block until the batch is processed
+
+            # Mark job as done if not switched to a higher priority job
+            if not next_priority < priority:
+                self.priority_queue.task_done()

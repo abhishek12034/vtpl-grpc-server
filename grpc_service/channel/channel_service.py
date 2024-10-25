@@ -92,11 +92,10 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             return self.create_job_status_response(job_id, error=str(e))
 
-    def process_grayscale(self, request, context, job_id, process_type):
+    def process_grayscale(self, request, context, job_id, process_type, img_chunk):
         try:
-
             adjust_params = {"process_type": process_type}
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -105,11 +104,13 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_extract_single_channel(self, request, context, job_id, process_type):
+    def process_extract_single_channel(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {"process_type": process_type}
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -118,7 +119,9 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_color_conversion(self, request, context, job_id, process_type):
+    def process_color_conversion(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
@@ -127,7 +130,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "sub_process_white": request.sub_process_white,
                 "sub_process_mid": request.sub_process_mid,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -136,14 +139,14 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_color_switch(self, request, context, job_id, process_type):
+    def process_color_switch(self, request, context, job_id, process_type, img_chunk):
         try:
 
             adjust_params = {
                 "process_type": process_type,
                 "sub_process_num": request.sub_process_num,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -152,14 +155,16 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_extract_single_channel(self, request, context, job_id, process_type):
+    def process_extract_single_channel(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
                 "process_type": process_type,
                 "sub_process_num": request.sub_process_num,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -168,14 +173,16 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_display_selected_channel(self, request, context, job_id, process_type):
+    def process_display_selected_channel(
+        self, request, context, job_id, process_type, img_chunk
+    ):
         try:
 
             adjust_params = {
                 "process_type": process_type,
                 "sub_process_num": request.sub_process_num,
             }
-            self.process_images(request, job_id, process_type, adjust_params)
+            self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
             logger.error(f"Error occurred while handling params: {str(e)}")
@@ -184,21 +191,16 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_images(self, request, job_id, process_type, adjust_params):
+    def process_images(self, request, job_id, process_type, adjust_params, img_chunk):
         try:
-
-            # List images based on the flag
-            in_img_list = request.in_img_list
-            if request.process_all_flag:
-                in_img_list = list_image_files(request.in_img_path)
 
             # Store thread ID in job status
             with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
+                self.job_status[job_id]["thread_id"].append(threading.get_ident())
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
             # Process each image in the list
-            for in_img in in_img_list:
+            for in_img in img_chunk:
                 self.processor.mod_channel(
                     process_all_flag=False,
                     in_img_path=request.in_img_path,
@@ -210,15 +212,6 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 # Update processed image count
                 with self.lock:
                     self.job_status[job_id]["processed_image_count"] += 1
-
-            # Mark job as completed
-            with self.lock:
-                self.job_status[job_id]["completed"] = True
-                self.job_status[job_id][
-                    "status_message"
-                ] = StatusMessage.JOB_COMPLETED.value
-                self.job_status[job_id]["status_code"] = JobStatusCode.COMPLETED.value
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
         except Exception as e:
             # Handle exceptions and update job status as failed
