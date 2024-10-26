@@ -4,6 +4,7 @@ package vtpl_grpc_server;
 import "job.proto";
 import "channel.proto";
 import "adjust.proto";
+import "pdf_generate.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -27,3 +28,8 @@ service AdjustService {
     rpc HistogramEqualizationFilter(HistogramEqualizationRequest) returns(JobStatusResponse);
 }
 
+
+service PDFGenerateService{
+    rpc PDFGeneretion(PDFGenerateRequest) returns (PDFGenerateResponse);
+
+}
