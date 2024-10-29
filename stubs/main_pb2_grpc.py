@@ -5,6 +5,7 @@ import warnings
 
 import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
+import extract_pb2 as extract__pb2
 import job_pb2 as job__pb2
 
 GRPC_GENERATED_VERSION = '1.66.1'
@@ -804,6 +805,594 @@ class AdjustService(object):
             target,
             '/vtpl_grpc_server.AdjustService/HistogramEqualizationFilter',
             adjust__pb2.HistogramEqualizationRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class ExtractServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.NegativeFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/NegativeFilter',
+                request_serializer=extract__pb2.NegativeRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ThresholdFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/ThresholdFilter',
+                request_serializer=extract__pb2.ThresholdRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.AdaptiveThresholdFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/AdaptiveThresholdFilter',
+                request_serializer=extract__pb2.AdaptiveThresholdRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.LaplaceFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/LaplaceFilter',
+                request_serializer=extract__pb2.LaplaceRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.PrewittFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/PrewittFilter',
+                request_serializer=extract__pb2.PrewittRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.SobelFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/SobelFilter',
+                request_serializer=extract__pb2.SobelRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ScharrFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/ScharrFilter',
+                request_serializer=extract__pb2.ScharrRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.CannyFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/CannyFilter',
+                request_serializer=extract__pb2.CannyRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.LinearFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/LinearFilter',
+                request_serializer=extract__pb2.LinearRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.BiLinearFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/BiLinearFilter',
+                request_serializer=extract__pb2.BiLinearRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ChannelSelectorFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/ChannelSelectorFilter',
+                request_serializer=extract__pb2.ChannelSelectorRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ChannelDemuxFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/ChannelDemuxFilter',
+                request_serializer=extract__pb2.ChannelDemuxRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.FourierFilter = channel.unary_unary(
+                '/vtpl_grpc_server.ExtractService/FourierFilter',
+                request_serializer=extract__pb2.FourierRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+
+
+class ExtractServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def NegativeFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ThresholdFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AdaptiveThresholdFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LaplaceFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PrewittFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SobelFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ScharrFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CannyFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def LinearFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def BiLinearFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ChannelSelectorFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ChannelDemuxFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def FourierFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_ExtractServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'NegativeFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.NegativeFilter,
+                    request_deserializer=extract__pb2.NegativeRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ThresholdFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ThresholdFilter,
+                    request_deserializer=extract__pb2.ThresholdRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'AdaptiveThresholdFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.AdaptiveThresholdFilter,
+                    request_deserializer=extract__pb2.AdaptiveThresholdRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'LaplaceFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.LaplaceFilter,
+                    request_deserializer=extract__pb2.LaplaceRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'PrewittFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.PrewittFilter,
+                    request_deserializer=extract__pb2.PrewittRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'SobelFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.SobelFilter,
+                    request_deserializer=extract__pb2.SobelRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ScharrFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ScharrFilter,
+                    request_deserializer=extract__pb2.ScharrRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'CannyFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.CannyFilter,
+                    request_deserializer=extract__pb2.CannyRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'LinearFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.LinearFilter,
+                    request_deserializer=extract__pb2.LinearRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'BiLinearFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.BiLinearFilter,
+                    request_deserializer=extract__pb2.BiLinearRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ChannelSelectorFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ChannelSelectorFilter,
+                    request_deserializer=extract__pb2.ChannelSelectorRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ChannelDemuxFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ChannelDemuxFilter,
+                    request_deserializer=extract__pb2.ChannelDemuxRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'FourierFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.FourierFilter,
+                    request_deserializer=extract__pb2.FourierRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.ExtractService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.ExtractService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class ExtractService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def NegativeFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/NegativeFilter',
+            extract__pb2.NegativeRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ThresholdFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/ThresholdFilter',
+            extract__pb2.ThresholdRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AdaptiveThresholdFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/AdaptiveThresholdFilter',
+            extract__pb2.AdaptiveThresholdRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LaplaceFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/LaplaceFilter',
+            extract__pb2.LaplaceRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PrewittFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/PrewittFilter',
+            extract__pb2.PrewittRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SobelFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/SobelFilter',
+            extract__pb2.SobelRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ScharrFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/ScharrFilter',
+            extract__pb2.ScharrRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CannyFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/CannyFilter',
+            extract__pb2.CannyRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def LinearFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/LinearFilter',
+            extract__pb2.LinearRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def BiLinearFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/BiLinearFilter',
+            extract__pb2.BiLinearRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ChannelSelectorFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/ChannelSelectorFilter',
+            extract__pb2.ChannelSelectorRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ChannelDemuxFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/ChannelDemuxFilter',
+            extract__pb2.ChannelDemuxRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def FourierFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.ExtractService/FourierFilter',
+            extract__pb2.FourierRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
             channel_credentials,

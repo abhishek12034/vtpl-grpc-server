@@ -69,9 +69,7 @@ class channel_process:
             "\n\t\t <sub_process_num> = x - x is 1 for R, 2 for G and 3 for B"
         )
         self.in_param = "\n\t <process_type> = display_selected_channels - display only a single color channel"
-        self.in_param = (
-            "\n\t\t <sub_process_num> = xyz - if process_type = extract_single_channel"
-        )
+        self.in_param = "\n\t\t <sub_process_num> = xyz - if process_type = display_selected_channels"
         self.in_param = "\n\t\t <sub_process_num> = x - x is 1 for R, y is 2 for G and z is 3 for B, 0 for ignoring the same"
         self.in_param = "\n\t\t <sub_process_num> = red = 100, green = 20, blue = 3, yellow = 120, magenta = 103, cyan = 23"
 

@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+
+message NegativeRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+
+}
+
+message ThresholdRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    string threshold_option = 7;
+    float threshold_level =8;
+}
+
+
+message AdaptiveThresholdRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    string adaptive_threshold_option =6;
+    int32 ad_th_box_len=7;
+    int32 ad_th_edge_reducer=8;
+}
+
+message LaplaceRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_kernal_size =6;
+}
+
+message PrewittRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+}
+
+message SobelRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_kernal_size =6;
+
+}
+
+message ScharrRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+}
+
+
+message CannyRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    float in_rejection_upper_level = 6;
+    float in_inclusion_lower_level = 7;
+}
+
+message Kernel2D {
+    repeated int32 values = 1;  // List of integers representing a row
+}
+
+message LinearRequest {
+    string in_img_path = 1;              // Input image path
+    bool process_all_flag = 2;           // Flag to process all images
+    repeated string in_img_list = 3;     // List of input images
+    string out_img_path = 4;             // Output image path
+    bool is_preview_flag = 5;            // Preview flag
+    repeated int32 in_kernal_1 = 6;     // 1D array
+    repeated Kernel2D in_kernal_2 = 7; // 2D array represented by repeated KernelRow
+    string in_filter_display_mode = 8;   // Display mode for the filter
+    string kernal_request_format = 9;
+}
+
+
+message BiLinearRequest{
+    string in_img_path = 1;              // Input image path
+    bool process_all_flag = 2;           // Flag to process all images
+    repeated string in_img_list = 3;     // List of input images
+    string out_img_path = 4;             // Output image path
+    bool is_preview_flag = 5; 
+    repeated int32 in_kernal_1 = 6;  // 1D array
+    repeated Kernel2D in_kernal_2 = 7; // 2D array
+}
+
+message ChannelSelectorRequest{
+    string in_img_path = 1;              // Input image path
+    bool process_all_flag = 2;           // Flag to process all images
+    repeated string in_img_list = 3;     // List of input images
+    string out_img_path = 4;             // Output image path
+    bool is_preview_flag = 5; 
+    string in_color_intensity_selection = 6;
+    float  in_mid_color_val = 7;
+    float in_spread_color = 8;
+    float in_manual_color_level = 9;
+
+}
+
+message Point {
+    int32 x = 1;  // X-coordinate
+    int32 y = 2;  // Y-coordinate
+}
+
+message PointList {
+    repeated Point points = 1;  // List of points
+}
+message ChannelDemuxRequest {
+    string in_img_path = 1;              // Input image path
+    bool process_all_flag = 2;           // Flag to process all images
+    repeated string in_img_list = 3;     // List of input images
+    string out_img_path = 4;             // Output image path
+    bool is_preview_flag = 5;
+    PointList in_select_dual_pt_rc_list = 6;        // List of points (2D coordinates)
+    Point in_bg_rc_pt = 7;                           // Background point (single point)
+    bool in_filter_pass_true_block_false_flag = 8;   // Flag for filter passing/blocking
+    float in_filter_power = 9;                        // Filter power level
+}
+
+message FourierRequest{
+    string in_img_path = 1;              // Input image path
+    bool process_all_flag = 2;           // Flag to process all images
+    repeated string in_img_list = 3;     // List of input images
+    string out_img_path = 4;             // Output image path
+    bool is_preview_flag = 5;
+    float in_period_closeness = 6;                   // Closeness parameter for period
+    float in_clarity_strength = 7;
+}

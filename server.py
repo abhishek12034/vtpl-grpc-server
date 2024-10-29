@@ -2,6 +2,7 @@ import grpc
 from concurrent import futures
 from grpc_service.channel.channel_service import ChannelService
 from grpc_service.adjust.adjust_service import AdjustFilterService
+from grpc_service.extract.extract_service import ExtractService
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
 
@@ -12,7 +13,7 @@ def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     main_pb2_grpc.add_ChannelServiceServicer_to_server(ChannelService(), server)
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
-
+    main_pb2_grpc.add_ExtractServiceServicer_to_server(ExtractService(), server)
     server.add_insecure_port("[::]:50051")
 
     # Log that the server has started
