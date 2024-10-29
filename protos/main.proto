@@ -4,6 +4,7 @@ package vtpl_grpc_server;
 import "job.proto";
 import "channel.proto";
 import "adjust.proto";
+import "extract.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -27,3 +28,18 @@ service AdjustService {
     rpc HistogramEqualizationFilter(HistogramEqualizationRequest) returns(JobStatusResponse);
 }
 
+service ExtractService {
+    rpc NegativeFilter(NegativeRequest) returns (JobStatusResponse);
+    rpc ThresholdFilter(ThresholdRequest) returns (JobStatusResponse);
+    rpc AdaptiveThresholdFilter(AdaptiveThresholdRequest) returns (JobStatusResponse);
+    rpc LaplaceFilter(LaplaceRequest) returns (JobStatusResponse);
+    rpc PrewittFilter(PrewittRequest) returns (JobStatusResponse);
+    rpc SobelFilter(SobelRequest) returns (JobStatusResponse);
+    rpc ScharrFilter(ScharrRequest) returns (JobStatusResponse);
+    rpc CannyFilter(CannyRequest) returns (JobStatusResponse);
+    rpc LinearFilter(LinearRequest) returns (JobStatusResponse);
+    rpc BiLinearFilter(BiLinearRequest) returns (JobStatusResponse);
+    rpc ChannelSelectorFilter(ChannelSelectorRequest) returns (JobStatusResponse);
+    rpc ChannelDemuxFilter(ChannelDemuxRequest) returns (JobStatusResponse);
+    rpc FourierFilter(FourierRequest) returns (JobStatusResponse);
+}
