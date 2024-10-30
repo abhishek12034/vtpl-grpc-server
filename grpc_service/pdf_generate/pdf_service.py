@@ -14,14 +14,14 @@ class PDFGenerateService(main_pb2_grpc.PDFGenerateServiceServicer):
 
         print(type(request), request)
         # Here We have to call PDF Generation Code
-        self.pdf_generate_obj.generate_report(
-            request.processes, request.processes_meta, request.out_pdf_path
-        )
+        # self.pdf_generate_obj.generate_report(
+        #     request.processes, request.processes_meta, request.out_pdf_path
+        # )
         # Create the response object
         response = pdf_generate_pb2.PDFGenerateResponse(
             status_code=200,
             status_message="PDF generated successfully",
-            pdf_url=request.output_pdf_path,
+            pdf_url=request.out_pdf_path,
             error_details="",
         )
 

@@ -12,6 +12,7 @@ message Process {
 }
 
 message ProcessMeta {
+  bool input_output_image_show_report =1;
 }
 
 message PDFGenerateRequest {

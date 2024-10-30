@@ -188,13 +188,13 @@ class GenerateReport:
         doc.generate_tex(os.path.splitext(tex_fullpath)[0])
 
         # Compile the TEX file to PDF
-        pdflatex_path = (
-            r"C:\Users\katan\AppData\Local\Programs\MiKTeX\miktex\bin\x64\pdflatex.exe"
-        )
+        # pdflatex_path = (
+        #     r"C:\Users\katan\AppData\Local\Programs\MiKTeX\miktex\bin\x64\pdflatex.exe"
+        # )
         try:
             for _ in range(2):
                 process = subprocess.run(
-                    [pdflatex_path, "-interaction=nonstopmode", tex_filename],
+                    [pdflatex, "-interaction=nonstopmode", tex_filename],
                     check=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
