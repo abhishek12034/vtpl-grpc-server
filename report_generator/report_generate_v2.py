@@ -6,6 +6,7 @@ import json
 # from pymongo import MongoClient
 import cv2
 import numpy as np
+import win32com.client
 from docx import Document as DocxDocument
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -17,41 +18,34 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 
 
 class GenerateReport:
-    # [Previous code remains exactly the same until the create_docx_report method's end]
-    def __init__(self, config_file, db_descriptions):
-        self.config_file = config_file
-        self.db_descriptions = db_descriptions
+    def __init__(self, input_json=None):
+        self.input_json = input_json
+        self.process_names = [process.process_name for process in self.input_json.processes]
+        print("Process Name :", self.process_names)
+        # self.process_names = [process.process_name for process in self.input_json["Processes"]]
+        self.show_report = self.input_json.processes_meta.input_output_image_show_report
+        print("ShoW Report :", self.show_report)
+        self.output_path = 'report' #self.input_json.output_path
+        self.description_file_path = "./report_generator/new_descriptions.json"
+        self.process_descriptions = self.load_description_config()
 
-    def load_db_data():
-        # Connect to MongoDB
-        client = MongoClient("mongodb://localhost:27017/")
-        db = client["report"]
-        collection = db["report_db"]
-
-        # Retrieve all documents from the collection
-        documents = collection.find()
-
-        # Convert documents to a list of dictionaries
-        data = [doc for doc in documents]
-
-        return data[0]
-
-    def load_config(self):
-        with open(self.config_file, "r") as f:
-            config = json.load(f)
-            # todo:we have to sort the process names based on process index. future development
-            process_names = [process["process_name"] for process in config["Processes"]]
-            print("Processes Name :", process_names)
-
-        return process_names, config["Processes_meta"]["input_output_image_show_report"]
+    # def load_db_data():
+    #     # Connect to MongoDB
+    #     client = MongoClient("mongodb://localhost:27017/")
+    #     db = client["report"]
+    #     collection = db["report_db"]
+    #     # Retrieve all documents from the collection
+    #     documents = collection.find()
+    #     # Convert documents to a list of dictionaries
+    #     data = [doc for doc in documents]
+    #     return data[0]
 
     def load_description_config(self):
-        with open(self.db_descriptions, "r") as f:
+        with open(self.description_file_path, "r") as f:
             descriptions = json.load(f)
-
         return descriptions
 
-    def create_docx_report(self, output_dir, process_names, operations2, show_report):
+    def create_docx_report(self):
         doc = DocxDocument()
 
         # Set up first section (title page) with no margins
@@ -197,13 +191,13 @@ class GenerateReport:
         image_width = Inches((available_width / 2) - 0.5)
 
         # Content sections
-        for process_name in process_names:
-            if process_name in operations2:
-                operation = operations2[process_name]
+        for process_name in self.process_names:
+            if process_name in self.process_descriptions:
+                desc_process_name = self.process_descriptions[process_name]
 
-                title = operation.get(process_name, operation["title"])
-                description = operation.get(
-                    f"{process_name}_description", operation["description"]
+                title = desc_process_name.get(process_name, desc_process_name["title"])
+                description = desc_process_name.get(
+                    f"{process_name}_description", desc_process_name["description"]
                 )
 
                 heading = doc.add_heading(title, level=1)
@@ -213,7 +207,7 @@ class GenerateReport:
                 para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 para.style = doc.styles["Normal"]
 
-                if show_report == "True":
+                if self.show_report == "True":
                     table = doc.add_table(rows=2, cols=2)
                     table.style = "Table Grid"
                     table.autofit = False
@@ -378,15 +372,13 @@ class GenerateReport:
 
         # Save the document
         try:
-            docx_path = os.path.join(output_dir, "color_channels_report.docx")
+            docx_path = os.path.join(self.output_path, "color_channels_report.docx")
             doc.save(docx_path)
             print(f"Word document generated successfully: {docx_path}")
 
             # Update the TOC
             word = None
             try:
-                import win32com.client
-
                 word = win32com.client.DispatchEx("Word.Application")
                 doc = word.Documents.Open(docx_path)
                 doc.TablesOfContents(1).Update()
@@ -405,18 +397,14 @@ class GenerateReport:
         except Exception as e:
             print(f"Error saving document: {str(e)}")
 
-    def generate_report(self, output_dir="report"):
-        output_dir = os.path.abspath(output_dir)
+    def generate_report(self):
+        output_dir = os.path.abspath(self.output_path)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Load configuration
-        process_names, show_report = self.load_config()
-        print("Show Report Flag :", show_report)
-        operations2 = self.load_description_config()
-
+        print("Show Report Flag :", self.show_report)
         # Generate Word document
-        self.create_docx_report(output_dir, process_names, operations2, show_report)
+        self.create_docx_report()
 
         geometry_options = {"margin": "2.54cm", "includeheadfoot": False}
         doc = Document(geometry_options=geometry_options)
@@ -514,7 +502,7 @@ class GenerateReport:
                 doc.append(NoEscape(r"\end{justify}"))
                 doc.append("\n\n")
 
-                if show_report == "True":
+                if self.show_report == "True":
                     print("INSIDE IF Condition :")
                     doc.append(NoEscape(r"\vspace{2em}"))
                     doc.append(NoEscape(r"\noindent\begin{minipage}{0.45\textwidth}"))
@@ -547,15 +535,15 @@ class GenerateReport:
                     doc.append(NoEscape(r"\vspace{1em}"))
 
         # Add each operation to the document
-        for process_name in process_names:
-            if process_name in operations2:
-                operation = operations2[process_name]
+        for process_name in self.process_names:
+            if process_name in self.process_descriptions:
+                desc_process_name = self.process_descriptions[process_name]
 
                 print(f"Processing: {process_name}")
 
-                title = operation.get(process_name, operation["title"])
-                description = operation.get(
-                    f"{process_name}_description", operation["description"]
+                title = desc_process_name.get(process_name, desc_process_name["title"])
+                description = desc_process_name.get(
+                    f"{process_name}_description", desc_process_name["description"]
                 )
                 input_image_path = f'./channels_images/input_images/input_{process_name.lower().replace(" ", "_")}.jpg'
                 output_image_path = f'./channels_images/output_images/output_{process_name.lower().replace(" ", "_")}.jpg'
@@ -592,12 +580,12 @@ class GenerateReport:
                     check=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
-                    cwd=output_dir,
+                    cwd=self.output_path,
                     text=True,
                 )
                 print(process.stdout)
 
-            pdf_path = os.path.join(output_dir, "color_channels_report.pdf")
+            pdf_path = os.path.join(self.output_path, "color_channels_report.pdf")
             if os.path.exists(pdf_path):
                 print(f"PDF generated successfully: {pdf_path}")
             else:
@@ -611,9 +599,3 @@ class GenerateReport:
             print(f"Output directory: {output_dir}")
             print(f"TEX file exists: {os.path.exists(tex_fullpath)}")
 
-
-if __name__ == "__main__":
-    report_obj = GenerateReport(
-        config_file="./config.json", db_descriptions="./new_descriptions.json"
-    )
-    report_obj.generate_report()
