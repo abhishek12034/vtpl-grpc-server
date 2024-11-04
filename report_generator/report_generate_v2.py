@@ -30,8 +30,8 @@ class GenerateReport:
         # logger.info("Process Name :", self.process_names)
         # self.process_names = [process.process_name for process in self.input_json["Processes"]]
         self.show_report = self.input_json.processes_meta.input_output_image_show_report
-        logger.info("Output Path", input_json.out_docs_path)
-        logger.info("ShoW Report :", self.show_report)
+        logger.info(f"Output Path {input_json.out_docs_path}")
+        logger.info(f"ShoW Report : {self.show_report}")
         self.output_path = input_json.out_docs_path  # self.input_json.output_path
         self.description_file_path = "./report_generator/new_descriptions.json"
         self.process_descriptions = self.load_description_config()
@@ -53,6 +53,7 @@ class GenerateReport:
         return descriptions
 
     def create_docx_report(self):
+        print(f"Base{os.path.abspath(os.path.dirname(__file__))}")
         doc = DocxDocument()
 
         # Set up first section (title page) with no margins
@@ -213,8 +214,7 @@ class GenerateReport:
                 para = doc.add_paragraph(description)
                 para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 para.style = doc.styles["Normal"]
-
-                if self.show_report == "True":
+                if self.show_report:
                     table = doc.add_table(rows=2, cols=2)
                     table.style = "Table Grid"
                     table.autofit = False
@@ -248,13 +248,14 @@ class GenerateReport:
                     input_para.space_after = Pt(0)
 
                     base_dir = os.path.abspath(os.path.dirname(__file__))
+                    print("Base Directory", base_dir)
                     input_img_path = os.path.join(
                         base_dir,
-                        "report/channels_images",
+                        "/report/channels_images",
                         "input_images",
                         f'input_{process_name.lower().replace(" ", "_")}.jpg',
                     )
-
+                    print(f" {input_img_path}")
                     if os.path.exists(input_img_path):
                         try:
                             input_para.add_run().add_picture(
@@ -294,7 +295,7 @@ class GenerateReport:
 
                     output_img_path = os.path.join(
                         base_dir,
-                        "report/channels_images",
+                        "/report/channels_images",
                         "output_images",
                         f'output_{process_name.lower().replace(" ", "_")}.jpg',
                     )
@@ -417,7 +418,7 @@ class GenerateReport:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        logger.info("Show Report Flag :", self.show_report)
+        logger.info(f"Show Report Flag: {self.show_report}")
         # Generate Word document
         self.create_docx_report()
 
@@ -562,7 +563,7 @@ class GenerateReport:
                 )
                 input_image_path = f'./channels_images/input_images/input_{process_name.lower().replace(" ", "_")}.jpg'
                 output_image_path = f'./channels_images/output_images/output_{process_name.lower().replace(" ", "_")}.jpg'
-                logger.info("LATEX Output IMG Path :", output_image_path)
+                logger.info(f"LATEX Output IMG Path: {output_image_path}")
 
                 add_operation_section(
                     title, description, input_image_path, output_image_path
