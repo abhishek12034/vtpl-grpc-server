@@ -6,7 +6,8 @@ import json
 # from pymongo import MongoClient
 import cv2
 import numpy as np
-import win32com.client
+
+# import win32com.client
 from docx import Document as DocxDocument
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -20,12 +21,14 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 class GenerateReport:
     def __init__(self, input_json=None):
         self.input_json = input_json
-        self.process_names = [process.process_name for process in self.input_json.processes]
+        self.process_names = [
+            process.process_name for process in self.input_json.processes
+        ]
         print("Process Name :", self.process_names)
         # self.process_names = [process.process_name for process in self.input_json["Processes"]]
         self.show_report = self.input_json.processes_meta.input_output_image_show_report
         print("ShoW Report :", self.show_report)
-        self.output_path = 'report' #self.input_json.output_path
+        self.output_path = input_json.out_docs_path  # self.input_json.output_path
         self.description_file_path = "./report_generator/new_descriptions.json"
         self.process_descriptions = self.load_description_config()
 
@@ -598,4 +601,3 @@ class GenerateReport:
             print(f"Current working directory: {os.getcwd()}")
             print(f"Output directory: {output_dir}")
             print(f"TEX file exists: {os.path.exists(tex_fullpath)}")
-
