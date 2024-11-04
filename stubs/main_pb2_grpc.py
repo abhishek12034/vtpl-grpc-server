@@ -7,6 +7,7 @@ import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
 import extract_pb2 as extract__pb2
 import job_pb2 as job__pb2
+import pdf_generate_pb2 as pdf__generate__pb2
 
 GRPC_GENERATED_VERSION = '1.66.1'
 GRPC_VERSION = grpc.__version__
@@ -1394,6 +1395,78 @@ class ExtractService(object):
             '/vtpl_grpc_server.ExtractService/FourierFilter',
             extract__pb2.FourierRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class PDFGenerateServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.PDFGeneretion = channel.unary_unary(
+                '/vtpl_grpc_server.PDFGenerateService/PDFGeneretion',
+                request_serializer=pdf__generate__pb2.PDFGenerateRequest.SerializeToString,
+                response_deserializer=pdf__generate__pb2.PDFGenerateResponse.FromString,
+                _registered_method=True)
+
+
+class PDFGenerateServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def PDFGeneretion(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_PDFGenerateServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'PDFGeneretion': grpc.unary_unary_rpc_method_handler(
+                    servicer.PDFGeneretion,
+                    request_deserializer=pdf__generate__pb2.PDFGenerateRequest.FromString,
+                    response_serializer=pdf__generate__pb2.PDFGenerateResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.PDFGenerateService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.PDFGenerateService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class PDFGenerateService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def PDFGeneretion(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.PDFGenerateService/PDFGeneretion',
+            pdf__generate__pb2.PDFGenerateRequest.SerializeToString,
+            pdf__generate__pb2.PDFGenerateResponse.FromString,
             options,
             channel_credentials,
             insecure,
