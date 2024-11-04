@@ -5,6 +5,7 @@ import "job.proto";
 import "channel.proto";
 import "adjust.proto";
 import "extract.proto";
+import "pdf_generate.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -42,4 +43,9 @@ service ExtractService {
     rpc ChannelSelectorFilter(ChannelSelectorRequest) returns (JobStatusResponse);
     rpc ChannelDemuxFilter(ChannelDemuxRequest) returns (JobStatusResponse);
     rpc FourierFilter(FourierRequest) returns (JobStatusResponse);
+}
+
+service PDFGenerateService{
+    rpc PDFGeneretion(PDFGenerateRequest) returns (PDFGenerateResponse);
+
 }

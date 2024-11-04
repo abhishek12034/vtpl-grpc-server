@@ -1,0 +1,35 @@
+{
+    "Processes" : [
+        {
+          "process_index" :  1,
+          "process_name" : "histogram_equalization",
+          "exe_details_avail_flag" : "False",
+          "exe_details" : {
+            "input_key_1" : "value_1",
+            "input_key_2" : "value_2"
+          }
+        },
+        {
+          "process_index" :  2,
+          "process_name" : "color_switch",
+          "exe_details_avail_flag" : "False",
+          "exe_details" : {
+            "input_key_5" : "value_7",
+            "input_key_8" : "value_3"
+          }
+        },
+        {
+            "process_index" :  3,
+            "process_name" : "hsv",
+            "exe_details_avail_flag" : "False",
+            "exe_details" : {
+              "input_key_5" : "value_7",
+              "input_key_8" : "value_3"
+            }
+          }
+      ],
+      "Processes_meta" : {
+        "input_output_image_show_report" : "True"
+       
+      }
+    }

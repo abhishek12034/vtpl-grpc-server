@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+message ExeDetails {
+  map<string, string> details = 1;
+}
+
+message Process {
+  int32 process_index = 1;
+  string process_name = 2;
+  bool exe_details_avail_flag = 3;
+  ExeDetails exe_details = 4;
+}
+
+message ProcessMeta {
+  bool input_output_image_show_report =1;
+}
+
+message PDFGenerateRequest {
+  repeated Process processes = 1;  
+  ProcessMeta processes_meta = 2;    
+  string out_docs_path = 3;          
+}
+
+message PDFGenerateResponse {
+    int32 status_code = 1;       
+    string status_message = 2;
+    string pdf_url = 3;
+    string error_details = 4;
+  }
