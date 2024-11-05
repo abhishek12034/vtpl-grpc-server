@@ -3,7 +3,7 @@ name: GitHub Action
 on:
   push:
     branches:
-      - main
+      - development-testing
 
 jobs:
   deploy:
@@ -46,8 +46,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/vadmin/vtpl-grpc-server
-            git pull origin main  # Pull the latest code from the main branch
+            cd /home/vadmin/grpc_service/grpc_testing/vtpl-grpc-server
+            git pull origin development-testing  # Pull the latest code from the development-testing branch
             source .venv/bin/activate  # Activate the virtual environment
             pip install -r requirements.txt  # Install dependencies
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl restart grpc_server
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl restart grpc_server_testing

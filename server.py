@@ -6,6 +6,7 @@ from grpc_service.extract.extract_service import ExtractService
 from grpc_service.pdf_generate.pdf_service import PDFGenerateService
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
+import os
 
 
 def serve():
@@ -16,10 +17,12 @@ def serve():
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
     main_pb2_grpc.add_ExtractServiceServicer_to_server(ExtractService(), server)
     main_pb2_grpc.add_PDFGenerateServiceServicer_to_server(PDFGenerateService(), server)
-    server.add_insecure_port("[::]:50051")
 
     # Log that the server has started
-    print("Server is running on port 50051...")
+    port = os.getenv("GRPC_SERVER_PORT", "50054")
+    server.add_insecure_port(f"[::]:{port}")
+
+    print(f"Server is running on port {port}...")
 
     server.start()
 
