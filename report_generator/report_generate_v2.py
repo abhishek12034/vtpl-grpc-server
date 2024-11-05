@@ -35,17 +35,7 @@ class GenerateReport:
         self.output_path = input_json.out_docs_path  # self.input_json.output_path
         self.description_file_path = "./report_generator/new_descriptions.json"
         self.process_descriptions = self.load_description_config()
-
-    # def load_db_data():
-    #     # Connect to MongoDB
-    #     client = MongoClient("mongodb://localhost:27017/")
-    #     db = client["report"]
-    #     collection = db["report_db"]
-    #     # Retrieve all documents from the collection
-    #     documents = collection.find()
-    #     # Convert documents to a list of dictionaries
-    #     data = [doc for doc in documents]
-    #     return data[0]
+        self.base_dir = os.path.abspath(os.path.dirname(__file__))
 
     def load_description_config(self):
         with open(self.description_file_path, "r") as f:
@@ -53,7 +43,6 @@ class GenerateReport:
         return descriptions
 
     def create_docx_report(self):
-        print(f"Base{os.path.abspath(os.path.dirname(__file__))}")
         doc = DocxDocument()
 
         # Set up first section (title page) with no margins
@@ -75,7 +64,7 @@ class GenerateReport:
         # Add title page with full-page image
         title_paragraph = doc.add_paragraph()
         title_run = title_paragraph.add_run()
-        title_image_path = "/home/vadmin/Documents/vtpl_grpc_server/report_generator/images/Title_Page_Word.png"
+        title_image_path = os.path.join(self.base_dir, "images/Title_Page_Word.png")
         if os.path.exists(title_image_path):
             try:
                 title_run.add_picture(title_image_path, width=Inches(8.5))
@@ -247,15 +236,13 @@ class GenerateReport:
                     input_para.space_before = Pt(0)
                     input_para.space_after = Pt(0)
 
-                    base_dir = os.path.abspath(os.path.dirname(__file__))
-                    print("Base Directory", base_dir)
+                    
                     input_img_path = os.path.join(
-                        base_dir,
-                        "/report/channels_images",
+                        self.base_dir,
+                        "channels_images",
                         "input_images",
                         f'input_{process_name.lower().replace(" ", "_")}.jpg',
                     )
-                    print(f" {input_img_path}")
                     if os.path.exists(input_img_path):
                         try:
                             input_para.add_run().add_picture(
@@ -294,8 +281,8 @@ class GenerateReport:
                     output_para.space_after = Pt(0)
 
                     output_img_path = os.path.join(
-                        base_dir,
-                        "/report/channels_images",
+                        self.base_dir,
+                        "channels_images",
                         "output_images",
                         f'output_{process_name.lower().replace(" ", "_")}.jpg',
                     )
@@ -360,7 +347,8 @@ class GenerateReport:
         # Add last page with full-page image
         last_page_paragraph = doc.add_paragraph()
         last_page_run = last_page_paragraph.add_run()
-        last_image_path = "/home/vadmin/Documents/vtpl_grpc_server/report_generator/images/Last_page.png"
+
+        last_image_path = os.path.join(self.base_dir, "images/Last_page.png")
 
         if os.path.exists(last_image_path):
             try:
@@ -495,9 +483,10 @@ class GenerateReport:
         doc.append(NoEscape(r"\begin{titlepage}"))
         doc.append(NoEscape(r"\thispagestyle{empty}"))
         doc.append(NoEscape(r"\newgeometry{margin=0pt}"))
+        title_page1 = os.path.join(self.base_dir, "images/Title_Page_Pdf.png")
         doc.append(
             NoEscape(
-                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{/home/vadmin/Documents/vtpl_grpc_server/report_generator/images/Title_Page_Pdf.png}"
+                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{" + title_page1 + "}"
             )
         )
         doc.append(NoEscape(r"\restoregeometry"))
@@ -510,7 +499,7 @@ class GenerateReport:
         doc.append(NoEscape(r"\tableofcontents"))
         doc.append(NoEscape(r"\clearpage"))
 
-        def add_operation_section(title, description, input_img_path, output_img_path):
+        def add_operation_section(title=None, description=None, input_img_path=None, output_img_path=None):
             with doc.create(Section(title)):
                 doc.append("\n\n")
                 doc.append(NoEscape(r"\begin{justify}"))
@@ -518,18 +507,12 @@ class GenerateReport:
                 doc.append(NoEscape(r"\end{justify}"))
                 doc.append("\n\n")
 
-                if self.show_report == "True":
+                if self.show_report:
                     logger.info("INSIDE IF Condition :")
                     doc.append(NoEscape(r"\vspace{2em}"))
                     doc.append(NoEscape(r"\noindent\begin{minipage}{0.45\textwidth}"))
                     doc.append(NoEscape(r"\centering"))
-                    doc.append(
-                        NoEscape(
-                            r"\includegraphics[width=\textwidth]{"
-                            + input_img_path
-                            + "}"
-                        )
-                    )
+                    doc.append(NoEscape(r"\includegraphics[width=\textwidth]{" + input_img_path + "}"))
                     doc.append(
                         NoEscape(r"\\\fontsize{10}{12}\selectfont\color{black} Input")
                     )  # Black caption  # 10pt for caption
@@ -537,13 +520,7 @@ class GenerateReport:
                     doc.append(NoEscape(r"\hfill"))
                     doc.append(NoEscape(r"\begin{minipage}{0.45\textwidth}"))
                     doc.append(NoEscape(r"\centering"))
-                    doc.append(
-                        NoEscape(
-                            r"\includegraphics[width=\textwidth]{"
-                            + output_img_path
-                            + "}"
-                        )
-                    )
+                    doc.append(NoEscape(r"\includegraphics[width=\textwidth]{" + output_img_path + "}"))
                     doc.append(
                         NoEscape(r"\\\fontsize{10}{12}\selectfont\color{black} Output")
                     )  # Black caption  # 10pt for caption
@@ -561,21 +538,32 @@ class GenerateReport:
                 description = desc_process_name.get(
                     f"{process_name}_description", desc_process_name["description"]
                 )
-                input_image_path = f'./channels_images/input_images/input_{process_name.lower().replace(" ", "_")}.jpg'
-                output_image_path = f'./channels_images/output_images/output_{process_name.lower().replace(" ", "_")}.jpg'
+                input_image_path = os.path.join(
+                        self.base_dir,
+                        "channels_images",
+                        "input_images",
+                        f'input_{process_name.lower().replace(" ", "_")}.jpg',
+                    )
+                output_image_path = os.path.join(
+                        self.base_dir,
+                        "channels_images",
+                        "output_images",
+                        f'output_{process_name.lower().replace(" ", "_")}.jpg',
+                    )
                 logger.info(f"LATEX Output IMG Path: {output_image_path}")
 
                 add_operation_section(
-                    title, description, input_image_path, output_image_path
+                    title=title, description=description, input_img_path=input_image_path, output_img_path=output_image_path
                 )
 
         # Add last page with full-page image
         doc.append(NoEscape(r"\clearpage"))  # Ensure new page
         doc.append(NoEscape(r"\thispagestyle{empty}"))  # Remove header/footer
         doc.append(NoEscape(r"\newgeometry{margin=0pt}"))  # Remove margins
+        last_page1 = os.path.join(self.base_dir, "images/Last_page.png")
         doc.append(
             NoEscape(
-                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{/home/vadmin/Documents/vtpl_grpc_server/report_generator/images/Last_page.png}"
+                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{" + last_page1 + "}"
             )
         )
         doc.append(NoEscape(r"\restoregeometry"))
