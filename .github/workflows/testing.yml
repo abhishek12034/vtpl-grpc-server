@@ -46,13 +46,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-<<<<<<<< HEAD:.github/workflows/testing.yml
             cd /home/vadmin/grpc_service/grpc_testing/vtpl-grpc-server
             git pull origin development-testing  # Pull the latest code from the development-testing branch
-========
-            cd /home/vadmin/grpc_service/grpc_production/vtpl-grpc-server
-            git pull origin main  # Pull the latest code from the main branch
->>>>>>>> 9f9258827b499966adc0f0d2757aafda8736d19f:.github/workflows/production.yml
             source .venv/bin/activate  # Activate the virtual environment
             pip install -r requirements.txt  # Install dependencies
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl restart grpc_server_testing
