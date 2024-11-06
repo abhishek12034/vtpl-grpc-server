@@ -17,17 +17,9 @@ def serve():
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
     main_pb2_grpc.add_ExtractServiceServicer_to_server(ExtractService(), server)
     main_pb2_grpc.add_PDFGenerateServiceServicer_to_server(PDFGenerateService(), server)
-<<<<<<< HEAD
-
-    # Log that the server has started
-    port = os.getenv("GRPC_SERVER_PORT", "50051")
-    server.add_insecure_port(f"[::]:{port}")
-
-=======
     port = os.getenv("GRPC_SERVER_PORT", "5012")
     server.add_insecure_port(f"[::]:{port}")
 
->>>>>>> 9f9258827b499966adc0f0d2757aafda8736d19f
     print(f"Server is running on port {port}...")
 
     server.start()
