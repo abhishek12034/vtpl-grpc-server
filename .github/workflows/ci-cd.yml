@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/vadmin/vtpl-grpc-server
+            cd /home/vadmin/grpc_service/grpc_production/vtpl-grpc-server
             git pull origin main  # Pull the latest code from the main branch
             source .venv/bin/activate  # Activate the virtual environment
             pip install -r requirements.txt  # Install dependencies
