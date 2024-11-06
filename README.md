@@ -20,6 +20,10 @@ This project is focused on building a gRPC server that exposes a collection of i
      ```bash
     pip install -r requirements.txt
    ```
+   # Set the path according to your system
+   ```
+export PYTHONPATH=$PYTHONPATH:/home/vadmin/Documents/vtpl_grpc_server/stubs
+   ```
     ```
     python3 server.py
     ```
