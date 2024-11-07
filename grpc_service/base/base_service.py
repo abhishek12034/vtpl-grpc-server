@@ -161,6 +161,7 @@ class BaseService:
     ):
 
         try:
+            logger.info(f"Request Data{request}")
             self.start_time = time.time()
 
             job_id = str(uuid.uuid4())
