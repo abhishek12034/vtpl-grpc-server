@@ -108,7 +108,6 @@ class measure_process:
     ):
 
         t_st = time.time()
-
         self.last_overall_time = 0
         self.last_processing_time = 0
         self.last_reading_time = 0
@@ -132,7 +131,7 @@ class measure_process:
             elif type(in_img_list) == list:
                 for i_cnt in range(len(in_img_list)):
                     f_path_list.append(os.path.join(in_img_path, in_img_list[i_cnt]))
-                    f_name_list.append(fn)
+                    f_name_list.append(in_img_list[i_cnt])
 
         for f_i_cnt in range(len(f_path_list)):
             t_st_read = time.time()
@@ -196,6 +195,7 @@ class measure_process:
                         calc_val = 0
 
                     self.calc_ref_val = calc_val
+                    print("Lenth of oBJ", self.calc_ref_val)
 
                 # measurement for the lenght in 2D plane where plane may not be flat
                 elif process_type == "measure2D":

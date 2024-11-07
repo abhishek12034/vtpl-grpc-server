@@ -40,5 +40,5 @@ message MeasureResponse {
     string error_message = 9;
     string process_type = 10;
     int32 status_code = 11;
-    int32 object_length = 12;
+    float object_length = 12;
 }
