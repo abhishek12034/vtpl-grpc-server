@@ -2,7 +2,7 @@ from stubs import channel_pb2 as channel_pb2
 from stubs import pdf_generate_pb2
 from stubs import main_pb2
 from stubs import main_pb2_grpc
-from report_generator.report_generate_v2 import GenerateReport
+from report_generator.report_generate_v3 import GenerateReport
 import time
 
 
