@@ -69,6 +69,9 @@ class BaseService:
     def update_progress_in_redis(self, job_id):
         retry_count = 0
         max_retries = 5
+        stale_progress_threshold = 10  # Number of iterations to detect staleness
+        last_processed_image_count = -1  # Track the last known progress count
+        staleness_counter = 0
 
         while True:
             try:
@@ -76,40 +79,70 @@ class BaseService:
 
                 with self.lock:
                     job_status = self.job_status.get(job_id)
+
+                    if not job_status:
+                        logger.error(f"Job {job_id} status is missing.")
+                        break
+
+                    # Check if the job is failed
                     if job_status["status_message"] == StatusMessage.JOB_FAILED.value:
                         break
-                    if job_status:
-                        # Calculate percentage
-                        if job_status["total_images"] > 0:
-                            job_status["percentage"] = int(
-                                (job_status["processed_image_count"] * 100)
-                                / job_status["total_images"]
-                            )
-                        if job_status["percentage"] == 100:
-                            job_status["status_message"] = (
-                                StatusMessage.JOB_COMPLETED.value
-                            )
-                            job_status["status_code"] = JobStatusCode.COMPLETED.value
-                            job_status["completed"] = True
-                            logger.info(
-                                f"Total Time Taken for Job Id {job_id} is {time.time()-self.start_time}"
-                            )
 
-                        # Store job status in Redis
-                        self.store_job_status_in_redis(job_id, job_status)
-                        logger.info(
-                            f"Job {job_id} progress updated in Redis: {job_status}"
+                    # Check for staleness in progress
+                    current_processed_image_count = job_status.get(
+                        "processed_image_count", 0
+                    )
+                    if current_processed_image_count == last_processed_image_count:
+                        staleness_counter += 1
+                        if staleness_counter >= stale_progress_threshold:
+                            job_status["status_message"] = (
+                                StatusMessage.JOB_FAILED.value
+                            )
+                            job_status["status_code"] = JobStatusCode.FAILED.value
+                            self.store_job_status_in_redis(job_id, job_status)
+                            logger.error(
+                                f"Job {job_id} progress stalled for too long. Marking as failed."
+                            )
+                            break
+                    else:
+                        staleness_counter = 0  # Reset counter if progress is made
+
+                    last_processed_image_count = current_processed_image_count
+
+                    # Calculate and update percentage
+                    if job_status["total_images"] > 0:
+                        job_status["percentage"] = int(
+                            (current_processed_image_count * 100)
+                            / job_status["total_images"]
                         )
 
-                    if job_status and job_status["completed"]:
+                    # Mark job as completed if 100%
+                    if job_status["percentage"] == 100:
+                        job_status["status_message"] = StatusMessage.JOB_COMPLETED.value
+                        job_status["status_code"] = JobStatusCode.COMPLETED.value
+                        job_status["completed"] = True
+                        logger.info(
+                            f"Total Time Taken for Job Id {job_id} is {time.time() - self.start_time}"
+                        )
+
+                    # Store job status in Redis
+                    self.store_job_status_in_redis(job_id, job_status)
+                    logger.info(f"Job {job_id} progress updated in Redis: {job_status}")
+
+                    # Break loop if job is completed
+                    if job_status.get("completed"):
                         logger.info(f"Job {job_id} is completed.")
                         break
+
             except Exception as e:
                 logger.error(f"Error updating progress for Job {job_id}: {e}")
                 retry_count += 1
                 if retry_count >= max_retries:
-                    job_status["status_message"] = StatusMessage.JOB_FAILED.value
-                    job_status["status_code"] = JobStatusCode.FAILED.value
+                    job_status = self.job_status.get(job_id)
+                    if job_status:
+                        job_status["status_message"] = StatusMessage.JOB_FAILED.value
+                        job_status["status_code"] = JobStatusCode.FAILED.value
+                        self.store_job_status_in_redis(job_id, job_status)
 
                     logger.error(
                         f"Max retries reached for Job {job_id}. Exiting the update loop."
@@ -128,6 +161,7 @@ class BaseService:
     ):
 
         try:
+            logger.info(f"Request Data{request}")
             self.start_time = time.time()
 
             job_id = str(uuid.uuid4())

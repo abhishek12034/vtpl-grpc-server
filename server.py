@@ -4,8 +4,11 @@ from grpc_service.channel.channel_service import ChannelService
 from grpc_service.adjust.adjust_service import AdjustFilterService
 from grpc_service.extract.extract_service import ExtractService
 from grpc_service.pdf_generate.pdf_service import PDFGenerateService
+from grpc_service.measure.measure_service import MeasureService
+
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
+import os
 
 
 def serve():
@@ -16,10 +19,12 @@ def serve():
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
     main_pb2_grpc.add_ExtractServiceServicer_to_server(ExtractService(), server)
     main_pb2_grpc.add_PDFGenerateServiceServicer_to_server(PDFGenerateService(), server)
-    server.add_insecure_port("[::]:50051")
+    main_pb2_grpc.add_MeasureServiceServicer_to_server(MeasureService(), server)
 
-    # Log that the server has started
-    print("Server is running on port 50051...")
+    port = os.getenv("GRPC_SERVER_PORT", "5012")
+    server.add_insecure_port(f"[::]:{port}")
+
+    print(f"Server is running on port {port}...")
 
     server.start()
 

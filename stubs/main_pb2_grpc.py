@@ -7,6 +7,7 @@ import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
 import extract_pb2 as extract__pb2
 import job_pb2 as job__pb2
+import measure_pb2 as measure__pb2
 import pdf_generate_pb2 as pdf__generate__pb2
 
 GRPC_GENERATED_VERSION = '1.66.1'
@@ -1467,6 +1468,78 @@ class PDFGenerateService(object):
             '/vtpl_grpc_server.PDFGenerateService/PDFGeneretion',
             pdf__generate__pb2.PDFGenerateRequest.SerializeToString,
             pdf__generate__pb2.PDFGenerateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class MeasureServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.MeasureOneD = channel.unary_unary(
+                '/vtpl_grpc_server.MeasureService/MeasureOneD',
+                request_serializer=measure__pb2.MeasureOneDRequest.SerializeToString,
+                response_deserializer=measure__pb2.MeasureResponse.FromString,
+                _registered_method=True)
+
+
+class MeasureServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def MeasureOneD(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_MeasureServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'MeasureOneD': grpc.unary_unary_rpc_method_handler(
+                    servicer.MeasureOneD,
+                    request_deserializer=measure__pb2.MeasureOneDRequest.FromString,
+                    response_serializer=measure__pb2.MeasureResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.MeasureService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.MeasureService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class MeasureService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def MeasureOneD(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.MeasureService/MeasureOneD',
+            measure__pb2.MeasureOneDRequest.SerializeToString,
+            measure__pb2.MeasureResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -1,0 +1,53 @@
+name: GitHub Action
+
+on:
+  push:
+    branches:
+      - development-testing
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Install OpenVPN and necessary dependencies
+      - name: Install OpenVPN
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+
+      # Step 3: Connect to VPN using provided credentials and OVPN configuration
+      - name: Connect to VPN
+        uses: "kota65535/github-openvpn-connect-action@v2"
+        with:
+          config_file: .github/workflows/config.ovpn
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          client_key: ${{ secrets.USER_KEY }}
+
+      # Step 4: Reset and apply proper Git user configuration for the deployment
+      - name: Configure Git User Info
+        run: |
+          git config --global --unset user.email || true
+          git config --global --unset user.name || true
+          git config --global user.email "abhishek.udiya@videonetics.com"
+          git config --global user.name "Abhishek"
+          git config --list  # Display the Git configuration to verify
+
+      # Step 5: Use SSH to connect to the remote server, pull the latest code, and restart the gRPC service
+      - name: SSH to Server and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/vadmin/grpc_service/grpc_testing/vtpl-grpc-server
+            git pull origin development-testing  # Pull the latest code from the development-testing branch
+            source .venv/bin/activate  # Activate the virtual environment
+            pip install -r requirements.txt  # Install dependencies
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl restart grpc_server_testing
