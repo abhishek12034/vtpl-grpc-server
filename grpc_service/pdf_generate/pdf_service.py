@@ -15,7 +15,8 @@ class PDFGenerateService(main_pb2_grpc.PDFGenerateServiceServicer):
         pass  # You can also call everything from here as well by passing request, there is no need of PDFGeneration function.
 
     def PDFGeneretion(self, request, context):
-        logger.info("REQUEST :", request)
+        logger.info("Request is Recerved")
+        logger.info(f"REQUEST {request}")
         report_obj = GenerateReport(request)
         report_obj.generate_report()
 
