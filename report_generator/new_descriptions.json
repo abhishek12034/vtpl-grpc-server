@@ -250,6 +250,14 @@
     "super_resolution": {
         "title": "Super Resolution",
         "description": "Super resolution is an advanced multi-frame processing operation that combines multiple low-resolution images to create a higher-resolution output. Input requires sequences of slightly shifted low-resolution frames and parameters for sub-pixel registration and reconstruction methods. Output provides an enhanced resolution image with improved detail visibility. Critical parameters include motion estimation accuracy, reconstruction algorithm selection, and artifact suppression settings. The operation manages sub-pixel alignment, information fusion, and detail enhancement. This technique is crucial in satellite imaging for improved ground sampling, surveillance systems for detail recovery, medical imaging for enhanced visualization, scientific imaging for resolution enhancement, and forensic analysis for evidence examination. It enables resolution improvement beyond single-frame limitations."
+    },
+    "undo": {
+    "title": "Undo",
+    "description": "Undo is a fundamental operation management feature that allows users to reverse their most recent actions in sequential order. The operation maintains a history stack of user actions with detailed state information, including the operation type, affected parameters, and previous state values. When invoked, it restores the system to the state that existed before the last operation was performed. Key parameters include history depth limit, state preservation method, and memory management settings. This essential functionality is crucial across various applications, including image editing software, text editors, CAD systems, and digital content creation tools. It provides users with the confidence to experiment freely, knowing they can reverse unintended changes while maintaining data integrity throughout the editing process."
+    },
+    "redo": {
+    "title": "Redo",
+    "description": "Redo is a complementary operation management feature that reinstates previously undone actions, allowing users to reapply operations that were reversed through the undo function. The operation works with the same history stack as the undo feature but moves forward through the sequence of reversed actions. It requires tracking of both the undo history and redo possibilities, with parameters controlling state restoration, action validation, and conflict resolution. The operation is particularly valuable in complex workflows where users need to compare different states or recover from accidental undo operations. Redo functionality is essential in professional software applications, including photo editing tools, document processors, 3D modeling software, and any system where precise control over action history is required. It enhances user confidence by providing a safety net for exploring different creative directions."
     }
 
 }

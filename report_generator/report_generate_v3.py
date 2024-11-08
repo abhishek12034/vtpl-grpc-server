@@ -2,12 +2,8 @@ import os
 import subprocess
 from pylatex import Document, Section, NoEscape, Package, Command
 import json
-
-# from pymongo import MongoClient
 import cv2
 import numpy as np
-
-import win32com.client
 from docx import Document as DocxDocument
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -189,7 +185,7 @@ class GenerateReport:
         margin_width = 2
         available_width = page_width - margin_width
         image_width = Inches((available_width / 2) - 0.5)
-        image_height = Inches(3)  # Set fixed height to 3 inches
+        image_height = Inches(2.2)  # Set fixed height to 3 inches
 
         # Content sections
         for process_name in self.process_names:
@@ -243,7 +239,7 @@ class GenerateReport:
                     
                     input_img_path = os.path.join(
                         self.base_dir,
-                        "channels_images",
+                        "all_images",
                         "input_images",
                         f'input_{process_name.lower().replace(" ", "_")}.jpg',
                     )
@@ -286,7 +282,7 @@ class GenerateReport:
 
                     output_img_path = os.path.join(
                         self.base_dir,
-                        "channels_images",
+                        "all_images",
                         "output_images",
                         f'output_{process_name.lower().replace(" ", "_")}.jpg',
                     )
@@ -324,7 +320,7 @@ class GenerateReport:
                     output_run.font.size = Pt(10)
 
                     # Set minimal row heights
-                    table.rows[0].height = Inches(3.2)
+                    table.rows[0].height = Inches(0.5)
                     table.rows[1].height = Inches(0.1)
 
                 # Add minimal spacing after each algorithm section
@@ -380,7 +376,7 @@ class GenerateReport:
 
         # Save the document
         try:
-            docx_path = os.path.join(self.output_path, "color_channels_report.docx")
+            docx_path = os.path.join(self.output_path, "report.docx")
             doc.save(docx_path)
             logger.info(f"Word document generated successfully: {docx_path}")
 
@@ -432,9 +428,7 @@ class GenerateReport:
         doc.packages.append(Package("helvet"))
         doc.packages.append(
             Package("lastpage")
-        )  # Add this package for total page count
-        # Prevent blank pages
-        # doc.preamble.append(NoEscape(r"\let\cleardoublepage\clearpage"))
+        )
         # Enhanced document styling
         doc.preamble.append(NoEscape(r"\usepackage{graphicx}"))
         doc.preamble.append(NoEscape(r"\usepackage{grffile}"))
@@ -561,13 +555,13 @@ class GenerateReport:
                 )
                 input_image_path = os.path.join(
                         self.base_dir,
-                        "channels_images",
+                        "all_images",
                         "input_images",
                         f'input_{process_name.lower().replace(" ", "_")}.jpg',
                     )
                 output_image_path = os.path.join(
                         self.base_dir,
-                        "channels_images",
+                        "all_images",
                         "output_images",
                         f'output_{process_name.lower().replace(" ", "_")}.jpg',
                     )
@@ -593,7 +587,7 @@ class GenerateReport:
         doc.append(NoEscape(r"\restoregeometry"))
         
         # Generate TEX file
-        tex_filename = "color_channels_report1.tex"
+        tex_filename = "report.tex"
         tex_fullpath = os.path.join(self.output_path, tex_filename)
         tex_fullpath = tex_fullpath.replace("\\", "/")
         
@@ -615,7 +609,7 @@ class GenerateReport:
                 )
                 logger.info(process.stdout)
 
-            pdf_path = os.path.join(self.output_path, "color_channels_report.pdf")
+            pdf_path = os.path.join(self.output_path, "report.pdf")
             pdf_path = pdf_path.replace("\\", "/")
             if os.path.exists(pdf_path):
                 logger.info(f"PDF generated successfully: {pdf_path}")
