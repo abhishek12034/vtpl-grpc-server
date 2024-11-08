@@ -5,13 +5,17 @@ from stubs import main_pb2_grpc
 from report_generator.report_generate_v2 import GenerateReport
 import time
 
+from logging_config import setup_logging
+
+logger = setup_logging()
+
 
 class PDFGenerateService(main_pb2_grpc.PDFGenerateServiceServicer):
     def __init__(self):
         pass  # You can also call everything from here as well by passing request, there is no need of PDFGeneration function.
 
     def PDFGeneretion(self, request, context):
-        print("REQUEST :", request)
+        logger.info("REQUEST :", request)
         report_obj = GenerateReport(request)
         report_obj.generate_report()
 
