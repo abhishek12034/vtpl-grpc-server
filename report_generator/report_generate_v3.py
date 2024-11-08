@@ -34,8 +34,6 @@ class GenerateReport:
         self.process_descriptions = self.load_description_config()
         self.base_dir = os.path.abspath(os.path.dirname(__file__))
 
-
-
     def load_description_config(self):
         with open(self.description_file_path, "r") as f:
             descriptions = json.load(f)
@@ -236,7 +234,6 @@ class GenerateReport:
                     input_para.space_before = Pt(0)
                     input_para.space_after = Pt(0)
 
-                    
                     input_img_path = os.path.join(
                         self.base_dir,
                         "all_images",
@@ -401,7 +398,6 @@ class GenerateReport:
         except Exception as e:
             logger.info(f"Error saving document: {str(e)}")
 
-    
     def generate_report(self):
 
         output_dir = os.path.abspath(self.output_path)
@@ -409,7 +405,7 @@ class GenerateReport:
             os.makedirs(output_dir)
 
         logger.info(f"Show Report Flag: {self.show_report}")
-        
+
         # Generate Word document
         self.create_docx_report()
 
@@ -417,7 +413,7 @@ class GenerateReport:
         doc = Document(geometry_options=geometry_options)
 
         # Add packages with enhanced styling
-        
+
         doc.packages.append(Package("graphicx"))
         doc.packages.append(Package("float"))
         doc.packages.append(Package("xcolor"))
@@ -426,9 +422,7 @@ class GenerateReport:
         doc.packages.append(Package("titlesec"))
         doc.packages.append(Package("hyperref"))
         doc.packages.append(Package("helvet"))
-        doc.packages.append(
-            Package("lastpage")
-        )
+        doc.packages.append(Package("lastpage"))
         # Enhanced document styling
         doc.preamble.append(NoEscape(r"\usepackage{graphicx}"))
         doc.preamble.append(NoEscape(r"\usepackage{grffile}"))
@@ -439,7 +433,9 @@ class GenerateReport:
         doc.preamble.append(NoEscape(r"\usepackage{ragged2e}"))
 
         # Prevent blank first page
-        doc.preamble.append(NoEscape(r"\AtBeginDocument{\AtBeginShipoutNext{\AtBeginShipoutDiscard}}"))
+        doc.preamble.append(
+            NoEscape(r"\AtBeginDocument{\AtBeginShipoutNext{\AtBeginShipoutDiscard}}")
+        )
 
         # Setup fancy headers and footers
         doc.preamble.append(NoEscape(r"\pagestyle{fancy}"))
@@ -490,7 +486,9 @@ class GenerateReport:
         title_page1 = title_page1.replace("\\", "/")
         doc.append(
             NoEscape(
-                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{" + title_page1 + "}"
+                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{"
+                + title_page1
+                + "}"
             )
         )
         doc.append(NoEscape(r"\restoregeometry"))
@@ -504,43 +502,71 @@ class GenerateReport:
         doc.append(NoEscape(r"\tableofcontents"))
         doc.append(NoEscape(r"\clearpage"))
 
-        def add_operation_section(title=None, description=None, input_img_path=None, output_img_path=None):
+        def add_operation_section(
+            title=None, description=None, input_img_path=None, output_img_path=None
+        ):
             with doc.create(Section(title)):
-                
+
                 # Add description with proper spacing
                 doc.append(NoEscape(r"\begin{justify}"))
                 doc.append(NoEscape(r"\large " + description))
                 doc.append(NoEscape(r"\end{justify}"))
-                
+
                 if self.show_report:
                     # Ensure images exist before trying to include them
-                    if os.path.exists(input_img_path) and os.path.exists(output_img_path):
+                    if os.path.exists(input_img_path) and os.path.exists(
+                        output_img_path
+                    ):
                         # Add vertical space between description and images
                         doc.append(NoEscape(r"\vspace{1em}"))
-                        
+
                         # First image (Input)
-                        doc.append(NoEscape(r"\noindent\begin{minipage}{0.45\textwidth}"))
+                        doc.append(
+                            NoEscape(r"\noindent\begin{minipage}{0.45\textwidth}")
+                        )
                         doc.append(NoEscape(r"\centering"))
                         # Set height to 3 inches (adjust this value as needed)
-                        doc.append(NoEscape(r"\includegraphics[height=3in,width=\textwidth,keepaspectratio]{" + input_img_path + "}"))
-                        doc.append(NoEscape(r"\\\fontsize{10}{12}\selectfont\color{black}Input"))
+                        doc.append(
+                            NoEscape(
+                                r"\includegraphics[height=3in,width=\textwidth,keepaspectratio]{"
+                                + input_img_path
+                                + "}"
+                            )
+                        )
+                        doc.append(
+                            NoEscape(
+                                r"\\\fontsize{10}{12}\selectfont\color{black}Input"
+                            )
+                        )
                         doc.append(NoEscape(r"\end{minipage}"))
-                        
+
                         # Add horizontal space between images
                         doc.append(NoEscape(r"\hfill"))
-                        
+
                         # Second image (Output)
                         doc.append(NoEscape(r"\begin{minipage}{0.45\textwidth}"))
                         doc.append(NoEscape(r"\centering"))
                         # Set height to 3 inches (adjust this value as needed)
-                        doc.append(NoEscape(r"\includegraphics[height=3in,width=\textwidth,keepaspectratio]{" + output_img_path + "}"))
-                        doc.append(NoEscape(r"\\\fontsize{10}{12}\selectfont\color{black}Output"))
+                        doc.append(
+                            NoEscape(
+                                r"\includegraphics[height=3in,width=\textwidth,keepaspectratio]{"
+                                + output_img_path
+                                + "}"
+                            )
+                        )
+                        doc.append(
+                            NoEscape(
+                                r"\\\fontsize{10}{12}\selectfont\color{black}Output"
+                            )
+                        )
                         doc.append(NoEscape(r"\end{minipage}"))
-                        
+
                         # Add vertical space after images
                         doc.append(NoEscape(r"\vspace{1em}"))
                     else:
-                        doc.append(f"Error: Image files not found at {input_img_path} or {output_img_path}")
+                        doc.append(
+                            f"Error: Image files not found at {input_img_path} or {output_img_path}"
+                        )
 
         # Add each operation to the document
         for process_name in self.process_names:
@@ -554,24 +580,27 @@ class GenerateReport:
                     f"{process_name}_description", desc_process_name["description"]
                 )
                 input_image_path = os.path.join(
-                        self.base_dir,
-                        "all_images",
-                        "input_images",
-                        f'input_{process_name.lower().replace(" ", "_")}.jpg',
-                    )
+                    self.base_dir,
+                    "all_images",
+                    "input_images",
+                    f'input_{process_name.lower().replace(" ", "_")}.jpg',
+                )
                 output_image_path = os.path.join(
-                        self.base_dir,
-                        "all_images",
-                        "output_images",
-                        f'output_{process_name.lower().replace(" ", "_")}.jpg',
-                    )
+                    self.base_dir,
+                    "all_images",
+                    "output_images",
+                    f'output_{process_name.lower().replace(" ", "_")}.jpg',
+                )
                 input_image_path = input_image_path.replace("\\", "/")
                 output_image_path = output_image_path.replace("\\", "/")
                 logger.info(f"LATEX Output IMG Path: {input_image_path}")
                 logger.info(f"LATEX Output IMG Path: {output_image_path}")
 
                 add_operation_section(
-                    title=title, description=description, input_img_path=input_image_path, output_img_path=output_image_path
+                    title=title,
+                    description=description,
+                    input_img_path=input_image_path,
+                    output_img_path=output_image_path,
                 )
 
         # doc.append(NoEscape(r"\let\cleardoublepage\clearpage"))
@@ -581,20 +610,22 @@ class GenerateReport:
         last_page1 = last_page1.replace("\\", "/")
         doc.append(
             NoEscape(
-                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{" + last_page1 + "}"
+                r"\noindent\includegraphics[width=\paperwidth,height=\paperheight]{"
+                + last_page1
+                + "}"
             )
         )
         doc.append(NoEscape(r"\restoregeometry"))
-        
+
         # Generate TEX file
         tex_filename = "report.tex"
         tex_fullpath = os.path.join(self.output_path, tex_filename)
         tex_fullpath = tex_fullpath.replace("\\", "/")
-        
+
         # Save the TEX file
         doc.generate_tex(os.path.splitext(tex_fullpath)[0])
         # pdflatex_path = "C:/Users/katan/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe"  # Adjust year and path as needed
-        
+
         # Compile the TEX file to PDF
         pdflatex_path = "pdflatex"
         try:
