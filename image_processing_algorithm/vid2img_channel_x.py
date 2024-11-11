@@ -9,10 +9,15 @@ import time
 from os import walk
 import copy
 from PIL import Image, ImageOps
+import cv2 as cv
 
 
 class channel_process:
     def __init__(self):
+        self.jpg_quality = [
+            int(cv.IMWRITE_JPEG_QUALITY),
+            int(os.getenv("JPEG_QUALITY", 100)),
+        ]
         self.last_overall_time = 0
         self.last_processing_time = 0
         self.last_reading_time = 0
@@ -214,7 +219,12 @@ class channel_process:
                 self.last_processing_time += t_en_process - t_st_process
 
                 t_st_write = time.time()
-                out_img.save(os.path.join(out_img_path, f_name_list[i_cnt]))
+                out_img.save(
+                    os.path.join(out_img_path, f_name_list[i_cnt]),
+                    quality=self.jpg_quality[1],
+                    subsampling=0,
+                )
+
                 t_en_write = time.time()
                 self.last_writing_time += t_en_write - t_st_write
 
