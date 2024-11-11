@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 
 class adjust_process:
     def __init__(self):
+        self.jpg_quality = [
+            int(cv.IMWRITE_JPEG_QUALITY),
+            int(os.getenv("JPEG_QUALITY", 100)),
+        ]
         self.last_overall_time = 0
         self.last_processing_time = 0
         self.last_reading_time = 0
@@ -974,7 +978,9 @@ class adjust_process:
                     t_st_write = time.time()
 
                     cv.imwrite(
-                        os.path.join(out_img_path, f_name_list[f_i_cnt]), out_img
+                        os.path.join(out_img_path, f_name_list[f_i_cnt]),
+                        out_img,
+                        self.jpg_quality,
                     )
                     t_en_write = time.time()
                     self.last_writing_time += t_en_write - t_st_write
