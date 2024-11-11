@@ -1493,6 +1493,16 @@ class MeasureServiceStub(object):
                 request_serializer=measure__pb2.MeasureOneDRequest.SerializeToString,
                 response_deserializer=measure__pb2.MeasureResponse.FromString,
                 _registered_method=True)
+        self.MeasureTwoD = channel.unary_unary(
+                '/vtpl_grpc_server.MeasureService/MeasureTwoD',
+                request_serializer=measure__pb2.MeasureTwoDRequest.SerializeToString,
+                response_deserializer=measure__pb2.MeasureResponse.FromString,
+                _registered_method=True)
+        self.MeasureThreeD = channel.unary_unary(
+                '/vtpl_grpc_server.MeasureService/MeasureThreeD',
+                request_serializer=measure__pb2.MeasureThreeDRequest.SerializeToString,
+                response_deserializer=measure__pb2.MeasureResponse.FromString,
+                _registered_method=True)
 
 
 class MeasureServiceServicer(object):
@@ -1504,12 +1514,34 @@ class MeasureServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def MeasureTwoD(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MeasureThreeD(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MeasureServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'MeasureOneD': grpc.unary_unary_rpc_method_handler(
                     servicer.MeasureOneD,
                     request_deserializer=measure__pb2.MeasureOneDRequest.FromString,
+                    response_serializer=measure__pb2.MeasureResponse.SerializeToString,
+            ),
+            'MeasureTwoD': grpc.unary_unary_rpc_method_handler(
+                    servicer.MeasureTwoD,
+                    request_deserializer=measure__pb2.MeasureTwoDRequest.FromString,
+                    response_serializer=measure__pb2.MeasureResponse.SerializeToString,
+            ),
+            'MeasureThreeD': grpc.unary_unary_rpc_method_handler(
+                    servicer.MeasureThreeD,
+                    request_deserializer=measure__pb2.MeasureThreeDRequest.FromString,
                     response_serializer=measure__pb2.MeasureResponse.SerializeToString,
             ),
     }
@@ -1539,6 +1571,60 @@ class MeasureService(object):
             target,
             '/vtpl_grpc_server.MeasureService/MeasureOneD',
             measure__pb2.MeasureOneDRequest.SerializeToString,
+            measure__pb2.MeasureResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MeasureTwoD(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.MeasureService/MeasureTwoD',
+            measure__pb2.MeasureTwoDRequest.SerializeToString,
+            measure__pb2.MeasureResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MeasureThreeD(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.MeasureService/MeasureThreeD',
+            measure__pb2.MeasureThreeDRequest.SerializeToString,
             measure__pb2.MeasureResponse.FromString,
             options,
             channel_credentials,
