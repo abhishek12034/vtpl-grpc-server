@@ -195,7 +195,6 @@ class measure_process:
                         calc_val = 0
 
                     self.calc_ref_val = calc_val
-                    print("Lenth of oBJ", self.calc_ref_val)
 
                 # measurement for the lenght in 2D plane where plane may not be flat
                 elif process_type == "measure2D":
@@ -354,9 +353,6 @@ class measure_process:
 
                 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                 # THIS PRINT ONLY FOR RETURN TESTING AND NEED NOT TO PRINT
-
-                print(self.calc_ref_val)
-
                 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
                 cv.imwrite(os.path.join(out_img_path, f_name_list[f_i_cnt]), out_img)
