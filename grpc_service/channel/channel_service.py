@@ -196,7 +196,8 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
 
             # Store thread ID in job status
             with self.lock:
-                self.job_status[job_id]["thread_id"].append(threading.get_ident())
+                self.job_status[job_id]["thread_id"] = threading.get_ident()
+
                 self.store_job_status_in_redis(job_id, self.job_status[job_id])
 
             # Process each image in the list

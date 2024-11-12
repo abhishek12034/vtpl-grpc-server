@@ -161,6 +161,7 @@ class BaseService:
     ):
 
         try:
+            logger.info(f"Json In Memory Object{self.job_status}")
             logger.info(f"Request Data{request}")
             self.start_time = time.time()
 
@@ -236,7 +237,7 @@ class BaseService:
             )
             # Submit the image processing job and progress update to the executor
             self.executor.submit(self.update_progress_in_redis, job_id)
-
+            logger.info("Updating In Redis")
             priority = (
                 1 if request.is_preview_flag else 10
             )  # Single-image jobs get higher priority
