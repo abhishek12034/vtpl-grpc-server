@@ -128,7 +128,8 @@ class BaseService:
                     # Store job status in Redis
                     self.store_job_status_in_redis(job_id, job_status)
                     logger.info(f"Job {job_id} progress updated in Redis: {job_status}")
-
+                    del self.job_status[job_id]  # This removes the job from memory
+                    print(f"Job {job_id} removed from memory.")
                     # Break loop if job is completed
                     if job_status.get("completed"):
                         logger.info(f"Job {job_id} is completed.")
@@ -162,6 +163,8 @@ class BaseService:
 
         try:
             logger.info(f"Json In Memory Object{self.job_status}")
+            print(f"Json In Memory Object{self.job_status}")
+
             logger.info(f"Request Data{request}")
             self.start_time = time.time()
 
