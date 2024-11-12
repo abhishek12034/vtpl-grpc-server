@@ -21,7 +21,7 @@ class BaseService:
         self.job_status = {}
         self.lock = threading.Lock()
         self.redis_client = get_redis_client()
-        self.executor = ThreadPoolExecutor(max_workers=10)
+        self.executor = ThreadPoolExecutor(max_workers=100)
         self.priority_queue = PriorityQueue()  # Priority queue for tasks
 
     def store_job_status_in_redis(self, job_id, job_status):
