@@ -5,6 +5,7 @@ import warnings
 
 import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
+import edit_pb2 as edit__pb2
 import extract_pb2 as extract__pb2
 import job_pb2 as job__pb2
 import measure_pb2 as measure__pb2
@@ -1626,6 +1627,422 @@ class MeasureService(object):
             '/vtpl_grpc_server.MeasureService/MeasureThreeD',
             measure__pb2.MeasureThreeDRequest.SerializeToString,
             measure__pb2.MeasureResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class EditServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.CropFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/CropFilter',
+                request_serializer=edit__pb2.CropRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.FlipFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/FlipFilter',
+                request_serializer=edit__pb2.FlipRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.RotateFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/RotateFilter',
+                request_serializer=edit__pb2.RotateRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.ResizeFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/ResizeFilter',
+                request_serializer=edit__pb2.ResizeRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.PerspectiveFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/PerspectiveFilter',
+                request_serializer=edit__pb2.PerspectiveRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.UndistortFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/UndistortFilter',
+                request_serializer=edit__pb2.UndistortRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.AspectRatioFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/AspectRatioFilter',
+                request_serializer=edit__pb2.AspectRatioRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.FisheyeFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/FisheyeFilter',
+                request_serializer=edit__pb2.FisheyeRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.SmartResizeFilter = channel.unary_unary(
+                '/vtpl_grpc_server.EditService/SmartResizeFilter',
+                request_serializer=edit__pb2.SmartResizeRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+
+
+class EditServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def CropFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def FlipFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RotateFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ResizeFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PerspectiveFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UndistortFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AspectRatioFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def FisheyeFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SmartResizeFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_EditServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'CropFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.CropFilter,
+                    request_deserializer=edit__pb2.CropRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'FlipFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.FlipFilter,
+                    request_deserializer=edit__pb2.FlipRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'RotateFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.RotateFilter,
+                    request_deserializer=edit__pb2.RotateRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'ResizeFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResizeFilter,
+                    request_deserializer=edit__pb2.ResizeRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'PerspectiveFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.PerspectiveFilter,
+                    request_deserializer=edit__pb2.PerspectiveRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'UndistortFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.UndistortFilter,
+                    request_deserializer=edit__pb2.UndistortRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'AspectRatioFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.AspectRatioFilter,
+                    request_deserializer=edit__pb2.AspectRatioRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'FisheyeFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.FisheyeFilter,
+                    request_deserializer=edit__pb2.FisheyeRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'SmartResizeFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.SmartResizeFilter,
+                    request_deserializer=edit__pb2.SmartResizeRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.EditService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.EditService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class EditService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def CropFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/CropFilter',
+            edit__pb2.CropRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def FlipFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/FlipFilter',
+            edit__pb2.FlipRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RotateFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/RotateFilter',
+            edit__pb2.RotateRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResizeFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/ResizeFilter',
+            edit__pb2.ResizeRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PerspectiveFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/PerspectiveFilter',
+            edit__pb2.PerspectiveRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UndistortFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/UndistortFilter',
+            edit__pb2.UndistortRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AspectRatioFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/AspectRatioFilter',
+            edit__pb2.AspectRatioRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def FisheyeFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/FisheyeFilter',
+            edit__pb2.FisheyeRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SmartResizeFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.EditService/SmartResizeFilter',
+            edit__pb2.SmartResizeRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
             options,
             channel_credentials,
             insecure,
