@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from stubs import edit_pb2 as edit_pb2
 from stubs import edit_pb2_grpc
 from stubs import main_pb2_grpc
-from image_processing_algorithm.vid2img_edit_x import edit_process
+from image_processing_algorithm.vid2img_edit_xy import edit_process
 from logging_config import setup_logging
 from grpc_service.base.base_filter_type import StatusMessage, JobStatusCode
 from grpc_service.edit.edit_filter_type import EditProcessingType
@@ -219,10 +219,14 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
     def process_fisheye(self, request, context, job_id, process_type, img_chunk):
         try:
             in_distortion_power = request.in_distortion_power
+            in_start_clock_pos = request.in_start_clock_pos
+            in_direction = request.in_direction
             logger.info(f"Distortion Power is {in_distortion_power}")
             adjust_params = {
                 "process_type": process_type,
                 "in_distortion_power": in_distortion_power,
+                "in_start_clock_pos": in_start_clock_pos,
+                "in_direction": in_direction,
             }
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 

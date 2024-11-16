@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[51]:
+# In[3]:
 
 
 import os
@@ -89,6 +89,8 @@ class edit_process:
         )
 
         self.in_param += "\n\t <process_type> = correct_fisheye - correct fiseye distortion of an image"
+        self.in_param += "\n\t <in_direction> = Vertical / Unknown --> Default is Vertical Direction of fisheye camera placement"
+        self.in_param += "\n\t <in_start_clock_pos> = 0 to 12 --> Default is 9, starting clock position"
         self.in_param += "\n\t\t <in_distortion_power> value between 0 to 1 --> 0 means same, 1 means maximum correction in fisheye"
 
     def dist_from_ori(self, point):
@@ -117,6 +119,8 @@ class edit_process:
         in_select_rc_arr=[[0, 0], [1, 0], [1, 1], [0, 1]],
         in_distortion_power=0.0,
         in_aspect_ratio_times=1.0,
+        in_direction="Vertical",
+        in_start_clock_pos="9.0",
         out_img_path="",
     ):
 
@@ -322,15 +326,12 @@ class edit_process:
                     sup_res = cv.dnn_superres.DnnSuperResImpl_create()
 
                     if tar_rat <= 1:
-                        print("Testing at 1 ")
                         out_img = cv.resize(
                             part_img,
                             (out_im_col, out_im_row),
                             interpolation=cv.INTER_NEAREST,
                         )
                     elif tar_rat <= 2:
-                        print("Testing at 2 ")
-
                         model_path = os.path.join(
                             model_folder_path, "sup_res_ESPCN_x2.pb"
                         )
@@ -343,8 +344,6 @@ class edit_process:
                             interpolation=cv.INTER_NEAREST,
                         )
                     elif tar_rat <= 3:
-                        print("Testing at 3 ")
-
                         model_path = os.path.join(
                             model_folder_path, "sup_res_ESPCN_x3.pb"
                         )
@@ -357,13 +356,9 @@ class edit_process:
                             interpolation=cv.INTER_NEAREST,
                         )
                     elif tar_rat <= 4:
-                        print("Testing at 4 ")
-
                         model_path = os.path.join(
                             model_folder_path, "sup_res_ESPCN_x4.pb"
                         )
-                        print("Model pATH")
-                        print(model_path)
                         sup_res.readModel(model_path)
                         sup_res.setModel("espcn", 4)
                         up_res_img = sup_res.upsample(part_img)
@@ -373,7 +368,7 @@ class edit_process:
                             interpolation=cv.INTER_NEAREST,
                         )
                     else:
-                        print("Testing 4-1")
+                        print("at 4-1")
                         model_path = os.path.join(
                             model_folder_path, "sup_res_ESPCN_x4.pb"
                         )
@@ -471,51 +466,103 @@ class edit_process:
                     three_pi_by_two = 1.5 * pi
                     pi_by_two = 0.5 * pi
 
-                    h, w = in_img.shape[:2]
+                    if in_direction == "Vertical":
+                        st_ang_pi = ((in_start_clock_pos - 9.0 + 12.0) % 12) * pi / 6
 
-                    cx, cy = w // 2, h // 2
+                        col_cnt_val = pi
+                        in_row, in_col = in_img.shape[:2]
 
-                    out_img = np.zeros_like(in_img)
+                        c_col, c_row = in_col // 2, in_row // 2
+                        diag = np.sqrt(in_row**2 + in_col**2)
+                        tar_row = int(diag / 2 + 0.5)
+                        tar_col = int(two_pi * (diag / 2) / col_cnt_val + 0.5)
 
-                    y, x = np.indices((h, w))
+                        ang_fact = two_pi / tar_col
 
-                    dx = x - cx
-                    dy = y - cy
+                        out_img = np.zeros((tar_row, tar_col, 3), dtype=np.uint8)
 
-                    theta = np.arctan2(dy, dx) % two_pi
+                        r_vals = tar_row - np.arange(tar_row)  # r_val = tar_row - vr
+                        vc_vals = np.arange(tar_col)
+                        theta_vals = pi + vc_vals * ang_fact + st_ang_pi
 
-                    radius = np.sqrt(dx**2 + dy**2)
+                        tar_r = np.round(
+                            r_vals[:, None] * np.sin(theta_vals) + c_row
+                        ).astype(int)
+                        tar_c = np.round(
+                            r_vals[:, None] * np.cos(theta_vals) + c_col
+                        ).astype(int)
 
-                    corner_ang = math.atan(cy / cx)
-                    pi_minus_corner_ang = pi - corner_ang
-                    pi_plus_corner_ang = pi + corner_ang
-                    tow_pi_minus_corner_ang = two_pi - corner_ang
+                        valid_mask = (
+                            (tar_r >= 0)
+                            & (tar_r < in_row)
+                            & (tar_c >= 0)
+                            & (tar_c < in_col)
+                        )
 
-                    fact = np.zeros_like(radius)
+                        tar_r_flat = tar_r[valid_mask]
+                        tar_c_flat = tar_c[valid_mask]
+                        vr_flat, vc_flat = np.where(
+                            valid_mask
+                        )  # Get the row and col indices for valid pixels
 
-                    mask1 = (theta <= corner_ang) | (theta > tow_pi_minus_corner_ang)
-                    mask2 = (theta > corner_ang) & (theta <= pi_minus_corner_ang)
-                    mask3 = (theta > pi_minus_corner_ang) & (
-                        theta <= pi_plus_corner_ang
-                    )
-                    mask4 = (theta > pi_plus_corner_ang) & (
-                        theta <= tow_pi_minus_corner_ang
-                    )
+                        out_img[vr_flat, vc_flat] = in_img[tar_r_flat, tar_c_flat]
 
-                    fact[mask1] = (radius[mask1] * np.abs(np.cos(theta[mask1]))) / cx
-                    fact[mask2] = (radius[mask2] * np.abs(np.sin(theta[mask2]))) / cy
-                    fact[mask3] = (radius[mask3] * np.abs(np.cos(theta[mask3]))) / cx
-                    fact[mask4] = (radius[mask4] * np.abs(np.sin(theta[mask4]))) / cy
+                    else:
+                        h, w = in_img.shape[:2]
 
-                    mod_fact = 1 + (fact - 1) * in_distortion_power
+                        cx, cy = w // 2, h // 2
 
-                    x_tar = (dx * mod_fact + cx).astype(int)
-                    y_tar = (dy * mod_fact + cy).astype(int)
+                        out_img = np.zeros_like(in_img)
 
-                    x_tar = np.clip(x_tar, 0, w - 1)
-                    y_tar = np.clip(y_tar, 0, h - 1)
+                        y, x = np.indices((h, w))
 
-                    out_img[y, x] = in_img[y_tar, x_tar]
+                        dx = x - cx
+                        dy = y - cy
+
+                        theta = np.arctan2(dy, dx) % two_pi
+
+                        radius = np.sqrt(dx**2 + dy**2)
+
+                        corner_ang = math.atan(cy / cx)
+                        pi_minus_corner_ang = pi - corner_ang
+                        pi_plus_corner_ang = pi + corner_ang
+                        tow_pi_minus_corner_ang = two_pi - corner_ang
+
+                        fact = np.zeros_like(radius)
+
+                        mask1 = (theta <= corner_ang) | (
+                            theta > tow_pi_minus_corner_ang
+                        )
+                        mask2 = (theta > corner_ang) & (theta <= pi_minus_corner_ang)
+                        mask3 = (theta > pi_minus_corner_ang) & (
+                            theta <= pi_plus_corner_ang
+                        )
+                        mask4 = (theta > pi_plus_corner_ang) & (
+                            theta <= tow_pi_minus_corner_ang
+                        )
+
+                        fact[mask1] = (
+                            radius[mask1] * np.abs(np.cos(theta[mask1]))
+                        ) / cx
+                        fact[mask2] = (
+                            radius[mask2] * np.abs(np.sin(theta[mask2]))
+                        ) / cy
+                        fact[mask3] = (
+                            radius[mask3] * np.abs(np.cos(theta[mask3]))
+                        ) / cx
+                        fact[mask4] = (
+                            radius[mask4] * np.abs(np.sin(theta[mask4]))
+                        ) / cy
+
+                        mod_fact = 1 + (fact - 1) * in_distortion_power
+
+                        x_tar = (dx * mod_fact + cx).astype(int)
+                        y_tar = (dy * mod_fact + cy).astype(int)
+
+                        x_tar = np.clip(x_tar, 0, w - 1)
+                        y_tar = np.clip(y_tar, 0, h - 1)
+
+                        out_img[y, x] = in_img[y_tar, x_tar]
 
                 t_en_process = time.time()
                 self.last_processing_time += t_en_process - t_st_process
@@ -530,19 +577,19 @@ class edit_process:
         self.last_overall_time = t_en - t_st
 
 
-# # In[53]:
+# In[5]:
 
 
 # im_cp = edit_process()
 
 
-# # In[55]:
+# # In[7]:
 
 
 # in_list = ["frm000000.jpg", "frm000001.jpg", "frm000002.jpg", "frm000003.jpg"]
 
 
-# # In[7]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -559,7 +606,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[9]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -573,7 +620,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[11]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -587,7 +634,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[13]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -605,7 +652,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[57]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -624,7 +671,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[17]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -638,7 +685,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[21]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -652,7 +699,7 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[23]:
+# # In[ ]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
@@ -666,14 +713,30 @@ class edit_process:
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[25]:
+# # In[11]:
 
 
 # im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
 #             process_all_flag = True,
 #             #in_img_list = in_list,
 #             process_type = "correct_fisheye",
+#             in_direction = "Unknown",
 #             in_distortion_power = 0.11,
+#             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
+
+# print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
+# read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
+
+
+# # In[13]:
+
+
+# im_cp.mod_edit(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
+#             process_all_flag = True,
+#             #in_img_list = in_list,
+#             process_type = "correct_fisheye",
+#             in_direction = "Vertical",
+#             in_start_clock_pos = 9.0,
 #             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
 
 # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \

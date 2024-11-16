@@ -85,6 +85,8 @@ message FisheyeRequest{
     string out_img_path = 4;
     bool is_preview_flag = 5;
     double in_distortion_power=6;
+    string in_direction = 7;
+    double in_start_clock_pos = 8;
 }
 
 message SmartResizeRequest{
