@@ -8,6 +8,7 @@ import "extract.proto";
 import "pdf_generate.proto";
 import "measure.proto";
 import "edit.proto";
+import "sharpen.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -67,4 +68,8 @@ service EditService{
     rpc AspectRatioFilter (AspectRatioRequest) returns (JobStatusResponse);
     rpc FisheyeFilter (FisheyeRequest) returns (JobStatusResponse);  
     rpc SmartResizeFilter (SmartResizeRequest) returns (JobStatusResponse);  
+}
+service SharpenService{
+    rpc LaplacianFilter (LaplacianSharpenRequest) returns (JobStatusResponse);
+    rpc UnsharpMaskFilter (UnsharpMaskRequest) returns (JobStatusResponse);
 }
