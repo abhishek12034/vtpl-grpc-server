@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message LaplacianSharpenRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    string in_lap_method =6;
+}
+
+message UnsharpMaskRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    double in_sharpen_spread=6;
+    double in_sharpen_power =7;
+}
