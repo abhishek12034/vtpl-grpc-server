@@ -83,9 +83,9 @@ class edit_process:
         )
 
         self.in_param += "\n\t <process_type> = correct_aspect_ratio - correct aspect ration of an image"
-        self.in_param += "\n\t\t <in_aspect_ratio_times> value between 0.01 to 10 --> 1 means same --> 1 to 10 to reduce rows "
+        self.in_param += "\n\t\t <in_aspect_ratio_times> value between 0.1 to 10 --> 1 means same --> 1 to 10 to reduce rows "
         self.in_param += (
-            "\n\t\t                               1 to 0.01 to reduce columns"
+            "\n\t\t                               1 to 0.1 to reduce columns"
         )
 
         self.in_param += "\n\t <process_type> = correct_fisheye - correct fiseye distortion of an image"

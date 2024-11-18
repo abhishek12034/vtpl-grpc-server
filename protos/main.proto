@@ -9,6 +9,7 @@ import "pdf_generate.proto";
 import "measure.proto";
 import "edit.proto";
 import "sharpen.proto";
+import "denoise.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -72,4 +73,12 @@ service EditService{
 service SharpenService{
     rpc LaplacianFilter (LaplacianSharpenRequest) returns (JobStatusResponse);
     rpc UnsharpMaskFilter (UnsharpMaskRequest) returns (JobStatusResponse);
+}
+
+service DenoiseService{
+    rpc AveragingFilter (AveragingRequest) returns (JobStatusResponse);
+    rpc GaussianSmoothingFilter (GaussianSmoothingRequest) returns (JobStatusResponse);
+    rpc BilateralFilter (BilateralFilteringRequest) returns (JobStatusResponse);
+    rpc MedianFilter (MedianFilteringRequest) returns (JobStatusResponse);
+    rpc WienerFilter (WienerRequest) returns (JobStatusResponse);
 }
