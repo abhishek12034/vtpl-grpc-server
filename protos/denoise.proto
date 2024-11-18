@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+
+message AveragingRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_filter_size = 6;
+}
+
+message GaussianSmoothingRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_filter_size = 6;
+}
+
+message BilateralFilteringRequest {
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_filter_size = 6;
+    int32 in_variation_range =7;
+}
+
+message MedianFilteringRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_filter_size = 6;
+}
+
+message WienerRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4;
+    bool is_preview_flag = 5;
+    int32 in_filter_size = 6;
+    int32 wiener_power_val =7;
+}
