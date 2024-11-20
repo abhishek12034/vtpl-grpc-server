@@ -21,7 +21,7 @@ class BaseService:
         self.job_status = {}
         self.lock = threading.Lock()
         self.redis_client = get_redis_client()
-        self.executor = ThreadPoolExecutor(max_workers=10)
+        self.executor = ThreadPoolExecutor(max_workers=100)
         self.priority_queue = PriorityQueue()  # Priority queue for tasks
 
     def store_job_status_in_redis(self, job_id, job_status):
@@ -124,7 +124,8 @@ class BaseService:
                         logger.info(
                             f"Total Time Taken for Job Id {job_id} is {time.time() - self.start_time}"
                         )
-
+                        del self.job_status[job_id]  # This removes the job from memory
+                        print(f"Job {job_id} removed from memory.")
                     # Store job status in Redis
                     self.store_job_status_in_redis(job_id, job_status)
                     logger.info(f"Job {job_id} progress updated in Redis: {job_status}")
@@ -161,6 +162,10 @@ class BaseService:
     ):
 
         try:
+            logger.info(f"Json In Memory Object{self.job_status}")
+            print(f"Json In Memory Object{self.job_status}")
+
+            logger.info(f"Request Data{request}")
             self.start_time = time.time()
 
             job_id = str(uuid.uuid4())
@@ -235,7 +240,7 @@ class BaseService:
             )
             # Submit the image processing job and progress update to the executor
             self.executor.submit(self.update_progress_in_redis, job_id)
-
+            logger.info("Updating In Redis")
             priority = (
                 1 if request.is_preview_flag else 10
             )  # Single-image jobs get higher priority

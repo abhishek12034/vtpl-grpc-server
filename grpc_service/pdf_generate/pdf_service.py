@@ -2,8 +2,12 @@ from stubs import channel_pb2 as channel_pb2
 from stubs import pdf_generate_pb2
 from stubs import main_pb2
 from stubs import main_pb2_grpc
-from report_generator.report_generate_v2 import GenerateReport
+from report_generator.report_generate_v3 import GenerateReport
 import time
+
+from logging_config import setup_logging
+
+logger = setup_logging()
 
 
 class PDFGenerateService(main_pb2_grpc.PDFGenerateServiceServicer):
@@ -11,16 +15,33 @@ class PDFGenerateService(main_pb2_grpc.PDFGenerateServiceServicer):
         pass  # You can also call everything from here as well by passing request, there is no need of PDFGeneration function.
 
     def PDFGeneretion(self, request, context):
-        print("REQUEST :", request)
-        report_obj = GenerateReport(request)
-        report_obj.generate_report()
+        try:
+            logger.info("Request is Received")
+            logger.info(f"REQUEST {request}")
 
-        response = pdf_generate_pb2.PDFGenerateResponse(
-            status_code=200,
-            status_message="PDF generated successfully",
-            pdf_url=request.out_docs_path,
-            error_details="",
-        )
+            # Generate the report
+            report_obj = GenerateReport(request)
+            report_obj.generate_report()
 
-        # Return the response
-        return response
+            # Success response
+            response = pdf_generate_pb2.PDFGenerateResponse(
+                status_code=200,
+                status_message="PDF generated successfully",
+                pdf_url=request.out_docs_path,
+                error_details="",
+            )
+            return response
+
+        except Exception as e:
+            # Log the exception
+            logger.error("Error generating PDF", exc_info=True)
+            logger.error(f"Exception: {e}")
+
+            # Error response
+            response = pdf_generate_pb2.PDFGenerateResponse(
+                status_code=500,
+                status_message="Failed to generate PDF",
+                pdf_url="",
+                error_details=str(e),
+            )
+            return response

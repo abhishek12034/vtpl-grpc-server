@@ -6,6 +6,10 @@ import "channel.proto";
 import "adjust.proto";
 import "extract.proto";
 import "pdf_generate.proto";
+import "measure.proto";
+import "edit.proto";
+import "sharpen.proto";
+import "denoise.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -47,5 +51,34 @@ service ExtractService {
 
 service PDFGenerateService{
     rpc PDFGeneretion(PDFGenerateRequest) returns (PDFGenerateResponse);
+}
 
+service MeasureService{
+    rpc MeasureOneD (MeasureOneDRequest) returns (MeasureResponse);
+    rpc MeasureTwoD (MeasureTwoDRequest) returns (MeasureResponse);
+    rpc MeasureThreeD (MeasureThreeDRequest) returns (MeasureResponse);
+}
+
+service EditService{
+    rpc CropFilter (CropRequest) returns (JobStatusResponse);
+    rpc FlipFilter (FlipRequest) returns (JobStatusResponse);
+    rpc RotateFilter (RotateRequest) returns (JobStatusResponse);
+    rpc ResizeFilter (ResizeRequest) returns (JobStatusResponse);
+    rpc PerspectiveFilter (PerspectiveRequest) returns (JobStatusResponse);
+    rpc UndistortFilter (UndistortRequest) returns (JobStatusResponse);
+    rpc AspectRatioFilter (AspectRatioRequest) returns (JobStatusResponse);
+    rpc FisheyeFilter (FisheyeRequest) returns (JobStatusResponse);  
+    rpc SmartResizeFilter (SmartResizeRequest) returns (JobStatusResponse);  
+}
+service SharpenService{
+    rpc LaplacianFilter (LaplacianSharpenRequest) returns (JobStatusResponse);
+    rpc UnsharpMaskFilter (UnsharpMaskRequest) returns (JobStatusResponse);
+}
+
+service DenoiseService{
+    rpc AveragingFilter (AveragingRequest) returns (JobStatusResponse);
+    rpc GaussianSmoothingFilter (GaussianSmoothingRequest) returns (JobStatusResponse);
+    rpc BilateralFilter (BilateralFilteringRequest) returns (JobStatusResponse);
+    rpc MedianFilter (MedianFilteringRequest) returns (JobStatusResponse);
+    rpc WienerFilter (WienerRequest) returns (JobStatusResponse);
 }

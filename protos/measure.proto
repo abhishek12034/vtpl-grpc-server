@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+message Coordinates {
+    int32 x = 1;  
+    int32 y = 2;
+}
+
+message CoordinatesGroup {
+    repeated Coordinates points = 1; 
+}
+
+message MeasureOneDRequest {
+    string in_img_path = 1;   
+    bool process_all_flag = 2;      
+    repeated string in_img_list = 3;   
+    string out_img_path = 4;             
+    bool is_preview_flag = 5; 
+    CoordinatesGroup in_ref_dual_pt_rc_list =6;
+    CoordinatesGroup in_calc_dual_pt_rc_list=7;
+    int32 in_ref_val=8;
+}
+
+message MeasureTwoDRequest {
+    string in_img_path = 1;   
+    bool process_all_flag = 2;      
+    repeated string in_img_list = 3;   
+    string out_img_path = 4;             
+    bool is_preview_flag = 5; 
+    CoordinatesGroup in_ref_dual_pt_rc_list =6;
+    CoordinatesGroup in_calc_dual_pt_rc_list=7;
+    repeated int32 in_ref_val_list=8;
+}
+
+message MeasureThreeDRequest {
+    string in_img_path = 1;   
+    bool process_all_flag = 2;      
+    repeated string in_img_list = 3;   
+    string out_img_path = 4;             
+    bool is_preview_flag = 5; 
+    repeated CoordinatesGroup in_ref_line_rc_list =6;
+    CoordinatesGroup in_calc_line_rc=7;
+    repeated int32 in_ref_base_ht_mesr_list=8;
+}
+
+message MeasureResponse {
+    string job_id = 1;
+    double percentage = 2;
+    string input_image_path = 3;
+    string output_image_path = 4;
+    int64 total_input_images = 5;
+    int64 processed_image_count = 6;
+    string status_message = 7;
+    bool completed = 8;
+    string error_message = 9;
+    string process_type = 10;
+    int32 status_code = 11;
+    float object_length = 12;
+}
