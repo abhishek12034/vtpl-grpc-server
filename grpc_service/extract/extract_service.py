@@ -33,7 +33,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def AdaptiveThresholdFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -43,7 +42,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def LaplaceFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -53,7 +51,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def PrewittFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -63,7 +60,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def SobelFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -73,7 +69,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def ScharrFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -83,7 +78,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def CannyFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -93,7 +87,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def LinearFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -103,7 +96,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def BiLinearFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -113,7 +105,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def ChannelSelectorFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -141,7 +132,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def FourierFilter(self, request, context):
-        print(request)
 
         return self._start_image_processing_job(
             request,
@@ -297,7 +287,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
                 if request.kernal_request_format == "horizontal"
                 else [item.values for item in request.in_kernal_2]
             )
-            print(in_kernal_1)
 
             adjust_params = {
                 "process_type": process_type,
@@ -319,8 +308,6 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         try:
             in_kernal_1 = request.in_kernal_1
             in_kernal_2 = [item.values for item in request.in_kernal_2]
-            print(in_kernal_1, in_kernal_2)
-
             adjust_params = {
                 "process_type": process_type,
                 "in_kernal_1": in_kernal_1,

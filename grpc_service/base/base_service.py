@@ -97,7 +97,9 @@ class BaseService:
                         current_processed_image_count = job_status.get(
                             "processed_image_count", 0
                         )
-                    print(current_processed_image_count, last_processed_image_count)
+                    logger.indo(
+                        "Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
+                    )
                     if current_processed_image_count == last_processed_image_count:
                         staleness_counter += 1
                         if staleness_counter >= stale_progress_threshold:
@@ -125,7 +127,7 @@ class BaseService:
                     last_processed_image_count = current_processed_image_count
 
                     # Mark job as completed if 100%
-                    if job_status["percentage"] == 100:
+                    if job_status["percentage"] >= 100:
                         job_status["status_message"] = StatusMessage.JOB_COMPLETED.value
                         job_status["status_code"] = JobStatusCode.COMPLETED.value
                         job_status["completed"] = True

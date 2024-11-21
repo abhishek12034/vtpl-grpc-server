@@ -342,7 +342,6 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 "grid_col": request.grid_col,
                 "process_type": process_type,
             }
-            print("Hello from clahe")
 
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
         except Exception as e:
