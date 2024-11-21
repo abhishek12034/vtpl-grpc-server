@@ -66,15 +66,22 @@ class BaseService:
             status_code=job_status["status_code"],
         )
 
-    def update_progress_in_redis(self, job_id, is_multithreading_used, output_path):
+    def update_progress_in_redis(
+        self, job_id, is_multithreading_used, output_path, input_path
+    ):
         retry_count = 0
         max_retries = 5
         stale_progress_threshold = 10  # Number of iterations to detect staleness
         last_processed_image_count = -1  # Track the last known progress count
         staleness_counter = 0
+        if not is_multithreading_used:
+            self.job_status.get(job_id)["total_images"] = len(
+                list_image_files(input_path)
+            )
 
         while True:
             try:
+
                 time.sleep(1)
 
                 with self.lock:
@@ -98,6 +105,9 @@ class BaseService:
                             "processed_image_count", 0
                         )
                     logger.info(
+                        f"Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
+                    )
+                    print(
                         f"Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
                     )
                     if current_processed_image_count == last_processed_image_count:
@@ -127,7 +137,7 @@ class BaseService:
                     last_processed_image_count = current_processed_image_count
 
                     # Mark job as completed if 100%
-                    if job_status["percentage"] >= 100:
+                    if job_status["percentage"] == 100:
                         job_status["status_message"] = StatusMessage.JOB_COMPLETED.value
                         job_status["status_code"] = JobStatusCode.COMPLETED.value
                         job_status["completed"] = True
@@ -259,6 +269,7 @@ class BaseService:
                 job_id,
                 is_multithreading_used,
                 request.out_img_path,
+                request.in_img_path,
             )
             logger.info("Updating In Redis")
 
