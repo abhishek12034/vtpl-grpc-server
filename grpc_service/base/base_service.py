@@ -66,7 +66,7 @@ class BaseService:
             status_code=job_status["status_code"],
         )
 
-    def update_progress_in_redis(self, job_id):
+    def update_progress_in_redis(self, job_id, is_multithreading_used, output_path):
         retry_count = 0
         max_retries = 5
         stale_progress_threshold = 10  # Number of iterations to detect staleness
@@ -89,9 +89,15 @@ class BaseService:
                         break
 
                     # Check for staleness in progress
-                    current_processed_image_count = job_status.get(
-                        "processed_image_count", 0
-                    )
+                    if not is_multithreading_used:
+                        current_processed_image_count = count_images_in_folder(
+                            output_path
+                        )
+                    else:
+                        current_processed_image_count = job_status.get(
+                            "processed_image_count", 0
+                        )
+                    print(current_processed_image_count, last_processed_image_count)
                     if current_processed_image_count == last_processed_image_count:
                         staleness_counter += 1
                         if staleness_counter >= stale_progress_threshold:
@@ -107,14 +113,16 @@ class BaseService:
                     else:
                         staleness_counter = 0  # Reset counter if progress is made
 
-                    last_processed_image_count = current_processed_image_count
-
                     # Calculate and update percentage
                     if job_status["total_images"] > 0:
                         job_status["percentage"] = int(
                             (current_processed_image_count * 100)
                             / job_status["total_images"]
                         )
+                        job_status["processed_image_count"] = (
+                            current_processed_image_count
+                        )
+                    last_processed_image_count = current_processed_image_count
 
                     # Mark job as completed if 100%
                     if job_status["percentage"] == 100:
@@ -158,7 +166,12 @@ class BaseService:
             yield lst[i : i + n]
 
     def _start_image_processing_job(
-        self, request, context, process_type, processing_func
+        self,
+        request,
+        context,
+        process_type,
+        processing_func,
+        is_multithreading_used=True,
     ):
 
         try:
@@ -239,28 +252,45 @@ class BaseService:
                 job_id=job_id, job_status=self.job_status[job_id]
             )
             # Submit the image processing job and progress update to the executor
-            self.executor.submit(self.update_progress_in_redis, job_id)
+            self.executor.submit(
+                self.update_progress_in_redis,
+                job_id,
+                is_multithreading_used,
+                request.out_img_path,
+            )
             logger.info("Updating In Redis")
-            priority = (
-                1 if request.is_preview_flag else 10
-            )  # Single-image jobs get higher priority
 
-            # Submit the job to the priority queue
-            self.priority_queue.put(
-                (
-                    priority,
-                    job_id,
+            logger.info(f"List of images is{in_img_list}")
+            if not is_multithreading_used:
+                logger.info("Process if Implemented without multithreading")
+                self.executor.submit(
                     processing_func,
                     request,
                     context,
+                    job_id,
                     process_type,
-                    self.job_status[job_id],
                     in_img_list,
                 )
-            )
-            # Start the worker thread if not already running
-            self.executor.submit(self._process_queue)
+            else:
+                priority = (
+                    1 if request.is_preview_flag else 10
+                )  # Single-image jobs get higher priority
 
+                # Submit the job to the priority queue
+                self.priority_queue.put(
+                    (
+                        priority,
+                        job_id,
+                        processing_func,
+                        request,
+                        context,
+                        process_type,
+                        self.job_status[job_id],
+                        in_img_list,
+                    )
+                )
+                # Start the worker thread if not already running
+                self.executor.submit(self._process_queue)
             # Return the initial job status response
             return self.create_job_status_response(
                 job_id, job_status=self.job_status[job_id]

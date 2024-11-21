@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message LocalStabilizationRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    int32 in_st_row =6;
+    int32 in_en_row=7;
+    int32 in_st_col=8;
+    int32 in_en_col=9;
+    int32 in_stabilization_power =10;
+    int32 in_video_fps =11;
+}
+message GlobalStabilizationRequest{
+    string in_img_path=1;
+    bool process_all_flag=2;
+    repeated string in_img_list=3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    int32 in_stabilization_power =10;
+    int32 in_video_fps =11;
+}

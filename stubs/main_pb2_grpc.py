@@ -12,6 +12,7 @@ import job_pb2 as job__pb2
 import measure_pb2 as measure__pb2
 import pdf_generate_pb2 as pdf__generate__pb2
 import sharpen_pb2 as sharpen__pb2
+import stablization_pb2 as stablization__pb2
 
 GRPC_GENERATED_VERSION = '1.66.1'
 GRPC_VERSION = grpc.__version__
@@ -2403,6 +2404,121 @@ class DenoiseService(object):
             target,
             '/vtpl_grpc_server.DenoiseService/WienerFilter',
             denoise__pb2.WienerRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class StablizationServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.LocalStablizationFilter = channel.unary_unary(
+                '/vtpl_grpc_server.StablizationService/LocalStablizationFilter',
+                request_serializer=stablization__pb2.LocalStabilizationRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+        self.GlobalStablizationFilter = channel.unary_unary(
+                '/vtpl_grpc_server.StablizationService/GlobalStablizationFilter',
+                request_serializer=stablization__pb2.GlobalStabilizationRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+
+
+class StablizationServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def LocalStablizationFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GlobalStablizationFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_StablizationServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'LocalStablizationFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.LocalStablizationFilter,
+                    request_deserializer=stablization__pb2.LocalStabilizationRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+            'GlobalStablizationFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.GlobalStablizationFilter,
+                    request_deserializer=stablization__pb2.GlobalStabilizationRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.StablizationService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.StablizationService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class StablizationService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def LocalStablizationFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.StablizationService/LocalStablizationFilter',
+            stablization__pb2.LocalStabilizationRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GlobalStablizationFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.StablizationService/GlobalStablizationFilter',
+            stablization__pb2.GlobalStabilizationRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
             channel_credentials,
