@@ -97,8 +97,8 @@ class BaseService:
                         current_processed_image_count = job_status.get(
                             "processed_image_count", 0
                         )
-                    logger.indo(
-                        "Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
+                    logger.info(
+                        f"Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
                     )
                     if current_processed_image_count == last_processed_image_count:
                         staleness_counter += 1
