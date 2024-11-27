@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message AbortRequest{
+string job_id = 1;
+}
+// message AbortResponse{
+//     string message = 1;
+// }
