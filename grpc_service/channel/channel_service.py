@@ -19,13 +19,14 @@ import os
 logger = setup_logging()
 
 
-class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
+class ChannelService(main_pb2_grpc.ChannelServiceServicer):
     def __init__(self):
         super().__init__()  # Call the __init__ method of BaseService
         self.processor = channel_process()
+        self.base_obj = BaseService()
 
     def GrayscaleFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.GRAYSCALE.value,
@@ -33,7 +34,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
         )
 
     def ColorSwitchFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.COLOR_SWITCH.value,
@@ -41,7 +42,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
         )
 
     def ColorConversionFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.COLOR_CONVERSION.value,
@@ -49,7 +50,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
         )
 
     def ExtractSingleChannelFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.EXTRACT_SINGLE_CHANNEL.value,
@@ -58,7 +59,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
 
     def DisplaySelectedChannelFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ChannelProcessingType.DISPLAY_SELECTED_CHANNEL.value,
@@ -68,7 +69,7 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
     def GetJobStatus(self, request, context):
         job_id = request.job_id
         try:
-            job_status_json = self.redis_client.get(job_id)
+            job_status_json = self.base_obj.redis_client.get(job_id)
             if job_status_json:
                 job_status = json.loads(job_status_json)
 
@@ -77,20 +78,20 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                     logger.error(f"Job {job_id} has failed.")
                     # context.set_details(f"Job {job_id} has failed.")
                     # context.set_code(grpc.StatusCode.INTERNAL)
-                    return self.create_job_status_response(job_id, job_status)
+                    return self.base_obj.create_job_status_response(job_id, job_status)
 
                 # If status code is not 500, return the job status as usual
-                return self.create_job_status_response(job_id, job_status)
+                return self.base_obj.create_job_status_response(job_id, job_status)
             else:
                 logger.warning(f"Job ID {job_id} not found in Redis.")
-                return self.create_job_status_response(
+                return self.base_obj.create_job_status_response(
                     job_id, error="Job ID not found."
                 )
         except Exception as e:
             logger.error(f"Error in GetJobStatus: {e}")
             context.set_details("Internal server error occurred.")
             context.set_code(grpc.StatusCode.INTERNAL)
-            return self.create_job_status_response(job_id, error=str(e))
+            return self.base_obj.create_job_status_response(job_id, error=str(e))
 
     def process_grayscale(self, request, context, job_id, process_type, img_chunk):
         try:
@@ -195,10 +196,12 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
         try:
 
             # Store thread ID in job status
-            with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
 
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
 
             # Process each image in the list
             for in_img in img_chunk:
@@ -211,18 +214,22 @@ class ChannelService(BaseService, main_pb2_grpc.ChannelServiceServicer):
                 )
 
                 # Update processed image count
-                with self.lock:
-                    self.job_status[job_id]["processed_image_count"] += 1
+                with self.base_obj.lock:
+                    self.base_obj.job_status[job_id]["processed_image_count"] += 1
 
         except Exception as e:
             # Handle exceptions and update job status as failed
-            with self.lock:
-                self.job_status[job_id]["completed"] = False
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["completed"] = False
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
-                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
-                self.job_status[job_id]["error"] = str(e)
+                self.base_obj.job_status[job_id][
+                    "status_message"
+                ] = JobStatusCode.FAILED.value
+                self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
                 raise e

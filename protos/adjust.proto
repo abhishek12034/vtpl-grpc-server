@@ -31,7 +31,6 @@ message ClaheRequest{
     int32 grid_row = 6;          
     int32 grid_col = 7;
     bool is_preview_flag = 8;
-  
 }
 
 message BrightnessContrastChangeRequest{

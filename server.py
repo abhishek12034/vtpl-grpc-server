@@ -9,15 +9,16 @@ from grpc_service.edit.edit_service import EditService
 from grpc_service.sharpen.sharpen_service import SharpenService
 from grpc_service.denoise.denoise_service import DenoiseService
 from grpc_service.stablization.stablization_service import StablizationService
-
+from grpc_service.abort.abort_service import AbortService
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
 import os
+from grpc_service.base.base_service import BaseService
 
 
 def serve():
     logger = setup_logging()  # Setup logging once at the start
-
+    # shared_base_obj = BaseService()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     main_pb2_grpc.add_ChannelServiceServicer_to_server(ChannelService(), server)
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
@@ -30,7 +31,7 @@ def serve():
     main_pb2_grpc.add_StablizationServiceServicer_to_server(
         StablizationService(), server
     )
-
+    main_pb2_grpc.add_AbortServiceServicer_to_server(AbortService(), server)
     port = os.getenv("GRPC_SERVER_PORT", "5012")
     server.add_insecure_port(f"[::]:{port}")
 

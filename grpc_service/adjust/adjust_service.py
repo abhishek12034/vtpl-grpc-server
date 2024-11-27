@@ -12,13 +12,14 @@ import grpc
 logger = setup_logging()
 
 
-class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
+class AdjustFilterService(main_pb2_grpc.AdjustServiceServicer):
     def __init__(self):
         super().__init__()
         self.processor = adjust_process()
+        self.base_obj = BaseService()
 
     def LevelControlFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.LEVEL_CONTROL.value,
@@ -26,7 +27,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def ContrastStretchFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.CONTRAST_STRETCH.value,
@@ -34,12 +35,12 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def ClaheFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, AdjustProcessingType.CLAHE.value, self.process_clahe
         )
 
     def BrightnessContrastChangeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.BRIGHTNESS_CONTRAST_CHANGE.value,
@@ -47,7 +48,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def IntensityChangeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.INTENSITY_VALUE_CHANGE.value,
@@ -55,7 +56,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def SaturationChangeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.SATURATION_CHANGE.value,
@@ -63,7 +64,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def HueSatValChangeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.HUE_SAT_VAL_CHANGE.value,
@@ -71,7 +72,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def ExposureControlFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.EXPOSURE_CONTROL.value,
@@ -79,7 +80,7 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def HueChangeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.HUE_CHANGE.value,
@@ -87,12 +88,12 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
         )
 
     def CurveFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, AdjustProcessingType.CURVE.value, self.process_curve
         )
 
     def HistogramEqualizationFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             AdjustProcessingType.HISTOGRAM_EQUALIZATION.value,
@@ -108,12 +109,14 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 in_img_list = list_image_files(request.in_img_path)
 
             # Store thread ID in job status
-            with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_STARTED.value
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
 
             # Process each image in the list
             for in_img in img_chunk:
@@ -126,26 +129,30 @@ class AdjustFilterService(BaseService, main_pb2_grpc.AdjustServiceServicer):
                 )
 
                 # Update processed image count
-                with self.lock:
-                    self.job_status[job_id]["processed_image_count"] += 1
-                    # self.job_status[job_id]["percentage"] = (
-                    #     self.job_status[job_id]["processed_image_count"]
-                    #     / self.job_status[job_id]["total_images"]
+                with self.base_obj.lock:
+                    self.base_obj.job_status[job_id]["processed_image_count"] += 1
+                    # self.base_obj.job_status[job_id]["percentage"] = (
+                    #     self.base_obj.job_status[job_id]["processed_image_count"]
+                    #     / self.base_obj.job_status[job_id]["total_images"]
                     #     * 100
                     # )
-                    # self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                    # self.store_job_status_in_redis(job_id, self.base_obj.job_status[job_id])
 
         except Exception as e:
             # Handle exceptions and update job status as failed
-            with self.lock:
-                self.job_status[job_id]["completed"] = False
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["completed"] = False
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
-                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
-                self.job_status[job_id]["error"] = str(e)
+                self.base_obj.job_status[job_id][
+                    "status_message"
+                ] = JobStatusCode.FAILED.value
+                self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
                 raise e
 
     def process_level_control(self, request, context, job_id, process_type, img_chunk):

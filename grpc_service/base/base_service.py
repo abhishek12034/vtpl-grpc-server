@@ -17,12 +17,26 @@ logger = setup_logging()
 
 
 class BaseService:
+    _instance = None  # This will store the singleton instance
+
+    def __new__(cls, *args, **kwargs):
+        # If an instance already exists, return it
+        if not cls._instance:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance
+
     def __init__(self):
-        self.job_status = {}
-        self.lock = threading.Lock()
-        self.redis_client = get_redis_client()
-        self.executor = ThreadPoolExecutor(max_workers=100)
-        self.priority_queue = PriorityQueue()  # Priority queue for tasks
+        # Only initialize the attributes the first time the class is instantiated
+        if not hasattr(self, "initialized"):  # Check if already initialized
+            self.job_status = {}
+            self.lock = threading.Lock()
+            self.redis_client = get_redis_client()
+            self.executor = ThreadPoolExecutor(max_workers=100)
+            self.priority_queue = PriorityQueue()  # Priority queue for tasks
+            self.initialized = True  # Mark as initialized
+            logger.info(
+                f"BaseService initialized at {id(self)} with job_status: {id(self.job_status)}"
+            )
 
     def store_job_status_in_redis(self, job_id, job_status):
         EXPIRATION_TIME = 60 * 60 * 24
@@ -51,6 +65,7 @@ class BaseService:
                 completed=False,
                 error=error,
                 status_code=JobStatusCode.NOT_FOUND.value,
+                abort_event=job_status["abort_event"],  # Add the abort_event here
             )
         return job_pb2.JobStatusResponse(
             job_id=job_status["job_id"],
@@ -64,6 +79,7 @@ class BaseService:
             completed=job_status["completed"],
             error=error if error else job_status.get("error"),
             status_code=job_status["status_code"],
+            abort_event=job_status["abort_event"],  # Add the abort_event here
         )
 
     def update_progress_in_redis(
@@ -92,7 +108,12 @@ class BaseService:
                         break
 
                     # Check if the job is failed
-                    if job_status["status_message"] == StatusMessage.JOB_FAILED.value:
+                    if (
+                        job_status["status_message"] == StatusMessage.JOB_FAILED.value
+                        or job_status["status_message"]
+                        == StatusMessage.JOB_ABORTED.value
+                    ):
+                        logger.info("Job is Failed or Aborted By User")
                         break
 
                     # Check for staleness in progress
@@ -258,6 +279,7 @@ class BaseService:
                     "error": None,
                     "thread_id": [],
                     "status_code": JobStatusCode.IN_PROGRESS.value,
+                    "abort_event": False,  # Add the abort_event here
                 }
             logger.info(f"Job Created: {self.job_status[job_id]}")
             self.store_job_status_in_redis(
@@ -303,7 +325,7 @@ class BaseService:
                     )
                 )
                 # Start the worker thread if not already running
-                self.executor.submit(self._process_queue)
+                self.executor.submit(self._process_queue, job_id)
             # Return the initial job status response
             return self.create_job_status_response(
                 job_id, job_status=self.job_status[job_id]
@@ -320,7 +342,7 @@ class BaseService:
                 "Internal error occurred during job initialization",
             )
 
-    def _process_queue(self):
+    def _process_queue(self, job_id):
         """Worker method that processes jobs from the priority queue."""
         max_concurrent_threads = os.cpu_count() - 2
         max_concurrent_threads = (
@@ -349,7 +371,10 @@ class BaseService:
             for i in range(0, len(img_chunks), max_concurrent_threads):
                 # Process the images in batches, respecting the thread limit
                 chunk_batch = img_chunks[i : i + max_concurrent_threads]
-
+                if self.job_status[job_id]["abort_event"]:
+                    logger.info(f"Job {job_id} aborted. Terminating processing.")
+                    self.priority_queue.task_done()
+                    return
                 # Before processing each batch, re-check the priority queue
                 if not self.priority_queue.empty():
                     next_priority, next_job_id, *_ = self.priority_queue.queue[0]

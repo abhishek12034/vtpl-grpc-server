@@ -11,6 +11,7 @@ import "edit.proto";
 import "sharpen.proto";
 import "denoise.proto";
 import "stablization.proto";
+import "abort.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -87,4 +88,8 @@ service StablizationService{
     rpc LocalStablizationFilter (LocalStabilizationRequest) returns (JobStatusResponse);
     rpc GlobalStablizationFilter (GlobalStabilizationRequest) returns (JobStatusResponse);
 
+}
+
+service AbortService{
+    rpc AbortProcess (AbortRequest) returns (JobStatusResponse);
 }

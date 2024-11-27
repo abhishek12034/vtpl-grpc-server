@@ -11,13 +11,14 @@ import threading
 logger = setup_logging()
 
 
-class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
+class ExtractService(main_pb2_grpc.ExtractServiceServicer):
     def __init__(self):
         super().__init__()  # Call the __init__ method of BaseService
         self.processor = extract_process()
+        self.base_obj = BaseService()
 
     def NegativeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.NEGATIVE.value,
@@ -25,7 +26,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         )
 
     def ThresholdFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.THRESHOLD.value,
@@ -34,7 +35,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def AdaptiveThresholdFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.ADAPTIVE_THRESHOLD.value,
@@ -43,7 +44,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def LaplaceFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.LAPLACE.value,
@@ -52,7 +53,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def PrewittFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.PREWITT.value,
@@ -61,7 +62,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def SobelFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.SOBEL.value,
@@ -70,7 +71,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def ScharrFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.SCHARR.value,
@@ -79,7 +80,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def CannyFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.CANNY.value,
@@ -88,7 +89,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def LinearFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.LINEAR_FILTER.value,
@@ -97,7 +98,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def BiLinearFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.BILINEAR_FILTER.value,
@@ -106,7 +107,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def ChannelSelectorFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.CHANNEL_SELECTOR.value,
@@ -115,7 +116,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def ChannelSelectorFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.CHANNEL_SELECTOR.value,
@@ -124,7 +125,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def ChannelDemuxFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.CHANNEL_DEMUX.value,
@@ -133,7 +134,7 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
 
     def FourierFilter(self, request, context):
 
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             ExtractProcessingType.FOURIER.value,
@@ -404,9 +405,11 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
         try:
 
             # Store thread ID in job status
-            with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
 
             # Process each image in the list
             for in_img in img_chunk:
@@ -419,18 +422,22 @@ class ExtractService(BaseService, main_pb2_grpc.ExtractServiceServicer):
                 )
 
                 # Update processed image count
-                with self.lock:
-                    self.job_status[job_id]["processed_image_count"] += 1
+                with self.base_obj.lock:
+                    self.base_obj.job_status[job_id]["processed_image_count"] += 1
 
         except Exception as e:
             # Handle exceptions and update job status as failed
-            with self.lock:
-                self.job_status[job_id]["completed"] = False
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["completed"] = False
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
-                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
-                self.job_status[job_id]["error"] = str(e)
+                self.base_obj.job_status[job_id][
+                    "status_message"
+                ] = JobStatusCode.FAILED.value
+                self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
                 raise e

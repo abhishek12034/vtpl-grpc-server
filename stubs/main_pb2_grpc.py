@@ -3,6 +3,7 @@
 import grpc
 import warnings
 
+import abort_pb2 as abort__pb2
 import adjust_pb2 as adjust__pb2
 import channel_pb2 as channel__pb2
 import denoise_pb2 as denoise__pb2
@@ -2519,6 +2520,78 @@ class StablizationService(object):
             target,
             '/vtpl_grpc_server.StablizationService/GlobalStablizationFilter',
             stablization__pb2.GlobalStabilizationRequest.SerializeToString,
+            job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class AbortServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.AbortProcess = channel.unary_unary(
+                '/vtpl_grpc_server.AbortService/AbortProcess',
+                request_serializer=abort__pb2.AbortRequest.SerializeToString,
+                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                _registered_method=True)
+
+
+class AbortServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def AbortProcess(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_AbortServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'AbortProcess': grpc.unary_unary_rpc_method_handler(
+                    servicer.AbortProcess,
+                    request_deserializer=abort__pb2.AbortRequest.FromString,
+                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.AbortService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.AbortService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class AbortService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def AbortProcess(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.AbortService/AbortProcess',
+            abort__pb2.AbortRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
             options,
             channel_credentials,
