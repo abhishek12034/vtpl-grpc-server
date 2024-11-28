@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x61\x62ort.proto\"\x1e\n\x0c\x41\x62ortRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\tb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x61\x62ort.proto\"\x1e\n\x0c\x41\x62ortRequest\x12\x0e\n\x06job_id\x18\x01 \x01(\t\"o\n\rAbortResponse\x12\x0e\n\x06job_id\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x13\n\x0bstatus_code\x18\x03 \x01(\x05\x12\x15\n\rerror_details\x18\x04 \x01(\t\x12\x11\n\ttimestamp\x18\x05 \x01(\tb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,4 +33,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_ABORTREQUEST']._serialized_start=15
   _globals['_ABORTREQUEST']._serialized_end=45
+  _globals['_ABORTRESPONSE']._serialized_start=47
+  _globals['_ABORTRESPONSE']._serialized_end=158
 # @@protoc_insertion_point(module_scope)

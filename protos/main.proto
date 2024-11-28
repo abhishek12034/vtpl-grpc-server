@@ -91,5 +91,5 @@ service StablizationService{
 }
 
 service AbortService{
-    rpc AbortProcess (AbortRequest) returns (JobStatusResponse);
+    rpc AbortProcess (AbortRequest) returns (AbortResponse);
 }
