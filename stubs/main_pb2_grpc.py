@@ -2544,7 +2544,7 @@ class AbortServiceStub(object):
         self.AbortProcess = channel.unary_unary(
                 '/vtpl_grpc_server.AbortService/AbortProcess',
                 request_serializer=abort__pb2.AbortRequest.SerializeToString,
-                response_deserializer=job__pb2.JobStatusResponse.FromString,
+                response_deserializer=abort__pb2.AbortResponse.FromString,
                 _registered_method=True)
 
 
@@ -2563,7 +2563,7 @@ def add_AbortServiceServicer_to_server(servicer, server):
             'AbortProcess': grpc.unary_unary_rpc_method_handler(
                     servicer.AbortProcess,
                     request_deserializer=abort__pb2.AbortRequest.FromString,
-                    response_serializer=job__pb2.JobStatusResponse.SerializeToString,
+                    response_serializer=abort__pb2.AbortResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -2592,7 +2592,7 @@ class AbortService(object):
             target,
             '/vtpl_grpc_server.AbortService/AbortProcess',
             abort__pb2.AbortRequest.SerializeToString,
-            job__pb2.JobStatusResponse.FromString,
+            abort__pb2.AbortResponse.FromString,
             options,
             channel_credentials,
             insecure,
