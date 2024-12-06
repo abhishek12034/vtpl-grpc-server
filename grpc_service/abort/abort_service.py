@@ -52,6 +52,9 @@ class AbortService(main_pb2_grpc.AbortServiceServicer):
                         error_details=f"No job found with ID {job_id}.",
                         timestamp=str(datetime.now()),
                     )
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status
+                )
 
             # Return a success response to the client
             return abort_pb2.AbortResponse(
