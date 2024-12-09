@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class DeblurProcessingType(Enum):
-    OPTICAL = "optical"
+    OPTICAL = "optical_deblurring"
     MOTION = "motion_deblurring"

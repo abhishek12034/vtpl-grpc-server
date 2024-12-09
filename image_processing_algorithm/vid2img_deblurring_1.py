@@ -212,6 +212,8 @@ class deblurring_process:
                         res = np.clip(res, 0, 255)
                         res = res.astype(np.uint8)
 
+                        out_img[:, :, i_plane] = res
+
                 t_en_process = time.time()
                 self.last_processing_time += t_en_process - t_st_process
 
