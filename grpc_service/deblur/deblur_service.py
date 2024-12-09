@@ -38,19 +38,14 @@ class DeblurService(main_pb2_grpc.DeblurServiceServicer):
 
     def process_optical(self, request, context, job_id, process_type, img_chunk):
         try:
-            (in_angle, in_dimension, in_defocus, in_snr) = (
-                request.in_angle,
-                request.in_dimension,
+            (in_dimention, in_snr) = (
+                request.in_dimention,
                 request.in_snr,
             )
-            logger.info(
-                f"In Angle: {in_angle}, In Dimension: {in_dimension}, In Defocus: {in_defocus}, In SNR: {in_snr}"
-            )
-
+            logger.info(f"In Dimension: {in_dimention}, In SNR: {in_snr}")
             adjust_params = {
                 "process_type": process_type,
-                "in_angle": in_angle,
-                "in_spread_distance": in_dimension,
+                "in_spread_distance": in_dimention,
                 "in_snr": in_snr,
             }
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
