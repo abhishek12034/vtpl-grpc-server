@@ -12,6 +12,7 @@ import "sharpen.proto";
 import "denoise.proto";
 import "stablization.proto";
 import "abort.proto";
+import "deblur.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -92,4 +93,9 @@ service StablizationService{
 
 service AbortService{
     rpc AbortProcess (AbortRequest) returns (AbortResponse);
+}
+
+service DeblurService{
+    rpc MotionFilter (MotionRequest) returns (JobStatusResponse);
+    rpc OpticalFilter (OpticalRequest) returns (JobStatusResponse);
 }
