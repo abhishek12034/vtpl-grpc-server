@@ -369,7 +369,7 @@ class AdjustFilterService(main_pb2_grpc.AdjustServiceServicer):
                 "in_st_col": request.in_st_col,
                 "in_en_col": request.in_en_col,
                 "process_type": process_type,
-                "histogram_calc_on_full_img_flag": request.histogram_calc_on_full_img_flag,
+                "histogram_calc_on_full_img_flag": True,
             }
 
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
