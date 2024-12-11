@@ -119,8 +119,8 @@ message ChannelSelectorRequest{
 }
 
 message Point {
-    int32 x = 1;  // X-coordinate
-    int32 y = 2;  // Y-coordinate
+    int32 row = 1;  // X-coordinate
+    int32 col = 2;  // Y-coordinate
 }
 
 message PointList {

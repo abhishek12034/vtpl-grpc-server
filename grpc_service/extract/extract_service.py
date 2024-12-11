@@ -332,8 +332,8 @@ class ExtractService(main_pb2_grpc.ExtractServiceServicer):
             in_bg_rc_pt = request.in_bg_rc_pt
 
             # Convert points to the desired format
-            in_select_dual_pt_rc_list = [[point.x, point.y] for point in points]
-            in_bg_rc_pt = [in_bg_rc_pt.x, in_bg_rc_pt.y]
+            in_select_dual_pt_rc_list = [[point.row, point.col] for point in points]
+            in_bg_rc_pt = [in_bg_rc_pt.row, in_bg_rc_pt.col]
             logger.info(
                 f"Input Values - in_filter_power: {in_filter_power}, in_bg_rc_pt: {in_bg_rc_pt}, in_select_dual_pt_rc_list: {in_select_dual_pt_rc_list}"
             )

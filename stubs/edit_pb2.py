@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nedit.proto\"\'\n\x0f\x45\x64itCoordinates\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\"8\n\x14\x45\x64itCoordinatesGroup\x12 \n\x06points\x18\x01 \x03(\x0b\x32\x10.EditCoordinates\"\xcc\x01\n\x0b\x43ropRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\"\xa6\x01\n\x0b\x46lipRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12$\n\x1cin_flip_hori_true_vert_false\x18\x06 \x01(\x08\"\x99\x01\n\rRotateRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x15\n\rin_rotate_deg\x18\x06 \x01(\x01\"\xf3\x01\n\rResizeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\x12#\n\x1bin_keep_same_selection_size\x18\n \x01(\x08\"\xb8\x01\n\x12PerspectiveRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12/\n\x10in_select_rc_arr\x18\x06 \x01(\x0b\x32\x15.EditCoordinatesGroup\"\xa2\x01\n\x10UndistortRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1b\n\x13in_distortion_power\x18\x06 \x01(\x01\"\xa6\x01\n\x12\x41spectRatioRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1d\n\x15in_aspect_ratio_times\x18\x06 \x01(\x01\"\xd2\x01\n\x0e\x46isheyeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1b\n\x13in_distortion_power\x18\x06 \x01(\x01\x12\x14\n\x0cin_direction\x18\x07 \x01(\t\x12\x1a\n\x12in_start_clock_pos\x18\x08 \x01(\x01\"\xea\x01\n\x12SmartResizeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\x12\x15\n\rin_scale_fact\x18\n \x01(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nedit.proto\"+\n\x0f\x45\x64itCoordinates\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\"8\n\x14\x45\x64itCoordinatesGroup\x12 \n\x06points\x18\x01 \x03(\x0b\x32\x10.EditCoordinates\"\xcc\x01\n\x0b\x43ropRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\"\xa6\x01\n\x0b\x46lipRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12$\n\x1cin_flip_hori_true_vert_false\x18\x06 \x01(\x08\"\x99\x01\n\rRotateRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x15\n\rin_rotate_deg\x18\x06 \x01(\x01\"\xf3\x01\n\rResizeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\x12#\n\x1bin_keep_same_selection_size\x18\n \x01(\x08\"\xb8\x01\n\x12PerspectiveRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12/\n\x10in_select_rc_arr\x18\x06 \x01(\x0b\x32\x15.EditCoordinatesGroup\"\xa2\x01\n\x10UndistortRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1b\n\x13in_distortion_power\x18\x06 \x01(\x01\"\xa6\x01\n\x12\x41spectRatioRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1d\n\x15in_aspect_ratio_times\x18\x06 \x01(\x01\"\xd2\x01\n\x0e\x46isheyeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x1b\n\x13in_distortion_power\x18\x06 \x01(\x01\x12\x14\n\x0cin_direction\x18\x07 \x01(\t\x12\x1a\n\x12in_start_clock_pos\x18\x08 \x01(\x01\"\xea\x01\n\x12SmartResizeRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x11\n\tin_st_row\x18\x06 \x01(\x05\x12\x11\n\tin_en_row\x18\x07 \x01(\x05\x12\x11\n\tin_st_col\x18\x08 \x01(\x05\x12\x11\n\tin_en_col\x18\t \x01(\x05\x12\x15\n\rin_scale_fact\x18\n \x01(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,25 +32,25 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'edit_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_EDITCOORDINATES']._serialized_start=14
-  _globals['_EDITCOORDINATES']._serialized_end=53
-  _globals['_EDITCOORDINATESGROUP']._serialized_start=55
-  _globals['_EDITCOORDINATESGROUP']._serialized_end=111
-  _globals['_CROPREQUEST']._serialized_start=114
-  _globals['_CROPREQUEST']._serialized_end=318
-  _globals['_FLIPREQUEST']._serialized_start=321
-  _globals['_FLIPREQUEST']._serialized_end=487
-  _globals['_ROTATEREQUEST']._serialized_start=490
-  _globals['_ROTATEREQUEST']._serialized_end=643
-  _globals['_RESIZEREQUEST']._serialized_start=646
-  _globals['_RESIZEREQUEST']._serialized_end=889
-  _globals['_PERSPECTIVEREQUEST']._serialized_start=892
-  _globals['_PERSPECTIVEREQUEST']._serialized_end=1076
-  _globals['_UNDISTORTREQUEST']._serialized_start=1079
-  _globals['_UNDISTORTREQUEST']._serialized_end=1241
-  _globals['_ASPECTRATIOREQUEST']._serialized_start=1244
-  _globals['_ASPECTRATIOREQUEST']._serialized_end=1410
-  _globals['_FISHEYEREQUEST']._serialized_start=1413
-  _globals['_FISHEYEREQUEST']._serialized_end=1623
-  _globals['_SMARTRESIZEREQUEST']._serialized_start=1626
-  _globals['_SMARTRESIZEREQUEST']._serialized_end=1860
+  _globals['_EDITCOORDINATES']._serialized_end=57
+  _globals['_EDITCOORDINATESGROUP']._serialized_start=59
+  _globals['_EDITCOORDINATESGROUP']._serialized_end=115
+  _globals['_CROPREQUEST']._serialized_start=118
+  _globals['_CROPREQUEST']._serialized_end=322
+  _globals['_FLIPREQUEST']._serialized_start=325
+  _globals['_FLIPREQUEST']._serialized_end=491
+  _globals['_ROTATEREQUEST']._serialized_start=494
+  _globals['_ROTATEREQUEST']._serialized_end=647
+  _globals['_RESIZEREQUEST']._serialized_start=650
+  _globals['_RESIZEREQUEST']._serialized_end=893
+  _globals['_PERSPECTIVEREQUEST']._serialized_start=896
+  _globals['_PERSPECTIVEREQUEST']._serialized_end=1080
+  _globals['_UNDISTORTREQUEST']._serialized_start=1083
+  _globals['_UNDISTORTREQUEST']._serialized_end=1245
+  _globals['_ASPECTRATIOREQUEST']._serialized_start=1248
+  _globals['_ASPECTRATIOREQUEST']._serialized_end=1414
+  _globals['_FISHEYEREQUEST']._serialized_start=1417
+  _globals['_FISHEYEREQUEST']._serialized_end=1627
+  _globals['_SMARTRESIZEREQUEST']._serialized_start=1630
+  _globals['_SMARTRESIZEREQUEST']._serialized_end=1864
 # @@protoc_insertion_point(module_scope)

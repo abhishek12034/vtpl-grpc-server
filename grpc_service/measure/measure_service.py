@@ -49,8 +49,8 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
             logger.info(f"Reference Points: {ref_points}")
 
             # Convert points to the desired format
-            in_calc_dual_pt_rc_list = [[point.x, point.y] for point in cal_points]
-            in_ref_dual_pt_rc_list = [[point.x, point.y] for point in ref_points]
+            in_calc_dual_pt_rc_list = [[point.row, point.col] for point in cal_points]
+            in_ref_dual_pt_rc_list = [[point.row, point.col] for point in ref_points]
 
             logger.info(
                 "Calling processor.mod_measure() with provided points and image paths."
@@ -153,8 +153,8 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
             logger.info(f"Reference Points: {ref_points}")
 
             # Convert points to the desired format
-            in_calc_dual_pt_rc_list = [[point.x, point.y] for point in cal_points]
-            in_ref_dual_pt_rc_list = [[point.x, point.y] for point in ref_points]
+            in_calc_dual_pt_rc_list = [[point.row, point.col] for point in cal_points]
+            in_ref_dual_pt_rc_list = [[point.row, point.col] for point in ref_points]
             logger.info(
                 "Calling processor.mod_measure() with provided points and image paths."
             )
@@ -248,11 +248,11 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
             logger.info(f"Reference Points: {ref_points_lists}")
 
             # Convert calibration points to desired format
-            in_calc_line_rc = [[point.x, point.y] for point in cal_points]
+            in_calc_line_rc = [[point.row, point.col] for point in cal_points]
 
             # Convert reference points to desired format for each set in the list
             in_ref_line_rc_list = [
-                [[point.x, point.y] for point in ref_points]
+                [[point.row, point.col] for point in ref_points]
                 for ref_points in ref_points_lists
             ]
 

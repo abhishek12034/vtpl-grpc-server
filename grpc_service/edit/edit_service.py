@@ -84,7 +84,9 @@ class EditService(main_pb2_grpc.EditServiceServicer):
             in_select_rc_arr = request.in_select_rc_arr.points
             logger.info(f"Select RC Array {in_select_rc_arr}")
 
-            in_select_rc_arr_list = [[point.x, point.y] for point in in_select_rc_arr]
+            in_select_rc_arr_list = [
+                [point.row, point.col] for point in in_select_rc_arr
+            ]
             logger.info(f"Select RC Array List {in_select_rc_arr_list}")
             adjust_params = {
                 "process_type": process_type,

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 message EditCoordinates {
-    int32 x = 1;  
-    int32 y = 2;
+    int32 row = 1;  
+    int32 col = 2;
 }
 
 message EditCoordinatesGroup {
