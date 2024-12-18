@@ -209,11 +209,12 @@ class BaseService:
 
         try:
             logger.info(
-                f"Received Region Request | Start Row: {request.start_row} | "
-                f"End Row: {request.end_row} | Start Column: {request.start_col} | "
-                f"End Column: {request.end_col} | Partial Processing: "
-                f"{'Enabled' if request.is_partial_processing else 'Disabled'}"
+                f"Received Region Request | Start Row: {request.par_st_row} | "
+                f"End Row: {request.par_en_row} | Start Column: {request.par_st_col} | "
+                f"End Column: {request.par_en_col} | Partial Processing: "
+                f"{'Enabled' if request.par_process_flag else 'Disabled'}"
             )
+
             logger.info(f"Json In Memory Object{self.job_status}")
             print(f"Json In Memory Object{self.job_status}")
 
