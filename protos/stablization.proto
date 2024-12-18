@@ -1,24 +1,39 @@
 syntax = "proto3";
 
-message LocalStabilizationRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message LocalStabilizationRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4; 
     bool is_preview_flag = 5;
-    int32 in_st_row =6;
-    int32 in_en_row=7;
-    int32 in_st_col=8;
-    int32 in_en_col=9;
-    int32 in_stabilization_power =10;
-    int32 in_video_fps =11;
+    int32 in_st_row = 6;
+    int32 in_en_row = 7;
+    int32 in_st_col = 8;
+    int32 in_en_col = 9;
+    int32 in_stabilization_power = 10;
+    int32 in_video_fps = 11;
+
+    // Newly added fields
+    int32 par_st_row = 12;
+    int32 par_en_row = 13;
+    int32 par_st_col = 14;
+    int32 par_en_col = 15;
+    bool par_process_flag = 16;
 }
-message GlobalStabilizationRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+
+message GlobalStabilizationRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4; 
     bool is_preview_flag = 5;
-    int32 in_stabilization_power =10;
-    int32 in_video_fps =11;
+    int32 in_stabilization_power = 10;
+    int32 in_video_fps = 11;
+
+    // Newly added fields
+    int32 par_st_row = 12;
+    int32 par_en_row = 13;
+    int32 par_st_col = 14;
+    int32 par_en_col = 15;
+    bool par_process_flag = 16;
 }

@@ -10,6 +10,11 @@ message MotionRequest {
     int32 in_dimention = 7;   // Max 50: Dimension (1 to 50)
     float in_snr = 8;         // Max 50: Signal-to-noise ratio (1 to 50)
     // bool in_defocus = 9;      // Defocus: true or false
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }
 
 message OpticalRequest {
@@ -22,4 +27,9 @@ message OpticalRequest {
     int32 in_dimention = 7;   // Max 50: Dimension (1 to 50)
     int32 in_snr = 8;         // Max 50: Signal-to-noise ratio (1 to 50)
     // bool in_defocus = 9;      // Defocus: true or false
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }

@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rsharpen.proto\"\xa3\x01\n\x17LaplacianSharpenRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x15\n\rin_lap_method\x18\x06 \x01(\t\"\xbc\x01\n\x12UnsharpMaskRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x19\n\x11in_sharpen_spread\x18\x06 \x01(\x01\x12\x18\n\x10in_sharpen_power\x18\x07 \x01(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rsharpen.proto\"\x8d\x02\n\x17LaplacianSharpenRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x15\n\rin_lap_method\x18\x06 \x01(\t\x12\x12\n\npar_st_row\x18\x07 \x01(\x05\x12\x12\n\npar_en_row\x18\x08 \x01(\x05\x12\x12\n\npar_st_col\x18\t \x01(\x05\x12\x12\n\npar_en_col\x18\n \x01(\x05\x12\x18\n\x10par_process_flag\x18\x0b \x01(\x08\"\xa6\x02\n\x12UnsharpMaskRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x19\n\x11in_sharpen_spread\x18\x06 \x01(\x01\x12\x18\n\x10in_sharpen_power\x18\x07 \x01(\x01\x12\x12\n\npar_st_row\x18\x08 \x01(\x05\x12\x12\n\npar_en_row\x18\t \x01(\x05\x12\x12\n\npar_st_col\x18\n \x01(\x05\x12\x12\n\npar_en_col\x18\x0b \x01(\x05\x12\x18\n\x10par_process_flag\x18\x0c \x01(\x08\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,7 +32,7 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'sharpen_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_LAPLACIANSHARPENREQUEST']._serialized_start=18
-  _globals['_LAPLACIANSHARPENREQUEST']._serialized_end=181
-  _globals['_UNSHARPMASKREQUEST']._serialized_start=184
-  _globals['_UNSHARPMASKREQUEST']._serialized_end=372
+  _globals['_LAPLACIANSHARPENREQUEST']._serialized_end=287
+  _globals['_UNSHARPMASKREQUEST']._serialized_start=290
+  _globals['_UNSHARPMASKREQUEST']._serialized_end=584
 # @@protoc_insertion_point(module_scope)
