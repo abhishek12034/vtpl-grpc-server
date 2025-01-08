@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rchannel.proto\"\x85\x01\n\x10GrayScaleRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\"\xa0\x01\n\x12\x43olorSwitchRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\"\xda\x01\n\x16\x43olorConversionRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x19\n\x11sub_process_black\x18\x05 \x01(\t\x12\x19\n\x11sub_process_white\x18\x06 \x01(\t\x12\x17\n\x0fsub_process_mid\x18\x07 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x08 \x01(\x08\"\xa9\x01\n\x1b\x45xtractSingleChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\"\xaa\x01\n\x1c\x44isplaySlectedChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rchannel.proto\"\xef\x01\n\x10GrayScaleRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x05 \x01(\x08\x12\x12\n\npar_st_row\x18\x06 \x01(\x05\x12\x12\n\npar_en_row\x18\x07 \x01(\x05\x12\x12\n\npar_st_col\x18\x08 \x01(\x05\x12\x12\n\npar_en_col\x18\t \x01(\x05\x12\x18\n\x10par_process_flag\x18\n \x01(\x08\"\x8a\x02\n\x12\x43olorSwitchRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\x12\x12\n\npar_st_row\x18\x07 \x01(\x05\x12\x12\n\npar_en_row\x18\x08 \x01(\x05\x12\x12\n\npar_st_col\x18\t \x01(\x05\x12\x12\n\npar_en_col\x18\n \x01(\x05\x12\x18\n\x10par_process_flag\x18\x0b \x01(\x08\"\xc4\x02\n\x16\x43olorConversionRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x19\n\x11sub_process_black\x18\x05 \x01(\t\x12\x19\n\x11sub_process_white\x18\x06 \x01(\t\x12\x17\n\x0fsub_process_mid\x18\x07 \x01(\t\x12\x17\n\x0fis_preview_flag\x18\x08 \x01(\x08\x12\x12\n\npar_st_row\x18\t \x01(\x05\x12\x12\n\npar_en_row\x18\n \x01(\x05\x12\x12\n\npar_st_col\x18\x0b \x01(\x05\x12\x12\n\npar_en_col\x18\x0c \x01(\x05\x12\x18\n\x10par_process_flag\x18\r \x01(\x08\"\x93\x02\n\x1b\x45xtractSingleChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\x12\x12\n\npar_st_row\x18\x07 \x01(\x05\x12\x12\n\npar_en_row\x18\x08 \x01(\x05\x12\x12\n\npar_st_col\x18\t \x01(\x05\x12\x12\n\npar_en_col\x18\n \x01(\x05\x12\x18\n\x10par_process_flag\x18\x0b \x01(\x08\"\x94\x02\n\x1c\x44isplaySlectedChannelRequest\x12\x13\n\x0bin_img_path\x18\x01 \x01(\t\x12\x18\n\x10process_all_flag\x18\x02 \x01(\x08\x12\x13\n\x0bin_img_list\x18\x03 \x03(\t\x12\x14\n\x0cout_img_path\x18\x04 \x01(\t\x12\x17\n\x0fsub_process_num\x18\x05 \x01(\x03\x12\x17\n\x0fis_preview_flag\x18\x06 \x01(\x08\x12\x12\n\npar_st_row\x18\x07 \x01(\x05\x12\x12\n\npar_en_row\x18\x08 \x01(\x05\x12\x12\n\npar_st_col\x18\t \x01(\x05\x12\x12\n\npar_en_col\x18\n \x01(\x05\x12\x18\n\x10par_process_flag\x18\x0b \x01(\x08\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,13 +32,13 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'channel_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_GRAYSCALEREQUEST']._serialized_start=18
-  _globals['_GRAYSCALEREQUEST']._serialized_end=151
-  _globals['_COLORSWITCHREQUEST']._serialized_start=154
-  _globals['_COLORSWITCHREQUEST']._serialized_end=314
-  _globals['_COLORCONVERSIONREQUEST']._serialized_start=317
-  _globals['_COLORCONVERSIONREQUEST']._serialized_end=535
-  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_start=538
-  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_end=707
-  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_start=710
-  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_end=880
+  _globals['_GRAYSCALEREQUEST']._serialized_end=257
+  _globals['_COLORSWITCHREQUEST']._serialized_start=260
+  _globals['_COLORSWITCHREQUEST']._serialized_end=526
+  _globals['_COLORCONVERSIONREQUEST']._serialized_start=529
+  _globals['_COLORCONVERSIONREQUEST']._serialized_end=853
+  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_start=856
+  _globals['_EXTRACTSINGLECHANNELREQUEST']._serialized_end=1131
+  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_start=1134
+  _globals['_DISPLAYSLECTEDCHANNELREQUEST']._serialized_end=1410
 # @@protoc_insertion_point(module_scope)

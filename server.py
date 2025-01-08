@@ -8,14 +8,18 @@ from grpc_service.measure.measure_service import MeasureService
 from grpc_service.edit.edit_service import EditService
 from grpc_service.sharpen.sharpen_service import SharpenService
 from grpc_service.denoise.denoise_service import DenoiseService
+from grpc_service.stablization.stablization_service import StablizationService
+from grpc_service.deblur.deblur_service import DeblurService
+from grpc_service.abort.abort_service import AbortService
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
 import os
+from grpc_service.base.base_service import BaseService
 
 
 def serve():
     logger = setup_logging()  # Setup logging once at the start
-
+    # shared_base_obj = BaseService()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     main_pb2_grpc.add_ChannelServiceServicer_to_server(ChannelService(), server)
     main_pb2_grpc.add_AdjustServiceServicer_to_server(AdjustFilterService(), server)
@@ -25,7 +29,11 @@ def serve():
     main_pb2_grpc.add_EditServiceServicer_to_server(EditService(), server)
     main_pb2_grpc.add_SharpenServiceServicer_to_server(SharpenService(), server)
     main_pb2_grpc.add_DenoiseServiceServicer_to_server(DenoiseService(), server)
-
+    main_pb2_grpc.add_StablizationServiceServicer_to_server(
+        StablizationService(), server
+    )
+    main_pb2_grpc.add_AbortServiceServicer_to_server(AbortService(), server)
+    main_pb2_grpc.add_DeblurServiceServicer_to_server(DeblurService(), server)
     port = os.getenv("GRPC_SERVER_PORT", "5012")
     server.add_insecure_port(f"[::]:{port}")
 

@@ -1,11 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor
 from stubs import edit_pb2 as edit_pb2
-from stubs import sharpen_pb2_grpc
+from stubs import deblur_pb2_grpc
 from stubs import main_pb2_grpc
-from image_processing_algorithm.vid2img_sharpen_x import sharpen_process
+
+from image_processing_algorithm.vid2img_deblurring_1 import deblurring_process
 from logging_config import setup_logging
 from grpc_service.base.base_filter_type import StatusMessage, JobStatusCode
-from grpc_service.sharpen.sharpen_filter_type import SharpenProcessingType
+from grpc_service.deblur.deblur_filter_type import DeblurProcessingType
 from grpc_service.base.base_service import BaseService
 import grpc
 import threading
@@ -13,36 +14,39 @@ import threading
 logger = setup_logging()
 
 
-class SharpenService(main_pb2_grpc.SharpenServiceServicer):
+class DeblurService(main_pb2_grpc.DeblurServiceServicer):
     def __init__(self):
         super().__init__()  # Call the __init__ method of BaseService
-        self.processor = sharpen_process()
+        self.processor = deblurring_process()
         self.base_obj = BaseService()
 
-    def LaplacianFilter(self, request, context):
+    def MotionFilter(self, request, context):
         return self.base_obj._start_image_processing_job(
             request,
             context,
-            SharpenProcessingType.LAPLACIAN_SHARPEN.value,
-            self.process_laplacian_sharpen,
+            DeblurProcessingType.MOTION.value,
+            self.process_motion,
         )
 
-    def UnsharpMaskFilter(self, request, context):
+    def OpticalFilter(self, request, context):
         return self.base_obj._start_image_processing_job(
             request,
             context,
-            SharpenProcessingType.UNSHARP_MASK.value,
-            self.process_unsharp_mask,
+            DeblurProcessingType.OPTICAL.value,
+            self.process_optical,
         )
 
-    def process_laplacian_sharpen(
-        self, request, context, job_id, process_type, img_chunk
-    ):
+    def process_optical(self, request, context, job_id, process_type, img_chunk):
         try:
-            in_lap_method = request.in_lap_method
+            (in_dimention, in_snr) = (
+                request.in_dimention,
+                request.in_snr,
+            )
+            logger.info(f"In Dimension: {in_dimention}, In SNR: {in_snr}")
             adjust_params = {
                 "process_type": process_type,
-                "in_lap_method": in_lap_method,
+                "in_spread_distance": in_dimention,
+                "in_snr": in_snr,
             }
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
@@ -53,14 +57,21 @@ class SharpenService(main_pb2_grpc.SharpenServiceServicer):
                 "Internal error occurred during job initialization",
             )
 
-    def process_unsharp_mask(self, request, context, job_id, process_type, img_chunk):
+    def process_motion(self, request, context, job_id, process_type, img_chunk):
         try:
-            in_sharpen_power = request.in_sharpen_power
-            in_sharpen_spread = request.in_sharpen_spread
+            (in_angle, in_dimention, in_snr) = (
+                request.in_angle,
+                request.in_dimention,
+                request.in_snr,
+            )
+            logger.info(
+                f"In Angle: {in_angle}, In Dimension: {in_dimention}, In SNR: {in_snr}"
+            )
             adjust_params = {
                 "process_type": process_type,
-                "in_sharpen_power": in_sharpen_power,
-                "in_sharpen_spread": in_sharpen_spread,
+                "in_angle": in_angle,
+                "in_spread_distance": in_dimention,
+                "in_snr": in_snr,
             }
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
@@ -80,7 +91,7 @@ class SharpenService(main_pb2_grpc.SharpenServiceServicer):
 
             # Process each image in the list
             for in_img in img_chunk:
-                self.processor.mod_sharpen(
+                self.processor.mod_deblurring(
                     process_all_flag=False,
                     in_img_path=request.in_img_path,
                     out_img_path=request.out_img_path,

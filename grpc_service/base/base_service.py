@@ -17,12 +17,26 @@ logger = setup_logging()
 
 
 class BaseService:
+    _instance = None  # This will store the singleton instance
+
+    def __new__(cls, *args, **kwargs):
+        # If an instance already exists, return it
+        if not cls._instance:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance
+
     def __init__(self):
-        self.job_status = {}
-        self.lock = threading.Lock()
-        self.redis_client = get_redis_client()
-        self.executor = ThreadPoolExecutor(max_workers=100)
-        self.priority_queue = PriorityQueue()  # Priority queue for tasks
+        # Only initialize the attributes the first time the class is instantiated
+        if not hasattr(self, "initialized"):  # Check if already initialized
+            self.job_status = {}
+            self.lock = threading.Lock()
+            self.redis_client = get_redis_client()
+            self.executor = ThreadPoolExecutor(max_workers=100)
+            self.priority_queue = PriorityQueue()  # Priority queue for tasks
+            self.initialized = True  # Mark as initialized
+            logger.info(
+                f"BaseService initialized at {id(self)} with job_status: {id(self.job_status)}"
+            )
 
     def store_job_status_in_redis(self, job_id, job_status):
         EXPIRATION_TIME = 60 * 60 * 24
@@ -51,6 +65,7 @@ class BaseService:
                 completed=False,
                 error=error,
                 status_code=JobStatusCode.NOT_FOUND.value,
+                abort_event=job_status["abort_event"],  # Add the abort_event here
             )
         return job_pb2.JobStatusResponse(
             job_id=job_status["job_id"],
@@ -64,17 +79,25 @@ class BaseService:
             completed=job_status["completed"],
             error=error if error else job_status.get("error"),
             status_code=job_status["status_code"],
+            abort_event=job_status["abort_event"],  # Add the abort_event here
         )
 
-    def update_progress_in_redis(self, job_id):
+    def update_progress_in_redis(
+        self, job_id, is_multithreading_used, output_path, input_path
+    ):
         retry_count = 0
         max_retries = 5
         stale_progress_threshold = 10  # Number of iterations to detect staleness
         last_processed_image_count = -1  # Track the last known progress count
         staleness_counter = 0
+        if not is_multithreading_used:
+            self.job_status.get(job_id)["total_images"] = len(
+                list_image_files(input_path)
+            )
 
         while True:
             try:
+
                 time.sleep(1)
 
                 with self.lock:
@@ -85,12 +108,28 @@ class BaseService:
                         break
 
                     # Check if the job is failed
-                    if job_status["status_message"] == StatusMessage.JOB_FAILED.value:
+                    if (
+                        job_status["status_message"] == StatusMessage.JOB_FAILED.value
+                        or job_status["status_message"]
+                        == StatusMessage.JOB_ABORTED.value
+                    ):
+                        logger.info("Job is Failed or Aborted By User")
                         break
 
                     # Check for staleness in progress
-                    current_processed_image_count = job_status.get(
-                        "processed_image_count", 0
+                    if not is_multithreading_used:
+                        current_processed_image_count = count_images_in_folder(
+                            output_path
+                        )
+                    else:
+                        current_processed_image_count = job_status.get(
+                            "processed_image_count", 0
+                        )
+                    logger.info(
+                        f"Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
+                    )
+                    print(
+                        f"Update Progress In Redis {current_processed_image_count, last_processed_image_count}"
                     )
                     if current_processed_image_count == last_processed_image_count:
                         staleness_counter += 1
@@ -107,14 +146,16 @@ class BaseService:
                     else:
                         staleness_counter = 0  # Reset counter if progress is made
 
-                    last_processed_image_count = current_processed_image_count
-
                     # Calculate and update percentage
                     if job_status["total_images"] > 0:
                         job_status["percentage"] = int(
                             (current_processed_image_count * 100)
                             / job_status["total_images"]
                         )
+                        job_status["processed_image_count"] = (
+                            current_processed_image_count
+                        )
+                    last_processed_image_count = current_processed_image_count
 
                     # Mark job as completed if 100%
                     if job_status["percentage"] == 100:
@@ -158,10 +199,22 @@ class BaseService:
             yield lst[i : i + n]
 
     def _start_image_processing_job(
-        self, request, context, process_type, processing_func
+        self,
+        request,
+        context,
+        process_type,
+        processing_func,
+        is_multithreading_used=True,
     ):
 
         try:
+            logger.info(
+                f"Received Region Request | Start Row: {request.par_st_row} | "
+                f"End Row: {request.par_en_row} | Start Column: {request.par_st_col} | "
+                f"End Column: {request.par_en_col} | Partial Processing: "
+                f"{'Enabled' if request.par_process_flag else 'Disabled'}"
+            )
+
             logger.info(f"Json In Memory Object{self.job_status}")
             print(f"Json In Memory Object{self.job_status}")
 
@@ -233,34 +286,53 @@ class BaseService:
                     "error": None,
                     "thread_id": [],
                     "status_code": JobStatusCode.IN_PROGRESS.value,
+                    "abort_event": False,  # Add the abort_event here
                 }
             logger.info(f"Job Created: {self.job_status[job_id]}")
             self.store_job_status_in_redis(
                 job_id=job_id, job_status=self.job_status[job_id]
             )
             # Submit the image processing job and progress update to the executor
-            self.executor.submit(self.update_progress_in_redis, job_id)
+            self.executor.submit(
+                self.update_progress_in_redis,
+                job_id,
+                is_multithreading_used,
+                request.out_img_path,
+                request.in_img_path,
+            )
             logger.info("Updating In Redis")
-            priority = (
-                1 if request.is_preview_flag else 10
-            )  # Single-image jobs get higher priority
 
-            # Submit the job to the priority queue
-            self.priority_queue.put(
-                (
-                    priority,
-                    job_id,
+            logger.info(f"List of images is{in_img_list}")
+            if not is_multithreading_used:
+                logger.info("Process if Implemented without multithreading")
+                self.executor.submit(
                     processing_func,
                     request,
                     context,
+                    job_id,
                     process_type,
-                    self.job_status[job_id],
                     in_img_list,
                 )
-            )
-            # Start the worker thread if not already running
-            self.executor.submit(self._process_queue)
+            else:
+                priority = (
+                    1 if request.is_preview_flag else 10
+                )  # Single-image jobs get higher priority
 
+                # Submit the job to the priority queue
+                self.priority_queue.put(
+                    (
+                        priority,
+                        job_id,
+                        processing_func,
+                        request,
+                        context,
+                        process_type,
+                        self.job_status[job_id],
+                        in_img_list,
+                    )
+                )
+                # Start the worker thread if not already running
+                self.executor.submit(self._process_queue, job_id)
             # Return the initial job status response
             return self.create_job_status_response(
                 job_id, job_status=self.job_status[job_id]
@@ -277,7 +349,7 @@ class BaseService:
                 "Internal error occurred during job initialization",
             )
 
-    def _process_queue(self):
+    def _process_queue(self, job_id):
         """Worker method that processes jobs from the priority queue."""
         max_concurrent_threads = os.cpu_count() - 2
         max_concurrent_threads = (
@@ -306,7 +378,10 @@ class BaseService:
             for i in range(0, len(img_chunks), max_concurrent_threads):
                 # Process the images in batches, respecting the thread limit
                 chunk_batch = img_chunks[i : i + max_concurrent_threads]
-
+                if self.job_status[job_id]["abort_event"]:
+                    logger.info(f"Job {job_id} aborted. Terminating processing.")
+                    self.priority_queue.task_done()
+                    return
                 # Before processing each batch, re-check the priority queue
                 if not self.priority_queue.empty():
                     next_priority, next_job_id, *_ = self.priority_queue.queue[0]

@@ -10,6 +10,9 @@ import "measure.proto";
 import "edit.proto";
 import "sharpen.proto";
 import "denoise.proto";
+import "stablization.proto";
+import "abort.proto";
+import "deblur.proto";
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -81,4 +84,18 @@ service DenoiseService{
     rpc BilateralFilter (BilateralFilteringRequest) returns (JobStatusResponse);
     rpc MedianFilter (MedianFilteringRequest) returns (JobStatusResponse);
     rpc WienerFilter (WienerRequest) returns (JobStatusResponse);
+}
+service StablizationService{
+    rpc LocalStablizationFilter (LocalStabilizationRequest) returns (JobStatusResponse);
+    rpc GlobalStablizationFilter (GlobalStabilizationRequest) returns (JobStatusResponse);
+
+}
+
+service AbortService{
+    rpc AbortProcess (AbortRequest) returns (AbortResponse);
+}
+
+service DeblurService{
+    rpc MotionFilter (MotionRequest) returns (JobStatusResponse);
+    rpc OpticalFilter (OpticalRequest) returns (JobStatusResponse);
 }

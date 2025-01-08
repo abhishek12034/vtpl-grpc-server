@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message AbortRequest{
+string job_id = 1;
+}
+message AbortResponse {
+    string job_id = 1;
+    string message = 2;          // Descriptive message about the abort
+    int32 status_code = 3;       // Numeric status code (e.g., HTTP-like codes or custom codes)
+    string error_details = 4;    // Additional information or error details
+    string timestamp = 5;        // Timestamp of the abort in ISO 8601 format
+}

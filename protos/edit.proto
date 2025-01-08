@@ -1,103 +1,149 @@
 syntax = "proto3";
 
 message EditCoordinates {
-    int32 x = 1;  
-    int32 y = 2;
+    int32 row = 1;  
+    int32 col = 2;
 }
 
 message EditCoordinatesGroup {
     repeated EditCoordinates points = 1; 
 }
 
-message CropRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message CropRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    int32 in_st_row =6;
-    int32 in_en_row=7;
-    int32 in_st_col=8;
-    int32 in_en_col=9;
+    int32 in_st_row = 6;
+    int32 in_en_row = 7;
+    int32 in_st_col = 8;
+    int32 in_en_col = 9;
+    int32 par_st_row = 10;
+    int32 par_en_row = 11;
+    int32 par_st_col = 12;
+    int32 par_en_col = 13;
+    bool par_process_flag = 14;
 }
 
-message FlipRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message FlipRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    bool in_flip_hori_true_vert_false =6;
+    bool in_flip_hori_true_vert_false = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
-message RotateRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+
+message RotateRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     double in_rotate_deg = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message ResizeRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message ResizeRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    int32 in_st_row =6;
-    int32 in_en_row=7;
-    int32 in_st_col=8;
-    int32 in_en_col=9;
-    bool in_keep_same_selection_size =10;
+    int32 in_st_row = 6;
+    int32 in_en_row = 7;
+    int32 in_st_col = 8;
+    int32 in_en_col = 9;
+    bool in_keep_same_selection_size = 10;
+    int32 par_st_row = 11;
+    int32 par_en_row = 12;
+    int32 par_st_col = 13;
+    int32 par_en_col = 14;
+    bool par_process_flag = 15;
 }
 
-message PerspectiveRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message PerspectiveRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    EditCoordinatesGroup in_select_rc_arr =6;
+    EditCoordinatesGroup in_select_rc_arr = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message UndistortRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message UndistortRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    double in_distortion_power =6;
+    double in_distortion_power = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message AspectRatioRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message AspectRatioRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    double in_aspect_ratio_times =6;
+    double in_aspect_ratio_times = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message FisheyeRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message FisheyeRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    double in_distortion_power=6;
+    double in_distortion_power = 6;
     string in_direction = 7;
     double in_start_clock_pos = 8;
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }
 
-message SmartResizeRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message SmartResizeRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
-    int32 in_st_row =6;
-    int32 in_en_row=7;
-    int32 in_st_col=8;
-    int32 in_en_col=9;
+    int32 in_st_row = 6;
+    int32 in_en_row = 7;
+    int32 in_st_col = 8;
+    int32 in_en_col = 9;
     double in_scale_fact = 10;
+    int32 par_st_row = 11;
+    int32 par_en_row = 12;
+    int32 par_st_col = 13;
+    int32 par_en_col = 14;
+    bool par_process_flag = 15;
 }

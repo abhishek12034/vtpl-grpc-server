@@ -13,13 +13,14 @@ import threading
 logger = setup_logging()
 
 
-class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
+class DenoiseService(main_pb2_grpc.DenoiseServiceServicer):
     def __init__(self):
         super().__init__()  # Call the __init__ method of BaseService
         self.processor = denoise_process()
+        self.base_obj = BaseService()
 
     def AveragingFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             DenoiseProcessType.AVERAGING.value,
@@ -27,7 +28,7 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
         )
 
     def GaussianSmoothingFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             DenoiseProcessType.GAUSSIAN_SMOOTHING.value,
@@ -35,7 +36,7 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
         )
 
     def BilateralFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             DenoiseProcessType.BILATERAL_FILTERING.value,
@@ -43,7 +44,7 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
         )
 
     def MedianFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             DenoiseProcessType.MEDIAN_FILTERING.value,
@@ -51,7 +52,7 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
         )
 
     def WienerFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             DenoiseProcessType.WIENER.value,
@@ -154,8 +155,8 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
         try:
 
             # Store thread ID in job status
-            with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
 
             # Process each image in the list
             for in_img in img_chunk:
@@ -168,18 +169,22 @@ class DenoiseService(BaseService, main_pb2_grpc.DenoiseServiceServicer):
                 )
 
                 # Update processed image count
-                with self.lock:
-                    self.job_status[job_id]["processed_image_count"] += 1
+                with self.base_obj.lock:
+                    self.base_obj.job_status[job_id]["processed_image_count"] += 1
 
         except Exception as e:
             # Handle exceptions and update job status as failed
-            with self.lock:
-                self.job_status[job_id]["completed"] = False
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["completed"] = False
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
-                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
-                self.job_status[job_id]["error"] = str(e)
+                self.base_obj.job_status[job_id][
+                    "status_message"
+                ] = JobStatusCode.FAILED.value
+                self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
                 raise e

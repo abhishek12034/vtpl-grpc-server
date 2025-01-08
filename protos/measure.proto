@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 message Coordinates {
-    int32 x = 1;  
-    int32 y = 2;
+    int32 row = 1;  
+    int32 col = 2;
 }
 
 message CoordinatesGroup {
@@ -15,9 +15,16 @@ message MeasureOneDRequest {
     repeated string in_img_list = 3;   
     string out_img_path = 4;             
     bool is_preview_flag = 5; 
-    CoordinatesGroup in_ref_dual_pt_rc_list =6;
-    CoordinatesGroup in_calc_dual_pt_rc_list=7;
-    int32 in_ref_val=8;
+    CoordinatesGroup in_ref_dual_pt_rc_list = 6;
+    CoordinatesGroup in_calc_dual_pt_rc_list = 7;
+    int32 in_ref_val = 8;
+
+    // Newly added fields
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }
 
 message MeasureTwoDRequest {
@@ -26,9 +33,16 @@ message MeasureTwoDRequest {
     repeated string in_img_list = 3;   
     string out_img_path = 4;             
     bool is_preview_flag = 5; 
-    CoordinatesGroup in_ref_dual_pt_rc_list =6;
-    CoordinatesGroup in_calc_dual_pt_rc_list=7;
-    repeated int32 in_ref_val_list=8;
+    CoordinatesGroup in_ref_dual_pt_rc_list = 6;
+    CoordinatesGroup in_calc_dual_pt_rc_list = 7;
+    repeated int32 in_ref_val_list = 8;
+
+    // Newly added fields
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }
 
 message MeasureThreeDRequest {
@@ -37,9 +51,16 @@ message MeasureThreeDRequest {
     repeated string in_img_list = 3;   
     string out_img_path = 4;             
     bool is_preview_flag = 5; 
-    repeated CoordinatesGroup in_ref_line_rc_list =6;
-    CoordinatesGroup in_calc_line_rc=7;
-    repeated int32 in_ref_base_ht_mesr_list=8;
+    repeated CoordinatesGroup in_ref_line_rc_list = 6;
+    CoordinatesGroup in_calc_line_rc = 7;
+    repeated int32 in_ref_base_ht_mesr_list = 8;
+
+    // Newly added fields
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
 }
 
 message MeasureResponse {
@@ -55,4 +76,11 @@ message MeasureResponse {
     string process_type = 10;
     int32 status_code = 11;
     float object_length = 12;
+
+    // Newly added fields
+    int32 par_st_row = 13;
+    int32 par_en_row = 14;
+    int32 par_st_col = 15;
+    int32 par_en_col = 16;
+    bool par_process_flag = 17;
 }

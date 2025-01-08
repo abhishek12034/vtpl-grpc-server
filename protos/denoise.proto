@@ -1,49 +1,73 @@
 syntax = "proto3";
 
-
-message AveragingRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message AveragingRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     int32 in_filter_size = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message GaussianSmoothingRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message GaussianSmoothingRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     int32 in_filter_size = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
 message BilateralFilteringRequest {
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     int32 in_filter_size = 6;
-    int32 in_variation_range =7;
+    int32 in_variation_range = 7;
+    int32 par_st_row = 8;
+    int32 par_en_row = 9;
+    int32 par_st_col = 10;
+    int32 par_en_col = 11;
+    bool par_process_flag = 12;
 }
 
-message MedianFilteringRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message MedianFilteringRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     int32 in_filter_size = 6;
+    int32 par_st_row = 7;
+    int32 par_en_row = 8;
+    int32 par_st_col = 9;
+    int32 par_en_col = 10;
+    bool par_process_flag = 11;
 }
 
-message WienerRequest{
-    string in_img_path=1;
-    bool process_all_flag=2;
-    repeated string in_img_list=3;
+message WienerRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
     string out_img_path = 4;
     bool is_preview_flag = 5;
     int32 in_filter_size = 6;
-    int32 wiener_power_val =7;
+    int32 wiener_power_val = 7;
+    int32 par_st_row = 8;
+    int32 par_en_row = 9;
+    int32 par_st_col = 10;
+    int32 par_en_col = 11;
+    bool par_process_flag = 12;
 }

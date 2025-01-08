@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+message MotionRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    int32 in_angle = 6;       // Max 180: Input angle (0 to 180)
+    int32 in_dimention = 7;   // Max 50: Dimension (1 to 50)
+    float in_snr = 8;         // Max 50: Signal-to-noise ratio (1 to 50)
+    // bool in_defocus = 9;      // Defocus: true or false
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
+}
+
+message OpticalRequest {
+    string in_img_path = 1;
+    bool process_all_flag = 2;
+    repeated string in_img_list = 3;
+    string out_img_path = 4; 
+    bool is_preview_flag = 5;
+    int32 in_angle = 6;       // Max 180: Input angle (0 to 180)
+    int32 in_dimention = 7;   // Max 50: Dimension (1 to 50)
+    int32 in_snr = 8;         // Max 50: Signal-to-noise ratio (1 to 50)
+    // bool in_defocus = 9;      // Defocus: true or false
+    int32 par_st_row = 9;
+    int32 par_en_row = 10;
+    int32 par_st_col = 11;
+    int32 par_en_col = 12;
+    bool par_process_flag = 13;
+}

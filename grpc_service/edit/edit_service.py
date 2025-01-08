@@ -13,33 +13,34 @@ import threading
 logger = setup_logging()
 
 
-class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
+class EditService(main_pb2_grpc.EditServiceServicer):
     def __init__(self):
         super().__init__()  # Call the __init__ method of BaseService
         self.processor = edit_process()
+        self.base_obj = BaseService()
 
     def CropFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, EditProcessingType.CROP.value, self.process_crop
         )
 
     def FlipFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, EditProcessingType.FLIP.value, self.process_flip
         )
 
     def RotateFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, EditProcessingType.ROTATE.value, self.process_rotate
         )
 
     def ResizeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request, context, EditProcessingType.RESIZE.value, self.process_resize
         )
 
     def PerspectiveFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             EditProcessingType.PERSPECTIVE.value,
@@ -47,7 +48,7 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
         )
 
     def UndistortFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             EditProcessingType.UNDISTORT.value,
@@ -55,7 +56,7 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
         )
 
     def AspectRatioFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             EditProcessingType.CORRECT_ASPECT_RATIO.value,
@@ -63,7 +64,7 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
         )
 
     def FisheyeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             EditProcessingType.CORRECT_FISHEYE.value,
@@ -71,7 +72,7 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
         )
 
     def SmartResizeFilter(self, request, context):
-        return self._start_image_processing_job(
+        return self.base_obj._start_image_processing_job(
             request,
             context,
             EditProcessingType.SMART_RESIZE.value,
@@ -83,7 +84,9 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
             in_select_rc_arr = request.in_select_rc_arr.points
             logger.info(f"Select RC Array {in_select_rc_arr}")
 
-            in_select_rc_arr_list = [[point.x, point.y] for point in in_select_rc_arr]
+            in_select_rc_arr_list = [
+                [point.row, point.col] for point in in_select_rc_arr
+            ]
             logger.info(f"Select RC Array List {in_select_rc_arr_list}")
             adjust_params = {
                 "process_type": process_type,
@@ -268,8 +271,8 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
         try:
 
             # Store thread ID in job status
-            with self.lock:
-                self.job_status[job_id]["thread_id"] = threading.get_ident()
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
 
             # Process each image in the list
             for in_img in img_chunk:
@@ -282,18 +285,22 @@ class EditService(BaseService, main_pb2_grpc.EditServiceServicer):
                 )
 
                 # Update processed image count
-                with self.lock:
-                    self.job_status[job_id]["processed_image_count"] += 1
+                with self.base_obj.lock:
+                    self.base_obj.job_status[job_id]["processed_image_count"] += 1
 
         except Exception as e:
             # Handle exceptions and update job status as failed
-            with self.lock:
-                self.job_status[job_id]["completed"] = False
-                self.job_status[job_id][
+            with self.base_obj.lock:
+                self.base_obj.job_status[job_id]["completed"] = False
+                self.base_obj.job_status[job_id][
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
-                self.job_status[job_id]["status_message"] = JobStatusCode.FAILED.value
-                self.job_status[job_id]["error"] = str(e)
+                self.base_obj.job_status[job_id][
+                    "status_message"
+                ] = JobStatusCode.FAILED.value
+                self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
-                self.store_job_status_in_redis(job_id, self.job_status[job_id])
+                self.base_obj.store_job_status_in_redis(
+                    job_id, self.base_obj.job_status[job_id]
+                )
                 raise e
