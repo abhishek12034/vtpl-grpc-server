@@ -53,7 +53,7 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
             in_ref_dual_pt_rc_list = [[point.row, point.col] for point in ref_points]
 
             logger.info(
-                "Calling processor.mod_measure() with provided points and image paths."
+                f"Calling processor.mod_measure() with provided points and image paths.{in_calc_dual_pt_rc_list} and reference point is {in_ref_dual_pt_rc_list}"
             )
             self.processor.mod_measure(
                 in_img_path=request.in_img_path,

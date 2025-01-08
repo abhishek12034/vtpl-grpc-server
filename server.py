@@ -1,3 +1,7 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "stubs")))
 import grpc
 from concurrent import futures
 from grpc_service.channel.channel_service import ChannelService
@@ -13,7 +17,6 @@ from grpc_service.deblur.deblur_service import DeblurService
 from grpc_service.abort.abort_service import AbortService
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
-import os
 from grpc_service.base.base_service import BaseService
 
 
