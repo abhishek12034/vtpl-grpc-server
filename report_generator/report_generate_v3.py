@@ -21,8 +21,12 @@ class GenerateReport:
     def __init__(self, input_json=None):
         self.input_json = input_json
         self.process_names = [
-            process.process_name for process in self.input_json.processes
+            (process.process_name, process.input_img_path, process.output_img_path)
+            for process in self.input_json.processes
         ]
+        print("elllp")
+        print(self.process_names)
+
         # logger.info("Process Name :", self.process_names)
         # self.process_names = [process.process_name for process in self.input_json["Processes"]]
         self.show_report = self.input_json.processes_meta.input_output_image_show_report
@@ -186,7 +190,8 @@ class GenerateReport:
         image_height = Inches(2.2)  # Set fixed height to 3 inches
 
         # Content sections
-        for process_name in self.process_names:
+        for process_name, input_img_path, output_img_path in self.process_names:
+            print(input_img_path, output_img_path)
             if process_name in self.process_descriptions:
                 desc_process_name = self.process_descriptions[process_name]
 
@@ -234,12 +239,7 @@ class GenerateReport:
                     input_para.space_before = Pt(0)
                     input_para.space_after = Pt(0)
 
-                    input_img_path = os.path.join(
-                        self.base_dir,
-                        "all_images",
-                        "input_images",
-                        f'input_{process_name.lower().replace(" ", "_")}.jpg',
-                    )
+                    input_img_path = os.path.join(input_img_path)
                     if os.path.exists(input_img_path):
                         try:
                             input_para.add_run().add_picture(
@@ -277,12 +277,7 @@ class GenerateReport:
                     output_para.space_before = Pt(0)
                     output_para.space_after = Pt(0)
 
-                    output_img_path = os.path.join(
-                        self.base_dir,
-                        "all_images",
-                        "output_images",
-                        f'output_{process_name.lower().replace(" ", "_")}.jpg',
-                    )
+                    output_img_path = os.path.join(output_img_path)
 
                     if os.path.exists(output_img_path):
                         try:
@@ -569,7 +564,7 @@ class GenerateReport:
                         )
 
         # Add each operation to the document
-        for process_name in self.process_names:
+        for process_name, input_img_path, output_img_path in self.process_names:
             if process_name in self.process_descriptions:
                 desc_process_name = self.process_descriptions[process_name]
 
@@ -579,18 +574,8 @@ class GenerateReport:
                 description = desc_process_name.get(
                     f"{process_name}_description", desc_process_name["description"]
                 )
-                input_image_path = os.path.join(
-                    self.base_dir,
-                    "all_images",
-                    "input_images",
-                    f'input_{process_name.lower().replace(" ", "_")}.jpg',
-                )
-                output_image_path = os.path.join(
-                    self.base_dir,
-                    "all_images",
-                    "output_images",
-                    f'output_{process_name.lower().replace(" ", "_")}.jpg',
-                )
+                input_image_path = os.path.join(input_img_path)
+                output_image_path = os.path.join(output_img_path)
                 input_image_path = input_image_path.replace("\\", "/")
                 output_image_path = output_image_path.replace("\\", "/")
                 logger.info(f"LATEX Output IMG Path: {input_image_path}")
