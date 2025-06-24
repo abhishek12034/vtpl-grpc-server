@@ -67,7 +67,7 @@ message MeasureResponse {
     string job_id = 1;
     double percentage = 2;
     string in_img_path = 3;
-    string output_image_path = 4;
+    string out_img_path = 4;
     int64 total_input_images = 5;
     int64 processed_image_count = 6;
     string status_message = 7;
