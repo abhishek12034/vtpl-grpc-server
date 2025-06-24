@@ -1,7 +1,7 @@
 import os
 
 # Get Redis connection details from environment variables
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")  # Default to 'localhost' if not set
+REDIS_HOST = "localhost"  # Default to 'localhost' if not set
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)  # Default to 6379 if not set
 print(REDIS_HOST, REDIS_PORT)
 # Use these variables to create your Redis client
