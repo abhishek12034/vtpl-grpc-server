@@ -22,7 +22,7 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
+            "in_img_path": request.in_img_path,
             "output_image_path": request.out_img_path,
             "total_input_images": len(request.in_img_list),
             "processed_image_count": 0,
@@ -128,7 +128,7 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
+            "in_img_path": request.in_img_path,
             "output_image_path": request.out_img_path,
             "total_input_images": 1,
             "processed_image_count": 0,
@@ -223,7 +223,7 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
+            "in_img_path": request.in_img_path,
             "output_image_path": request.out_img_path,
             "total_input_images": 1,
             "processed_image_count": 0,
