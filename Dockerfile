@@ -22,8 +22,6 @@ COPY . .
 # Generate the gRPC and protobuf Python files inside the 'stubs' directory
 RUN python -m grpc_tools.protoc -I./protos --python_out=./stubs --grpc_python_out=./stubs ./protos/*.proto
 
-# Set the PYTHONPATH environment variable to include /app/stubs
-ENV PYTHONPATH=/app/stubs
 
 # Expose the gRPC port
 EXPOSE 50051

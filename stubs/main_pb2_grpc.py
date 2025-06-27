@@ -5,6 +5,7 @@ import warnings
 
 import abort_pb2 as abort__pb2
 import adjust_pb2 as adjust__pb2
+import annotation_pb2 as annotation__pb2
 import channel_pb2 as channel__pb2
 import deblur_pb2 as deblur__pb2
 import denoise_pb2 as denoise__pb2
@@ -2709,6 +2710,78 @@ class DeblurService(object):
             '/vtpl_grpc_server.DeblurService/OpticalFilter',
             deblur__pb2.OpticalRequest.SerializeToString,
             job__pb2.JobStatusResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class AnnotationServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.AnnotationFilter = channel.unary_unary(
+                '/vtpl_grpc_server.AnnotationService/AnnotationFilter',
+                request_serializer=annotation__pb2.AnnotationRequest.SerializeToString,
+                response_deserializer=annotation__pb2.AnnotationResponse.FromString,
+                _registered_method=True)
+
+
+class AnnotationServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def AnnotationFilter(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_AnnotationServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'AnnotationFilter': grpc.unary_unary_rpc_method_handler(
+                    servicer.AnnotationFilter,
+                    request_deserializer=annotation__pb2.AnnotationRequest.FromString,
+                    response_serializer=annotation__pb2.AnnotationResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'vtpl_grpc_server.AnnotationService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('vtpl_grpc_server.AnnotationService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class AnnotationService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def AnnotationFilter(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vtpl_grpc_server.AnnotationService/AnnotationFilter',
+            annotation__pb2.AnnotationRequest.SerializeToString,
+            annotation__pb2.AnnotationResponse.FromString,
             options,
             channel_credentials,
             insecure,

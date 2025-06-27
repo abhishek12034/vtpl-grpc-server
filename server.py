@@ -1,3 +1,7 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "stubs")))
 import grpc
 from concurrent import futures
 from grpc_service.channel.channel_service import ChannelService
@@ -11,9 +15,10 @@ from grpc_service.denoise.denoise_service import DenoiseService
 from grpc_service.stablization.stablization_service import StablizationService
 from grpc_service.deblur.deblur_service import DeblurService
 from grpc_service.abort.abort_service import AbortService
+from grpc_service.annotation.annotation_service import AnnotationService
+
 from stubs import main_pb2_grpc
 from logging_config import setup_logging  # Import the centralized logging config
-import os
 from grpc_service.base.base_service import BaseService
 
 
@@ -34,6 +39,7 @@ def serve():
     )
     main_pb2_grpc.add_AbortServiceServicer_to_server(AbortService(), server)
     main_pb2_grpc.add_DeblurServiceServicer_to_server(DeblurService(), server)
+    main_pb2_grpc.add_AnnotationServiceServicer_to_server(AnnotationService(), server)
     port = os.getenv("GRPC_SERVER_PORT", "5012")
     server.add_insecure_port(f"[::]:{port}")
 

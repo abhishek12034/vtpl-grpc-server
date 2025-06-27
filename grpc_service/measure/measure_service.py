@@ -22,8 +22,8 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
-            "output_image_path": request.out_img_path,
+            "in_img_path": request.in_img_path,
+            "out_img_path": request.out_img_path,
             "total_input_images": len(request.in_img_list),
             "processed_image_count": 0,
             "status_message": StatusMessage.JOB_STARTED.value,
@@ -53,7 +53,7 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
             in_ref_dual_pt_rc_list = [[point.row, point.col] for point in ref_points]
 
             logger.info(
-                "Calling processor.mod_measure() with provided points and image paths."
+                f"Calling processor.mod_measure() with provided points and image paths.{in_calc_dual_pt_rc_list} and reference point is {in_ref_dual_pt_rc_list}"
             )
             self.processor.mod_measure(
                 in_img_path=request.in_img_path,
@@ -128,8 +128,8 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
-            "output_image_path": request.out_img_path,
+            "in_img_path": request.in_img_path,
+            "out_img_path": request.out_img_path,
             "total_input_images": 1,
             "processed_image_count": 0,
             "status_message": StatusMessage.JOB_STARTED.value,
@@ -223,8 +223,8 @@ class MeasureService(main_pb2_grpc.MeasureServiceServicer):
         self.base_obj.job_status[job_id] = {
             "job_id": job_id,
             "percentage": 100,
-            "input_image_path": request.in_img_path,
-            "output_image_path": request.out_img_path,
+            "in_img_path": request.in_img_path,
+            "out_img_path": request.out_img_path,
             "total_input_images": 1,
             "processed_image_count": 0,
             "status_message": StatusMessage.JOB_STARTED.value,

@@ -13,6 +13,8 @@ import "denoise.proto";
 import "stablization.proto";
 import "abort.proto";
 import "deblur.proto";
+import "annotation.proto";
+
 service ChannelService {
     rpc GrayscaleFilter (GrayScaleRequest) returns (JobStatusResponse);
     rpc ColorSwitchFilter (ColorSwitchRequest) returns (JobStatusResponse);
@@ -98,4 +100,8 @@ service AbortService{
 service DeblurService{
     rpc MotionFilter (MotionRequest) returns (JobStatusResponse);
     rpc OpticalFilter (OpticalRequest) returns (JobStatusResponse);
+}
+
+service AnnotationService{
+    rpc AnnotationFilter (AnnotationRequest) returns (AnnotationResponse);
 }

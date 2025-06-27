@@ -58,6 +58,15 @@ class StablizationService(main_pb2_grpc.StablizationServiceServicer):
                 request.in_stabilization_power,
                 request.in_video_fps,
             )
+            logger.info(
+                f"Request details: "
+                f"in_st_row={request.in_st_row}, "
+                f"in_en_row={request.in_en_row}, "
+                f"in_st_col={request.in_st_col}, "
+                f"in_en_col={request.in_en_col}, "
+                f"in_stabilization_power={request.in_stabilization_power}, "
+                f"in_video_fps={request.in_video_fps}, "
+            )
             adjust_params = {
                 "process_type": process_type,
                 "in_st_row": in_st_row,
@@ -67,6 +76,7 @@ class StablizationService(main_pb2_grpc.StablizationServiceServicer):
                 "in_stabilization_power": in_stabilization_power,
                 "in_video_fps": in_video_fps,
             }
+            logger.info(f"Local Adjust params: {adjust_params}")
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:
@@ -80,6 +90,7 @@ class StablizationService(main_pb2_grpc.StablizationServiceServicer):
         self, request, context, job_id, process_type, img_chunk
     ):
         try:
+
             (
                 in_stabilization_power,
                 in_video_fps,
@@ -92,6 +103,8 @@ class StablizationService(main_pb2_grpc.StablizationServiceServicer):
                 "in_stabilization_power": in_stabilization_power,
                 "in_video_fps": in_video_fps,
             }
+            logger.info(f"Global Adjust params: {adjust_params}")
+
             self.process_images(request, job_id, process_type, adjust_params, img_chunk)
 
         except Exception as e:

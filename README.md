@@ -32,8 +32,7 @@ export PYTHONPATH=$PYTHONPATH:/home/vadmin/Documents/vtpl_grpc_server/stubs
     python3 -m grpc_tools.protoc -I./protos --python_out=./stubs --grpc_python_out=./stubs ./protos/*.proto
     ```
    
-
-   ## Setup using Docker 
+   ## Setup using Docker Tapan
    ```bash
     docker build -t grpc-server .
     ```
