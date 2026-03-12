@@ -211,6 +211,11 @@ class ChannelService(main_pb2_grpc.ChannelServiceServicer):
                     out_img_path=request.out_img_path,
                     in_img_list=[in_img],
                     **adjust_params,  # Pass specific filter parameters
+                    par_process_flag=request.par_process_flag,
+                    par_st_row=request.par_st_row,
+                    par_en_row=request.par_en_row,
+                    par_st_col=request.par_st_col,
+                    par_en_col=request.par_en_col,
                 )
 
                 # Update processed image count

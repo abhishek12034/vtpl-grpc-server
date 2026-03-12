@@ -119,6 +119,11 @@ class channel_process:
         sub_process_mid="",
         out_img_path="",
         in_mat=[],
+        par_st_row=None,   
+        par_en_row=None,   
+        par_st_col=None,   
+        par_en_col=None,  
+        par_process_flag = False 
     ):
 
         t_st = time.time()
@@ -157,13 +162,35 @@ class channel_process:
                 self.last_reading_time += t_en_read - t_st_read
 
                 t_st_process = time.time()
+                # ✅ Partial Processing Logic
+                if par_process_flag:
+
+                    # Safety validation
+                    if None in (par_st_row, par_en_row, par_st_col, par_en_col):
+                        raise ValueError("Partial processing enabled but coordinates missing")
+
+                    if par_en_row <= par_st_row or par_en_col <= par_st_col:
+                        raise ValueError("Invalid crop coordinates")
+
+                    crop_box = (
+                        par_st_col,   # left (x1)
+                        par_st_row,   # top (y1)
+                        par_en_col,   # right (x2)
+                        par_en_row    # bottom (y2)
+                    )
+
+                    original_img = in_img.copy()
+                    in_img = in_img.crop(crop_box)
+
+                else:
+                    original_img = None
+                    crop_box = None
 
                 # grayscale
                 if process_type == "grayscale":
                     # ITU-R 601-2 luma transform
                     # L = R * 299/1000 + G * 587/1000 + B * 114/1000
-                    out_img = in_img.convert(mode="L")
-                    out_img = out_img.convert("RGB")
+                    out_img = in_img.convert(mode="L").convert("RGB")
 
                 # color_conversion
                 elif process_type == "color_conversion":
@@ -219,6 +246,10 @@ class channel_process:
                 self.last_processing_time += t_en_process - t_st_process
 
                 t_st_write = time.time()
+                # ✅ Paste ROI back before saving
+                if par_process_flag and original_img is not None:
+                    original_img.paste(out_img, crop_box)
+                    out_img = original_img
                 out_img.save(
                     os.path.join(out_img_path, f_name_list[i_cnt]),
                     quality=self.jpg_quality[1],
@@ -235,7 +266,7 @@ class channel_process:
 # In[14]:
 
 
-# im_cp = channel_process()
+im_cp = channel_process()
 
 
 # # In[15]:
@@ -247,11 +278,26 @@ class channel_process:
 # # In[20]:
 
 
-# im_cp.mod_channel(in_img_path = "/home/vadmin/Documents/grpc-image-processing/vid_1",
+# im_cp.mod_channel(in_img_path = "/home/vadmin/Documents/testing-forensic-algo/vid1/",
 #             process_all_flag = True,
 #             #in_img_list = in_list,
 #             process_type = "grayscale",
-#             out_img_path = "/home/vadmin/Documents/grpc-image-processing/vid_2")
+#             out_img_path = "/home/vadmin/Documents/testing-forensic-algo/vid2/")
+
+
+
+# im_cp.mod_channel(
+#     in_img_path="/home/vadmin/Documents/testing-forensic-algo/vid1/",
+#     process_all_flag=True,
+#     process_type="grayscale",
+#     out_img_path="/home/vadmin/Documents/testing-forensic-algo/vid2/",
+
+#     par_process_flag=True,
+#     par_st_row=100,
+#     par_en_row=120,
+#     par_st_col=20,
+#     par_en_col=60
+# )
 
 # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
@@ -269,50 +315,78 @@ class channel_process:
 #             #sub_process_mid = "gray",
 #             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
 
+
+
+# im_cp.mod_channel(
+#     in_img_path="/home/vadmin/Documents/testing-forensic-algo/vid1/",
+#     process_all_flag=True,
+#     process_type="color_conversion",
+#     out_img_path="/home/vadmin/Documents/testing-forensic-algo/vid2/",
+#     sub_process_black = "black",
+#     sub_process_white = "orange",
+#     #sub_process_mid = "gray",
+#     par_process_flag=True,
+#     par_st_row=100,
+#     par_en_row=120,
+#     par_st_col=20,
+#     par_en_col=60
+# )
+
 # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[8]:
+
+# # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
+# # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# im_cp.mod_channel(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
+# # # In[8]:
+
+
+# im_cp.mod_channel(in_img_path="/home/vadmin/Documents/testing-forensic-algo/vid1/",
 #             process_all_flag = True,
 #             #in_img_list = in_list,
 #             process_type = "color_switch",
 #             sub_process_num = 312,
-#             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
+#             out_img_path = "/home/vadmin/Documents/testing-forensic-algo/vid2/",
+#             par_process_flag=True,
+#             par_st_row=100,
+#             par_en_row=120,
+#             par_st_col=20,
+#             par_en_col=60
+#             )
 
 # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
 # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# # In[9]:
+# # # In[9]:
 
 
-# im_cp.mod_channel(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
-#             process_all_flag = True,
-#             #in_img_list = in_list,
-#             process_type = "extract_single_channel",
-#             sub_process_num = 1,
-#             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
+# # im_cp.mod_channel(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
+# #             process_all_flag = True,
+# #             #in_img_list = in_list,
+# #             process_type = "extract_single_channel",
+# #             sub_process_num = 1,
+# #             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
 
-# print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
-# read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
-
-
-# # In[10]:
+# # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
+# # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
 
 
-# im_cp.mod_channel(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
-#             process_all_flag = True,
-#             #in_img_list = in_list,
-#             process_type = "display_selected_channels",
-#             sub_process_num = 120,
-#             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
-
-# print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
-# read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
+# # # In[10]:
 
 
-# In[ ]:
+# # im_cp.mod_channel(in_img_path = "D:/MyData/Test_Set_01/vid_1/",
+# #             process_all_flag = True,
+# #             #in_img_list = in_list,
+# #             process_type = "display_selected_channels",
+# #             sub_process_num = 120,
+# #             out_img_path = "D:/MyData/Test_Set_01/vid_2/")
+
+# # print(f"Time taken for {im_cp.processing_image_cnt} images processing = {round(im_cp.last_processing_time, 2)}s  \
+# # read = {round(im_cp.last_reading_time, 2)}s  write = {round(im_cp.last_writing_time, 2)}s  overall = {round(im_cp.last_overall_time, 2)}s")
+
+
+# # In[ ]:
