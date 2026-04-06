@@ -514,15 +514,22 @@ class extract_process:
                     temp_hsv_img = temp_hsv_img.astype(np.float32)
                     wtg_hsv_img = copy.deepcopy(temp_hsv_img)
 
+                    # Use original (full) image for sampling coordinates if ROI is enabled
+                    sampling_hsv_img = (
+                        cv.cvtColor(original_img, cv.COLOR_BGR2HSV)
+                        if par_process_flag and original_img is not None
+                        else hsv_img
+                    )
+
                     select_hsv_list = []
                     for i_cnt in range(len(in_select_dual_pt_rc_list)):
-                        hsv_val = hsv_img[
+                        hsv_val = sampling_hsv_img[
                             in_select_dual_pt_rc_list[i_cnt][0],
                             in_select_dual_pt_rc_list[i_cnt][1],
                         ]
                         select_hsv_list.append(hsv_val)
 
-                    bg_hsv_val = hsv_img[
+                    bg_hsv_val = sampling_hsv_img[
                         in_bg_rc_pt[0],
                         in_bg_rc_pt[1],
                     ]

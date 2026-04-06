@@ -87,6 +87,11 @@ class deblurring_process:
         in_spread_distance=10,
         in_snr=25,
         out_img_path="",
+        par_st_row=None,
+        par_en_row=None,
+        par_st_col=None,
+        par_en_col=None,
+        par_process_flag=False,
     ):
 
         t_st = time.time()
@@ -127,6 +132,23 @@ class deblurring_process:
                 self.last_reading_time += t_en_read - t_st_read
 
                 t_st_process = time.time()
+
+                # ✅ Partial Processing Logic
+                if par_process_flag:
+                    # Safety validation
+                    if None in (par_st_row, par_en_row, par_st_col, par_en_col):
+                        raise ValueError(
+                            "Partial processing enabled but coordinates missing"
+                        )
+
+                    if par_en_row <= par_st_row or par_en_col <= par_st_col:
+                        raise ValueError("Invalid crop coordinates")
+
+                    # Save original image and crop the ROI
+                    original_img = in_img.copy()
+                    in_img = in_img[par_st_row:par_en_row, par_st_col:par_en_col]
+                else:
+                    original_img = None
 
                 # motion_deblurring
                 if process_type == "motion_deblurring":
@@ -216,6 +238,11 @@ class deblurring_process:
 
                 t_en_process = time.time()
                 self.last_processing_time += t_en_process - t_st_process
+
+                # ✅ Paste ROI back before saving
+                if par_process_flag and original_img is not None:
+                    original_img[par_st_row:par_en_row, par_st_col:par_en_col] = out_img
+                    out_img = original_img
 
                 t_st_write = time.time()
 
