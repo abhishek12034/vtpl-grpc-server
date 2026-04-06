@@ -20,7 +20,7 @@ import re
 
 def extract_number(filename):
     match = re.search(r"\d+", filename)
-    return int(match.group()) if match else None
+    return int(match.group()) if match else -1
 
 
 def list_image_files(directory):
