@@ -122,6 +122,11 @@ class edit_process:
         in_direction="Vertical",
         in_start_clock_pos="9.0",
         out_img_path="",
+        par_st_row=None,
+        par_en_row=None,
+        par_st_col=None,
+        par_en_col=None,
+        par_process_flag=False,
     ):
 
         t_st = time.time()
@@ -163,6 +168,32 @@ class edit_process:
 
                 t_st_process = time.time()
 
+                # ✅ Partial Processing Logic
+                if par_process_flag:
+                    # Safety validation
+                    if None in (par_st_row, par_en_row, par_st_col, par_en_col):
+                        raise ValueError(
+                            "Partial processing enabled but coordinates missing"
+                        )
+
+                    if par_en_row <= par_st_row or par_en_col <= par_st_col:
+                        raise ValueError("Invalid crop coordinates")
+
+                    # Adjust input coordinates to be relative to the ROI
+                    if process_type in ["crop", "resize", "smart_resize"]:
+                        in_st_row = max(0, in_st_row - par_st_row)
+                        in_en_row = max(0, in_en_row - par_st_row)
+                        in_st_col = max(0, in_st_col - par_st_col)
+                        in_en_col = max(0, in_en_col - par_st_col)
+                    elif process_type == "perspective":
+                        in_select_rc_arr = [[pt[0] - par_st_row, pt[1] - par_st_col] for pt in in_select_rc_arr]
+
+                    # Save original image and crop the ROI
+                    original_img = in_img.copy()
+                    in_img = in_img[par_st_row:par_en_row, par_st_col:par_en_col]
+                else:
+                    original_img = None
+
                 # crop
                 if process_type == "crop":
                     out_img = copy.deepcopy(
@@ -170,6 +201,18 @@ class edit_process:
                             in_st_row : (in_en_row + 1), in_st_col : (in_en_col + 1), :
                         ]
                     )
+
+                    # Handle ROI for crop: Create a canvas of ROI size and paste the crop result
+                    if par_process_flag:
+                        temp_roi = np.zeros_like(in_img)
+                        h, w = out_img.shape[:2]
+                        # Ensure we don't exceed ROI bounds
+                        st_r = min(in_st_row, temp_roi.shape[0])
+                        st_c = min(in_st_col, temp_roi.shape[1])
+                        en_r = min(st_r + h, temp_roi.shape[0])
+                        en_c = min(st_c + w, temp_roi.shape[1])
+                        temp_roi[st_r:en_r, st_c:en_c] = out_img[0:(en_r-st_r), 0:(en_c-st_c)]
+                        out_img = temp_roi
 
                 # flip
                 elif process_type == "flip":
@@ -562,10 +605,26 @@ class edit_process:
                         x_tar = np.clip(x_tar, 0, w - 1)
                         y_tar = np.clip(y_tar, 0, h - 1)
 
-                        out_img[y, x] = in_img[y_tar, x_tar]
+                        if par_process_flag and original_img is not None:
+                            # Adjust target coordinates to sample from original image
+                            y_tar_abs = np.clip(y_tar + par_st_row, 0, original_img.shape[0] - 1)
+                            x_tar_abs = np.clip(x_tar + par_st_col, 0, original_img.shape[1] - 1)
+                            out_img[y, x] = original_img[y_tar_abs, x_tar_abs]
+                        else:
+                            out_img[y, x] = in_img[y_tar, x_tar]
 
                 t_en_process = time.time()
                 self.last_processing_time += t_en_process - t_st_process
+
+                # ✅ Paste ROI back before saving
+                if par_process_flag and original_img is not None:
+                    # For filters that might have changed size (resize, smart_resize), we must ensure compatibility
+                    if out_img.shape[:2] != (par_en_row - par_st_row, par_en_col - par_st_col):
+                        # Resize back to ROI size if there was a size change (e.g. resize filter on ROI)
+                        out_img = cv.resize(out_img, (par_en_col - par_st_col, par_en_row - par_st_row))
+                    
+                    original_img[par_st_row:par_en_row, par_st_col:par_en_col] = out_img
+                    out_img = original_img
 
                 t_st_write = time.time()
 
