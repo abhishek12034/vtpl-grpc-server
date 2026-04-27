@@ -231,15 +231,14 @@ class BaseService:
             # # Validate required fields
             if not request.in_img_path:
                 logger.info(
-                    f"out_img_path directory does not exist: {request.in_img_path}"
+                    f"in_img_path directory is required: {request.in_img_path}"
                 )
                 raise ValueError("in_img_path is required")
 
             if request.out_img_path == "":
-                logger.info(
-                    f"out_img_path directory does not exist: {request.out_img_path}"
-                )
-                raise ValueError("out_img_path is required")
+                # Default to a subdirectory named 'output' in the input directory
+                request.out_img_path = os.path.join(request.in_img_path, "output")
+                logger.info(f"out_img_path was empty, defaulting to: {request.out_img_path}")
 
             # Check if in_img_path exists and if all images in in_img_list are present
             if not request.process_all_flag and not all(
@@ -254,14 +253,13 @@ class BaseService:
                     f"Either in_img_path does not exist: {request.in_img_path} or the following images do not exist in the directory: {', '.join(missing_images)}."
                 )
 
-            if not os.path.exists(os.path.dirname(request.out_img_path)):
-                logger.info(
-                    f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
-                )
-
-                raise ValueError(
-                    f"out_img_path directory does not exist: {os.path.dirname(request.out_img_path)}"
-                )
+            # Ensure the output directory exists
+            if not os.path.exists(request.out_img_path):
+                try:
+                    os.makedirs(request.out_img_path, exist_ok=True)
+                    logger.info(f"Created output directory: {request.out_img_path}")
+                except Exception as e:
+                    raise ValueError(f"Could not create out_img_path: {request.out_img_path}. Error: {str(e)}")
             if total_images == 0:
                 raise ValueError(
                     "No images found to process. Either provide a valid image path or image list."
