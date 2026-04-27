@@ -231,6 +231,12 @@ class extract_process:
 
                 # adaptive_threshold     'adaptive_mean', 'adaptive_gaussian'
                 elif process_type == "adaptive_threshold":
+                    # ✅ OpenCV requires blockSize to be odd and > 1
+                    if ad_th_box_len <= 1:
+                        ad_th_box_len = 3
+                    elif ad_th_box_len % 2 == 0:
+                        ad_th_box_len += 1
+
                     if adaptive_threshold_option in self.ad_th_name:
                         out_img = copy.deepcopy(in_img)
 
@@ -253,6 +259,12 @@ class extract_process:
 
                 # Laplace
                 elif process_type == "Laplace":
+                    # ✅ OpenCV requires ksize to be odd and >= 1
+                    if in_kernal_size < 1:
+                        in_kernal_size = 1
+                    elif in_kernal_size % 2 == 0:
+                        in_kernal_size += 1
+
                     out_img = copy.deepcopy(in_img)
                     out_img = out_img.astype(np.float32)
 
@@ -306,6 +318,12 @@ class extract_process:
 
                 # Sobel
                 elif process_type == "Sobel":
+                    # ✅ OpenCV Sobel ksize must be 1, 3, 5, or 7
+                    if in_kernal_size not in [1, 3, 5, 7]:
+                        if in_kernal_size < 1: in_kernal_size = 1
+                        elif in_kernal_size > 7: in_kernal_size = 7
+                        elif in_kernal_size % 2 == 0: in_kernal_size += 1
+
                     out_img = copy.deepcopy(in_img)
                     for cch in range(3):
                         grad_x = cv.Sobel(
@@ -522,12 +540,27 @@ class extract_process:
                     )
 
                     select_hsv_list = []
+                    # ✅ Ensure we have at least 2 points to avoid IndexError later
+                    if len(in_select_dual_pt_rc_list) < 2:
+                        # Add default points if missing
+                        in_select_dual_pt_rc_list = [[293, 262], [234, 436]]
+
+                    # ✅ Bounds checking for sampling points
+                    h, w = sampling_hsv_img.shape[:2]
+                    for pt in in_select_dual_pt_rc_list:
+                        pt[0] = min(max(0, pt[0]), h - 1)
+                        pt[1] = min(max(0, pt[1]), w - 1)
+
                     for i_cnt in range(len(in_select_dual_pt_rc_list)):
                         hsv_val = sampling_hsv_img[
                             in_select_dual_pt_rc_list[i_cnt][0],
                             in_select_dual_pt_rc_list[i_cnt][1],
                         ]
                         select_hsv_list.append(hsv_val)
+
+                    # ✅ Bounds checking for background point
+                    in_bg_rc_pt[0] = min(max(0, in_bg_rc_pt[0]), h - 1)
+                    in_bg_rc_pt[1] = min(max(0, in_bg_rc_pt[1]), w - 1)
 
                     bg_hsv_val = sampling_hsv_img[
                         in_bg_rc_pt[0],
@@ -677,7 +710,9 @@ class extract_process:
                             cv.magnitude(dft_shift[:, :, 0], dft_shift[:, :, 1])
                         )
 
-                        ini_mag_norm_val = 255 / ini_mag_spec.max()
+                        # ✅ Avoid division by zero
+                        max_spec = ini_mag_spec.max()
+                        ini_mag_norm_val = 255 / max_spec if max_spec > 0 else 1
 
                         plot_ini_mag_spec = copy.deepcopy(ini_mag_spec)
                         plot_ini_mag_spec *= ini_mag_norm_val
@@ -714,7 +749,9 @@ class extract_process:
                         img_back = cv.idft(f_ishift)
                         img_back = cv.magnitude(img_back[:, :, 0], img_back[:, :, 1])
 
-                        back_img_norm_val = 255 / img_back.max()
+                        # ✅ Avoid division by zero
+                        max_back = img_back.max()
+                        back_img_norm_val = 255 / max_back if max_back > 0 else 1
                         img_back *= back_img_norm_val
                         img_back = img_back.astype(np.uint8)
 

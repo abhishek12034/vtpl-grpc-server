@@ -156,6 +156,10 @@ class sharpen_process:
 
                 # unsharp_mask
                 elif process_type == "unsharp_mask":
+                    # ✅ Ensure sharpen spread is positive
+                    if in_sharpen_spread <= 0:
+                        in_sharpen_spread = 0.1
+
                     im_blurred = cv.GaussianBlur(
                         in_img, ksize=(0, 0), sigmaX=in_sharpen_spread
                     )

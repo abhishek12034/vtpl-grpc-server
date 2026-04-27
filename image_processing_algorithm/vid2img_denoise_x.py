@@ -143,7 +143,13 @@ class denoise_process:
                         (in_img.shape[0], in_img.shape[1], 3), dtype=np.uint8
                     )
 
+                    # ✅ OpenCV GaussianBlur requires ksize to be odd and > 0
                     fil_len = int(in_filter_size)
+                    if fil_len < 1:
+                        fil_len = 1
+                    elif fil_len % 2 == 0:
+                        fil_len += 1
+                    
                     kernel_1 = np.ones((fil_len, fil_len), np.float32) / (
                         fil_len * fil_len
                     )
@@ -158,8 +164,15 @@ class denoise_process:
 
                 # gaussian_smoothing
                 elif process_type == "gaussian_smoothing":
+                    # ✅ OpenCV GaussianBlur requires ksize to be odd and > 0
+                    fil_len = int(in_filter_size)
+                    if fil_len < 1:
+                        fil_len = 1
+                    elif fil_len % 2 == 0:
+                        fil_len += 1
+
                     out_img = cv.GaussianBlur(
-                        in_img, ksize=(in_filter_size, in_filter_size), sigmaX=0
+                        in_img, ksize=(fil_len, fil_len), sigmaX=0
                     )
 
                 # gaussian_smoothing
@@ -173,7 +186,13 @@ class denoise_process:
 
                 # gaussian_smoothing
                 elif process_type == "median_filtering":
-                    out_img = cv.medianBlur(in_img, in_filter_size)
+                    # ✅ OpenCV medianBlur requires ksize to be odd and > 0
+                    fil_len = int(in_filter_size)
+                    if fil_len < 1:
+                        fil_len = 1
+                    elif fil_len % 2 == 0:
+                        fil_len += 1
+                    out_img = cv.medianBlur(in_img, fil_len)
 
                 # gaussian_smoothing
                 elif process_type == "wiener":
@@ -181,8 +200,15 @@ class denoise_process:
                         (in_img.shape[0], in_img.shape[1], 3), dtype=np.uint8
                     )
 
-                    kernel = gaussian(in_filter_size, in_filter_size / 3).reshape(
-                        in_filter_size, 1
+                    # ✅ Ensure filter size is odd and > 0
+                    fil_len = int(in_filter_size)
+                    if fil_len < 1:
+                        fil_len = 1
+                    elif fil_len % 2 == 0:
+                        fil_len += 1
+
+                    kernel = gaussian(fil_len, fil_len / 3).reshape(
+                        fil_len, 1
                     )
                     kernel = np.dot(kernel, kernel.transpose())
                     kernel /= np.sum(kernel)
@@ -199,7 +225,8 @@ class denoise_process:
                         fft_img = fft_img * win_kernel
                         fft_img = np.abs(ifft2(fft_img))
 
-                        scale_val = 255 / np.max(fft_img)
+                        max_val = np.max(fft_img)
+                        scale_val = 255 / max_val if max_val > 0 else 1
                         fft_img = fft_img * scale_val
                         out_img[:, :, cch] = np.uint8(np.clip(fft_img, 0, 255))
 

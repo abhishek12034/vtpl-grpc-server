@@ -87,7 +87,7 @@ class BaseService:
     ):
         retry_count = 0
         max_retries = 5
-        stale_progress_threshold = 10  # Number of iterations to detect staleness
+        stale_progress_threshold = 300  # Number of iterations (seconds) to detect staleness
         last_processed_image_count = -1  # Track the last known progress count
         staleness_counter = 0
         if not is_multithreading_used:
@@ -236,8 +236,13 @@ class BaseService:
                 raise ValueError("in_img_path is required")
 
             if request.out_img_path == "":
-                # Default to a subdirectory named 'output' in the input directory
-                request.out_img_path = os.path.join(request.in_img_path, "output")
+                # Determine the base directory for the output (handle file vs directory)
+                base_dir = request.in_img_path
+                if os.path.isfile(base_dir):
+                    base_dir = os.path.dirname(base_dir)
+                
+                # Default to a subdirectory named 'output'
+                request.out_img_path = os.path.join(base_dir, "output")
                 logger.info(f"out_img_path was empty, defaulting to: {request.out_img_path}")
 
             # Check if in_img_path exists and if all images in in_img_list are present
