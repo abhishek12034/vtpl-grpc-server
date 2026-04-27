@@ -172,6 +172,13 @@ class channel_process:
                     if par_en_row <= par_st_row or par_en_col <= par_st_col:
                         raise ValueError("Invalid crop coordinates")
 
+                    # ✅ Ensure crop coordinates are within image bounds
+                    img_w, img_h = in_img.size
+                    par_st_col = max(0, min(par_st_col, img_w-1))
+                    par_en_col = max(0, min(par_en_col, img_w))
+                    par_st_row = max(0, min(par_st_row, img_h-1))
+                    par_en_row = max(0, min(par_en_row, img_h))
+
                     crop_box = (
                         par_st_col,   # left (x1)
                         par_st_row,   # top (y1)

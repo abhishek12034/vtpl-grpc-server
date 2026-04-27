@@ -144,6 +144,13 @@ class deblurring_process:
                     if par_en_row <= par_st_row or par_en_col <= par_st_col:
                         raise ValueError("Invalid crop coordinates")
 
+                    # ✅ Ensure crop coordinates are within image bounds
+                    h, w = in_img.shape[:2]
+                    par_st_row = max(0, min(par_st_row, h-1))
+                    par_en_row = max(0, min(par_en_row, h))
+                    par_st_col = max(0, min(par_st_col, w-1))
+                    par_en_col = max(0, min(par_en_col, w))
+
                     # Save original image and crop the ROI
                     original_img = in_img.copy()
                     in_img = in_img[par_st_row:par_en_row, par_st_col:par_en_col]
@@ -165,11 +172,18 @@ class deblurring_process:
 
                     psf = self.motion_kernel(ang, dist, sz=kernel_size)
 
-                    psf /= psf.sum()
-                    psf_pad = np.zeros_like(in_img[:, :, 0])
+                    # ✅ Avoid division by zero
+                    psf_sum = psf.sum()
+                    if psf_sum > 0:
+                        psf /= psf_sum
+                    # ✅ Ensure kh, kw don't exceed psf_pad dimensions (handle small images)
                     kh, kw = psf.shape
-                    psf_pad[:kh, :kw] = psf
-                    PSF = cv.dft(psf_pad, flags=cv.DFT_COMPLEX_OUTPUT, nonzeroRows=kh)
+                    psf_pad = np.zeros_like(in_img[:, :, 0])
+                    kh_safe = min(kh, psf_pad.shape[0])
+                    kw_safe = min(kw, psf_pad.shape[1])
+                    psf_pad[:kh_safe, :kw_safe] = psf[:kh_safe, :kw_safe]
+                    
+                    PSF = cv.dft(psf_pad, flags=cv.DFT_COMPLEX_OUTPUT, nonzeroRows=kh_safe)
 
                     if deblur_flag:
                         PSF2 = (PSF**2).sum(-1)
@@ -208,11 +222,18 @@ class deblurring_process:
 
                     psf = self.defocus_kernel(dist, sz=kernel_size)
 
-                    psf /= psf.sum()
-                    psf_pad = np.zeros_like(in_img[:, :, 0])
+                    # ✅ Avoid division by zero
+                    psf_sum = psf.sum()
+                    if psf_sum > 0:
+                        psf /= psf_sum
+                    # ✅ Ensure kh, kw don't exceed psf_pad dimensions (handle small images)
                     kh, kw = psf.shape
-                    psf_pad[:kh, :kw] = psf
-                    PSF = cv.dft(psf_pad, flags=cv.DFT_COMPLEX_OUTPUT, nonzeroRows=kh)
+                    psf_pad = np.zeros_like(in_img[:, :, 0])
+                    kh_safe = min(kh, psf_pad.shape[0])
+                    kw_safe = min(kw, psf_pad.shape[1])
+                    psf_pad[:kh_safe, :kw_safe] = psf[:kh_safe, :kw_safe]
+                    
+                    PSF = cv.dft(psf_pad, flags=cv.DFT_COMPLEX_OUTPUT, nonzeroRows=kh_safe)
 
                     if deblur_flag:
                         PSF2 = (PSF**2).sum(-1)
