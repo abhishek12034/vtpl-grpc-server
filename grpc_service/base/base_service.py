@@ -222,6 +222,7 @@ class BaseService:
             self.start_time = time.time()
 
             job_id = str(uuid.uuid4())
+            print("in image ",request.in_im)
             total_images = (
                 count_images_in_folder(request.in_img_path)
                 if request.process_all_flag
@@ -235,15 +236,15 @@ class BaseService:
                 )
                 raise ValueError("in_img_path is required")
 
-            if request.out_img_path == "":
-                # Determine the base directory for the output (handle file vs directory)
-                base_dir = request.in_img_path
-                if os.path.isfile(base_dir):
-                    base_dir = os.path.dirname(base_dir)
+            # if request.out_img_path == "":
+            #     # Determine the base directory for the output (handle file vs directory)
+            #     base_dir = request.in_img_path
+            #     if os.path.isfile(base_dir):
+            #         base_dir = os.path.dirname(base_dir)
                 
-                # Default to a subdirectory named 'output'
-                request.out_img_path = os.path.join(base_dir, "output")
-                logger.info(f"out_img_path was empty, defaulting to: {request.out_img_path}")
+            #     # Default to a subdirectory named 'output'
+            #     request.out_img_path = os.path.join(base_dir, "output")
+            #     logger.info(f"out_img_path was empty, defaulting to: {request.out_img_path}")
 
             # Check if in_img_path exists and if all images in in_img_list are present
             if not request.process_all_flag and not all(

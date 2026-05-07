@@ -57,7 +57,7 @@ class AnnotationService(main_pb2_grpc.AnnotationServiceServicer):
             # Store thread ID in job status
             with self.base_obj.lock:
                 self.base_obj.job_status[job_id]["thread_id"] = threading.get_ident()
-
+            print("img_chunk", request.in_img_list, adjust_params,request.in_img_path,request.out_img_path)
             # Process each image in the list
             for in_img in img_chunk:
                 self.processor.mod_annotate(
@@ -80,7 +80,7 @@ class AnnotationService(main_pb2_grpc.AnnotationServiceServicer):
                     "status_message"
                 ] = StatusMessage.JOB_FAILED.value
                 self.base_obj.job_status[job_id][
-                    "status_message"
+                    "status_code"
                 ] = JobStatusCode.FAILED.value
                 self.base_obj.job_status[job_id]["error"] = str(e)
                 logger.info(f"Job Failed for job_id {job_id} with error {e}")
